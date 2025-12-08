@@ -1,0 +1,109 @@
+import React, { useState } from "react";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import useAxiosSecure from "../../../../hooks/useAxiosSecure";
+import Loader from "../../../Shared/Loader/Loader";
+import EditScholarshipModal from "./EditScholarshipModal"; // নিচে বানানো হবে
+
+const ManageScholarships = () => {
+  const axiosSecure = useAxiosSecure();
+  const queryClient = useQueryClient();
+  const [editingScholarship, setEditingScholarship] = useState(null);
+
+  const { data: scholarships = [], isLoading } = useQuery({
+    queryKey: ["scholarships"],
+    queryFn: async () => {
+      const res = await axiosSecure.get("/all-scholarships");
+      return res.data;
+    },
+  });
+
+  const handleDelete = async (id) => {
+    if (!window.confirm("Are you sure you want to delete this scholarship?"))
+      return;
+
+    try {
+      await axiosSecure.delete(`/scholarships/${id}`);
+      alert("Scholarship deleted successfully!");
+      queryClient.invalidateQueries(["scholarships"]);
+    } catch (err) {
+      console.error(err);
+      alert("Failed to delete scholarship");
+    }
+  };
+
+  if (isLoading) return <Loader />;
+
+  return (
+    <div>
+      <h1 className="text-3xl font-bold mb-6">Manage Scholarships</h1>
+      <div className="overflow-x-auto">
+        <table className="table table-zebra w-full">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Scholarship Name</th>
+              <th>University</th>
+              <th>Country</th>
+              <th>City</th>
+              <th>Subject</th>
+              <th>Category</th>
+              <th>Degree</th>
+              <th>Deadline</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {scholarships.length === 0 ? (
+              <tr>
+                <td colSpan="10" className="text-center text-gray-500">
+                  No scholarships found.
+                </td>
+              </tr>
+            ) : (
+              scholarships.map((sch, index) => (
+                <tr key={sch._id}>
+                  <th>{index + 1}</th>
+                  <td>{sch.scholarshipName}</td>
+                  <td>{sch.universityName}</td>
+                  <td>{sch.universityCountry}</td>
+                  <td>{sch.universityCity}</td>
+                  <td>{sch.subjectCategory}</td>
+                  <td>{sch.scholarshipCategory}</td>
+                  <td>{sch.degree}</td>
+                  <td>{new Date(sch.deadline).toLocaleDateString()}</td>
+                  <td className="flex gap-2">
+                    <button
+                      className="btn btn-sm btn-warning"
+                      onClick={() => setEditingScholarship(sch)}
+                    >
+                      Update
+                    </button>
+                    <button
+                      className="btn btn-sm btn-error"
+                      onClick={() => handleDelete(sch._id)}
+                    >
+                      Delete
+                    </button>
+                  </td>
+                </tr>
+              ))
+            )}
+          </tbody>
+        </table>
+      </div>
+
+      {editingScholarship && (
+        <EditScholarshipModal
+          scholarship={editingScholarship}
+          closeModal={() => setEditingScholarship(null)}
+          onUpdate={() => {
+            queryClient.invalidateQueries(["scholarships"]);
+            setEditingScholarship(null);
+          }}
+        />
+      )}
+    </div>
+  );
+};
+
+export default ManageScholarships;

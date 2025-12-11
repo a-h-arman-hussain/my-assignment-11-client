@@ -9,9 +9,12 @@ const ScholarshipDetails = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
   const axiosSecure = useAxiosSecure();
+
   const [scholarship, setScholarship] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [reviews, setReviews] = useState([]);
 
+  // ✅ Load Scholarship Details
   useEffect(() => {
     const fetchScholarship = async () => {
       try {
@@ -24,27 +27,34 @@ const ScholarshipDetails = () => {
       }
     };
     fetchScholarship();
-  }, [id, axiosSecure]);
+  }, [id]);
 
+  // ✅ Load Reviews only when scholarshipName is available
+  useEffect(() => {
+    if (!scholarship?.scholarshipName) return;
+
+    axiosSecure
+      .get(`/reviews/${scholarship.scholarshipName}`)
+      .then((res) => setReviews(res.data))
+      .catch((err) => console.error("Failed to load reviews:", err));
+  }, [scholarship?.scholarshipName]);
+
+  // Apply button handler
   const handleApply = async () => {
-    if (!user) {
-      return navigate("/login");
-    }
+    if (!user) return navigate("/login");
 
     const { _id, ...scholarshipData } = scholarship;
 
     const applicationData = {
       scholarshipId: _id,
       ...scholarshipData,
-
       studentEmail: user.email,
       studentName: user.displayName,
-
       appliedAt: new Date(),
       paymentStatus: "pending",
       applicationStatus: "pending",
     };
-    console.log(applicationData);
+
     try {
       const res = await axiosSecure.post(
         "/apply-scholarships",
@@ -63,7 +73,7 @@ const ScholarshipDetails = () => {
     }
   };
 
-  if (loading) return <Loader></Loader>;
+  if (loading) return <Loader />;
   if (!scholarship)
     return (
       <p className="text-center mt-10 text-red-500">Scholarship not found.</p>
@@ -71,7 +81,7 @@ const ScholarshipDetails = () => {
 
   return (
     <section className="max-w-5xl mx-auto p-6">
-      {/* Image */}
+      {/* Cover Image */}
       <div className="relative rounded-xl overflow-hidden shadow-2xl mb-8">
         <img
           src={scholarship.universityImage}
@@ -88,13 +98,13 @@ const ScholarshipDetails = () => {
         <h1 className="text-3xl md:text-4xl font-bold text-white mb-3">
           {scholarship.scholarshipName}
         </h1>
+
         <p className="text-gray-300 mb-6">
           <span className="font-semibold">University:</span>{" "}
           {scholarship.universityName} <br />
           <span className="font-semibold">Location:</span>{" "}
           {scholarship.universityCity}, {scholarship.universityCountry} <br />
-          <span className="font-semibold">Degree:</span> {scholarship.degree}{" "}
-          <br />
+          <span className="font-semibold">Degree:</span> {scholarship.degree}
         </p>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
@@ -135,6 +145,49 @@ const ScholarshipDetails = () => {
         >
           Apply Now
         </button>
+      </div>
+
+      {/* Reviews Section */}
+      <div className="mt-10">
+        <h2 className="text-2xl font-semibold mb-4">Student Reviews</h2>
+
+        {reviews.length === 0 && (
+          <p className="text-gray-500">No reviews for this scholarship yet.</p>
+        )}
+
+        <div className="space-y-4">
+          {reviews.map((review) => (
+            <div
+              key={review._id}
+              className="p-5 border rounded-lg shadow-md bg-white flex gap-4"
+            >
+              <img
+                src={
+                  review.reviewerImage || "https://i.ibb.co/4pDNd9p/avatar.png"
+                }
+                alt="avatar"
+                className="w-14 h-14 rounded-full"
+              />
+
+              <div className="flex-1">
+                <div className="flex items-center justify-between">
+                  <h3 className="text-lg font-semibold">
+                    {review.studentName}
+                  </h3>
+                  <span className="text-yellow-500 font-bold">
+                    ⭐ {review.rating}
+                  </span>
+                </div>
+
+                <p className="text-gray-500 text-sm">
+                  {new Date(review.createdAt).toLocaleDateString()}
+                </p>
+
+                <p className="mt-2 text-gray-700">{review.comment}</p>
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
     </section>
   );

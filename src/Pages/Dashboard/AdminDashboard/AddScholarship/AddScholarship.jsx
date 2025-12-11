@@ -52,7 +52,7 @@ const AddScholarship = () => {
   };
 
   return (
-    <div className="max-w-3xl mx-auto p-6 bg-black rounded-lg shadow-lg">
+    <div className="max-w-3xl mx-auto p-6 rounded-lg shadow-lg">
       <h1 className="text-2xl font-bold mb-6">Add Scholarship</h1>
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>

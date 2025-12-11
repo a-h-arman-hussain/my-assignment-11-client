@@ -20,7 +20,6 @@ const FeedbackModal = ({ application, closeModal, onSubmit }) => {
       if (res.data.success) {
         alert("Feedback submitted successfully!");
         closeModal();
-        onSubmit();
       } else {
         alert("Failed to submit feedback");
       }
@@ -43,7 +42,7 @@ const FeedbackModal = ({ application, closeModal, onSubmit }) => {
           animate={{ scale: 1, opacity: 1, y: 0 }}
           exit={{ scale: 0.7, opacity: 0, y: 40 }}
           transition={{ duration: 0.25 }}
-          className="bg-black p-6 rounded-2xl shadow-2xl w-full max-w-md"
+          className="bg-white p-6 rounded-2xl shadow-2xl w-full max-w-md"
         >
           <h2 className="text-2xl font-bold mb-4">Write Feedback</h2>
           <textarea

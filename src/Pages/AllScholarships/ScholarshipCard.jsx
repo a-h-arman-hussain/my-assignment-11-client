@@ -5,6 +5,7 @@ const ScholarshipCard = ({ scholar }) => {
   const {
     _id,
     universityImage,
+    scholarshipName,
     universityName,
     universityCity,
     universityCountry,
@@ -32,7 +33,7 @@ const ScholarshipCard = ({ scholar }) => {
       <div className="p-4 flex flex-col space-y-2">
         {/* University Name */}
         <h2 className="text-white text-lg font-semibold truncate">
-          {universityName}
+          {scholarshipName}
         </h2>
 
         {/* Location */}

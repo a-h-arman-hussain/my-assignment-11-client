@@ -26,9 +26,9 @@ const LatestScholarships = () => {
   if (loading) return <Loader></Loader>;
 
   return (
-    <section className="py-12 bg-gray-900">
+    <section className="py-12">
       <div className="container mx-auto px-6">
-        <h2 className="text-3xl font-bold text-white mb-8 text-center">
+        <h2 className="text-3xl font-bold mb-8 text-center">
           Latest Scholarships
         </h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">

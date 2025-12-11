@@ -14,7 +14,7 @@ const Navbar = () => {
           className={({ isActive }) =>
             isActive
               ? "text-yellow-400 font-semibold"
-              : "text-gray-200 hover:text-yellow-400 transition"
+              : "hover:text-yellow-400 transition"
           }
         >
           Home
@@ -26,7 +26,7 @@ const Navbar = () => {
           className={({ isActive }) =>
             isActive
               ? "text-yellow-400 font-semibold"
-              : "text-gray-200 hover:text-yellow-400 transition"
+              : "hover:text-yellow-400 transition"
           }
         >
           All Scholarships
@@ -36,7 +36,7 @@ const Navbar = () => {
   );
 
   return (
-    <div className="navbar bg-gray-900 shadow-sm px-4 relative">
+    <div className="navbar bg-white shadow-sm px-4 relative">
       {/* Start */}
       <div className="navbar-start">
         <div className="dropdown">
@@ -88,7 +88,7 @@ const Navbar = () => {
 
             {/* Dropdown Menu */}
             {dropdownOpen && (
-              <ul className="absolute right-0 mt-2 w-40 bg-gray-800 text-white rounded-lg shadow-lg py-2 z-20">
+              <ul className="absolute right-0 mt-2 w-40 bg-white rounded-lg shadow-lg py-2 z-20">
                 <li className="px-4 py-2 hover:bg-gray-700">
                   <Link to="/profile">Profile</Link>
                 </li>

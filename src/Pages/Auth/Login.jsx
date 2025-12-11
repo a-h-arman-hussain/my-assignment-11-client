@@ -1,43 +1,94 @@
 import React from "react";
 import { useForm } from "react-hook-form";
-import { useNavigate } from "react-router";
+import { Link, useNavigate } from "react-router";
 import useAuth from "../../hooks/useAuth";
-// import axiosSecure from "../../hooks/useAxiosSecure";
+import useAxiosSecure from "../../hooks/useAxiosSecure";
+import Swal from "sweetalert2";
 
 export default function Login() {
   const { signInUser, signInGoogle } = useAuth();
   const navigate = useNavigate();
+  const axiosSecure = useAxiosSecure();
+
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm();
 
+  // Email login
   const onSubmit = async (data) => {
     try {
       await signInUser(data.email, data.password);
 
-      //  get JWT from server (if implemented)
-      // const res = await axiosSecure.post("/jwt", { email: data.email });
-      // localStorage.setItem("access-token", res.data.token);
+      Swal.fire({
+        title: "Welcome Back! 👋",
+        text: "Login Successful",
+        icon: "success",
+        background: "rgba(31, 41, 55, 0.8)",
+        color: "#fff",
+        confirmButtonColor: "#8b5cf6",
+      });
 
-      alert("Login Successful!");
-      navigate("/"); 
+      navigate("/");
     } catch (err) {
-      console.log(err);
-      alert(err.message);
+      Swal.fire({
+        title: "Login Failed!",
+        text: err.message,
+        icon: "error",
+        background: "rgba(31, 41, 55, 0.8)",
+        color: "#fff",
+        confirmButtonColor: "#ef4444",
+      });
     }
   };
 
-  // Google login handler
+  // Google Login + DB save
   const handleGoogleLogin = async () => {
     try {
-      await signInGoogle();
-      alert("Login with Google Successful!");
+      // Google Login
+      const result = await signInGoogle();
+      const user = result.user;
+
+      // 1️⃣ Check if user already exists in DB
+      const { data: existingUser } = await axiosSecure.get(
+        `/users/${user.email}`
+      );
+
+      // 2️⃣ If user DOES NOT exist → Create new user
+      if (!existingUser) {
+        const savedUser = {
+          name: user.displayName,
+          email: user.email,
+          photo: user.photoURL,
+          role: "Student",
+        };
+
+        await axiosSecure.post("/users", savedUser);
+      }
+
+      // SweetAlert
+      Swal.fire({
+        title: "Google Login Successful 🔥",
+        text: existingUser
+          ? "Welcome back to ScholarStream!"
+          : "Account created & logged in successfully!",
+        icon: "success",
+        background: "rgba(31, 41, 55, 0.8)",
+        color: "#fff",
+        confirmButtonColor: "#8b5cf6",
+      });
+
       navigate("/");
     } catch (err) {
-      console.log(err);
-      alert(err.message);
+      Swal.fire({
+        title: "Google Login Failed!",
+        text: err.message,
+        icon: "error",
+        background: "rgba(31, 41, 55, 0.8)",
+        color: "#fff",
+        confirmButtonColor: "#ef4444",
+      });
     }
   };
 
@@ -99,9 +150,12 @@ export default function Login() {
 
         <p className="mt-6 text-center text-gray-400">
           Don't have an account?{" "}
-          <a href="/register" className="text-purple-500 font-semibold">
+          <Link
+            to="/register"
+            className="text-purple-500 font-semibold hover:underline"
+          >
             Register
-          </a>
+          </Link>
         </p>
       </div>
     </div>

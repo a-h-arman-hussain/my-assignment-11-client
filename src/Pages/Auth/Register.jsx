@@ -2,7 +2,8 @@ import React from "react";
 import { useForm } from "react-hook-form";
 import useAuth from "../../hooks/useAuth";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
-import { useNavigate } from "react-router";
+import { Link, useNavigate } from "react-router";
+import Swal from "sweetalert2";
 
 export default function Register() {
   const { registerUser, updateUserProfile } = useAuth();
@@ -20,13 +21,11 @@ export default function Register() {
     try {
       const result = await registerUser(data.email, data.password);
 
-      //  Update Profile
       await updateUserProfile({
         displayName: data.name,
         photoURL: data.photo,
       });
 
-      // Save user to database with default role
       const savedUser = {
         name: data.name,
         email: data.email,
@@ -36,12 +35,33 @@ export default function Register() {
 
       await axiosSecure.post("/users", savedUser);
 
-      alert("Registration Successful!");
+      Swal.fire({
+        title: "Registration Successful! 🎉",
+        text: "Your account has been created successfully.",
+        icon: "success",
+        background: "rgba(31, 41, 55, 0.8)",
+        color: "#fff",
+        confirmButtonColor: "#8b5cf6",
+        confirmButtonText: "Continue",
+        backdrop: `
+          rgba(0,0,0,0.6)
+          url("https://i.gifer.com/ZZ5H.gif")
+          center top
+          no-repeat
+        `,
+      });
+
       navigate("/");
       reset();
     } catch (err) {
-      console.log(err);
-      alert(err.message);
+      Swal.fire({
+        title: "Error!",
+        text: err.message,
+        icon: "error",
+        background: "rgba(31, 41, 55, 0.8)",
+        color: "#fff",
+        confirmButtonColor: "#ef4444",
+      });
     }
   };
 
@@ -119,6 +139,16 @@ export default function Register() {
             Register
           </button>
         </form>
+
+        <p className="mt-6 text-center text-gray-400">
+          Already have an account?{" "}
+          <Link
+            to="/login"
+            className="text-purple-500 font-semibold hover:underline"
+          >
+            Login
+          </Link>
+        </p>
       </div>
     </div>
   );

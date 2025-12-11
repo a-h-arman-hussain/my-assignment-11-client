@@ -18,6 +18,9 @@ import ManageScholarships from "../Pages/Dashboard/AdminDashboard/ManageScholars
 import ManageUsers from "../Pages/Dashboard/AdminDashboard/ManageUsers/ManageUsers";
 import ManageApplications from "../Pages/Dashboard/ModeratorDashboard/ManageApplications/ManageApplications";
 import AllReviews from "../Pages/Dashboard/ModeratorDashboard/AllReviews/AllReviews";
+import UserProfile from "../Pages/Dashboard/UserProfile/UserProfile";
+import AdminRoute from "./AdminRoute";
+import Analytics from "../Pages/Dashboard/AdminDashboard/Analytics/Analytics";
 
 const router = createBrowserRouter([
   {
@@ -47,11 +50,42 @@ const router = createBrowserRouter([
     children: [
       { path: "my-applications", Component: MyApplications },
       { path: "my-reviews", Component: MyReviews },
-      { path: "add-scholarship", Component: AddScholarship },
-      { path: "manage-scholarships", Component: ManageScholarships },
-      { path: "manage-users", Component: ManageUsers },
+      {
+        path: "add-scholarship",
+        element: (
+          <AdminRoute>
+            <AddScholarship></AddScholarship>
+          </AdminRoute>
+        ),
+      },
+      {
+        path: "manage-scholarships",
+        element: (
+          <AdminRoute>
+            <ManageScholarships></ManageScholarships>
+          </AdminRoute>
+        ),
+      },
+      {
+        path: "manage-users",
+        element: (
+          <AdminRoute>
+            <ManageUsers></ManageUsers>
+          </AdminRoute>
+        ),
+      },
+      {
+        path: "analytics",
+        element: (
+          <AdminRoute>
+            <Analytics></Analytics>
+          </AdminRoute>
+        ),
+      },
+
       { path: "manage-applications", Component: ManageApplications },
       { path: "all-reviews", Component: AllReviews },
+      { path: "user-profile", Component: UserProfile },
 
       {
         path: "payment-success",

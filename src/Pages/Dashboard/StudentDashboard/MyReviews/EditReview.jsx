@@ -29,7 +29,7 @@ const EditReview = ({ review, closeModal, onSubmit }) => {
           animate={{ scale: 1, opacity: 1, y: 0 }}
           exit={{ scale: 0.8, opacity: 0, y: 30 }}
           transition={{ duration: 0.25 }}
-          className="bg-black p-6 rounded-2xl shadow-2xl w-full max-w-md"
+          className="bg-white p-6 rounded-2xl shadow-2xl w-full max-w-md"
         >
           <h2 className="text-2xl font-bold mb-4">Edit Review</h2>
 

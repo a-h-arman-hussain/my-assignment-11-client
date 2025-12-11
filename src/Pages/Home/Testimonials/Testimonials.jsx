@@ -35,9 +35,9 @@ const Testimonials = () => {
   const prevSlide = () => setCurrent(current === 0 ? length - 1 : current - 1);
 
   return (
-    <section className="py-12 bg-gray-800">
+    <section className="py-12">
       <div className="container mx-auto px-6 text-center">
-        <h2 className="text-3xl font-bold text-white mb-10">Testimonials</h2>
+        <h2 className="text-3xl font-bold  mb-10">Testimonials</h2>
 
         <div className="relative max-w-xl mx-auto">
           {testimonialsData.map((testimonial, index) => (

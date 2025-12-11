@@ -5,22 +5,23 @@ import { useEffect } from "react";
 const axiosSecure = axios.create({
   baseURL: "http://localhost:5000",
 });
+// logOut
 
 const useAxiosSecure = () => {
-  const { logOut } = useAuth();
+  const { user } = useAuth();
 
   useEffect(() => {
     // Request Interceptor → add JWT Token to headers
     axiosSecure.interceptors.request.use(
       (config) => {
-        const token = localStorage.getItem("access-token");
+        // const token = localStorage.getItem("access-token");
 
-        if (token) {
-          config.headers.Authorization = `Bearer ${token}`;
-        }
+        // if (token) {
+          config.headers.Authorization = `Bearer ${user.accessToken}`;
+        // }
         return config;
       },
-      (error) => Promise.reject(error)
+      // (error) => Promise.reject(error)
     );
 
     // Response Interceptor → if 401 or 403 → logout
@@ -28,12 +29,12 @@ const useAxiosSecure = () => {
       (response) => response,
       async (error) => {
         if (error.response?.status === 401 || error.response?.status === 403) {
-          await logOut();
+          // await logOut();
         }
         return Promise.reject(error);
       }
     );
-  }, [logOut]);
+  }, [user]);
 
   return axiosSecure;
 };

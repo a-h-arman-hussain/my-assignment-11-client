@@ -26,7 +26,7 @@ const ManageApplications = () => {
   if (isLoading) return <Loader />;
   const handleStatusUpdate = async (id, newStatus) => {
     try {
-      await axiosSecure.patch(`/applications/${id}/status`, {
+      await axiosSecure.patch(`/applications/${id}`, {
         status: newStatus,
       });
       queryClient.invalidateQueries(["allApplications"]);
@@ -40,7 +40,7 @@ const ManageApplications = () => {
     if (!window.confirm("Are you sure you want to reject this application?"))
       return;
     try {
-      await axiosSecure.patch(`/applications/${id}/status`, {
+      await axiosSecure.patch(`/applications/${id}`, {
         status: "rejected",
       });
       queryClient.invalidateQueries(["allApplications"]);
@@ -102,11 +102,17 @@ const ManageApplications = () => {
                         onChange={(e) =>
                           handleStatusUpdate(app._id, e.target.value)
                         }
-                        className="select select-sm border border-green-500 text-green-500"
+                        className="select select-sm border border-green-500"
                       >
-                        <option className="text-amber-500" value="pending">Pending</option>
-                        <option className="text-blue-500" value="processing">Processing</option>
-                        <option value="completed">Completed</option>
+                        <option className="text-amber-500" value="pending">
+                          Pending
+                        </option>
+                        <option className="text-blue-500" value="processing">
+                          Processing
+                        </option>
+                        <option className="text-green-500" value="completed">
+                          Completed
+                        </option>
                       </select>
                       <button
                         className="btn btn-sm btn-error text-white"

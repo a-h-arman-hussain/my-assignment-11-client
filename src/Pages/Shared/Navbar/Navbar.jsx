@@ -13,8 +13,8 @@ const Navbar = () => {
           to="/"
           className={({ isActive }) =>
             isActive
-              ? "text-yellow-400 font-semibold"
-              : "hover:text-yellow-400 transition"
+              ? "text-warning font-semibold"
+              : "hover:text-warning transition-colors"
           }
         >
           Home
@@ -25,8 +25,8 @@ const Navbar = () => {
           to="/all-scholarships"
           className={({ isActive }) =>
             isActive
-              ? "text-yellow-400 font-semibold"
-              : "hover:text-yellow-400 transition"
+              ? "text-warning font-semibold"
+              : "hover:text-warning transition-colors"
           }
         >
           All Scholarships
@@ -36,7 +36,7 @@ const Navbar = () => {
   );
 
   return (
-    <div className="navbar bg-white shadow-sm px-4 relative">
+    <div className="navbar bg-base-100 shadow-sm px-4 relative">
       {/* Start */}
       <div className="navbar-start">
         <div className="dropdown">
@@ -63,7 +63,7 @@ const Navbar = () => {
             {links}
           </ul>
         </div>
-        <Link to="/" className="btn-ghost text-xl font-bold">
+        <Link to="/" className="btn-ghost text-xl font-bold text-primary">
           ScholarStream
         </Link>
       </div>
@@ -81,22 +81,19 @@ const Navbar = () => {
             <img
               src={user.photoURL || ""}
               alt={user.displayName || "User"}
-              className="w-10 h-10 rounded-full border-2 border-purple-500 cursor-pointer"
+              className="w-10 h-10 rounded-full border-2 border-accent cursor-pointer"
               title={user.displayName}
               onClick={() => setDropdownOpen(!dropdownOpen)}
             />
 
             {/* Dropdown Menu */}
             {dropdownOpen && (
-              <ul className="absolute right-0 mt-2 w-40 bg-white rounded-lg shadow-lg py-2 z-20">
-                <li className="px-4 py-2 hover:bg-gray-700">
-                  <Link to="/profile">Profile</Link>
-                </li>
-                <li className="px-4 py-2 hover:bg-gray-700">
+              <ul className="absolute right-0 mt-2 w-40 bg-base-100 rounded-lg shadow-lg py-2 z-20">
+                <li className="px-4 py-2 hover:bg-base-200">
                   <Link to="/dashboard">Dashboard</Link>
                 </li>
                 <li
-                  className="px-4 py-2 hover:bg-gray-700 cursor-pointer"
+                  className="px-4 py-2 hover:bg-base-200 cursor-pointer"
                   onClick={logOut}
                 >
                   Logout
@@ -107,7 +104,7 @@ const Navbar = () => {
         ) : (
           <Link
             to="/login"
-            className="btn bg-purple-600 hover:bg-purple-700 text-white"
+            className="btn bg-primary hover:bg-primary/90 text-base-100"
           >
             Login
           </Link>

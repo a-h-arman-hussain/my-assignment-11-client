@@ -34,11 +34,13 @@ const ManageScholarships = () => {
   if (isLoading) return <Loader />;
 
   return (
-    <div>
-      <h1 className="text-3xl font-bold mb-6">Manage Scholarships</h1>
-      <div className="overflow-x-auto">
+    <div className="min-h-screen p-6 bg-base-200 text-neutral">
+      <h1 className="text-3xl font-bold mb-6 text-primary text-center">
+        Manage Scholarships
+      </h1>
+      <div className="overflow-x-auto bg-base-100 rounded-lg shadow border border-base-300 p-4">
         <table className="table table-zebra w-full">
-          <thead>
+          <thead className="bg-base-300 text-neutral font-semibold">
             <tr>
               <th>#</th>
               <th>Scholarship Name</th>
@@ -55,7 +57,7 @@ const ManageScholarships = () => {
           <tbody>
             {scholarships.length === 0 ? (
               <tr>
-                <td colSpan="10" className="text-center text-gray-500">
+                <td colSpan="10" className="text-center text-muted">
                   No scholarships found.
                 </td>
               </tr>
@@ -73,7 +75,7 @@ const ManageScholarships = () => {
                   <td>{new Date(sch.deadline).toLocaleDateString()}</td>
                   <td className="flex gap-2">
                     <button
-                      className="btn btn-sm btn-warning"
+                      className="btn btn-sm btn-accent"
                       onClick={() => setEditingScholarship(sch)}
                     >
                       Update

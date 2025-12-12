@@ -5,15 +5,20 @@ import Footer from "../../Pages/Shared/Footer/Footer";
 
 const AuthLayout = () => {
   return (
-    <div>
-      <header className="sticky top-0 z-50">
-        <Navbar></Navbar>
+    <div className="bg-base-200 text-neutral min-h-screen flex flex-col">
+      {/* Header */}
+      <header className="sticky top-0 z-50 bg-base-100 shadow-md shadow-primary/20">
+        <Navbar />
       </header>
-      <main>
-        <Outlet></Outlet>
+
+      {/* Main Content */}
+      <main className="flex-grow max-w-11/12 mx-auto">
+        <Outlet />
       </main>
-      <footer>
-        <Footer></Footer>
+
+      {/* Footer */}
+      <footer className="text-neutral border-t border-base-200 mt-10">
+        <Footer />
       </footer>
     </div>
   );

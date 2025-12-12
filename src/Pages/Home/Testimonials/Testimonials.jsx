@@ -37,7 +37,7 @@ const Testimonials = () => {
   return (
     <section className="py-12">
       <div className="container mx-auto px-6 text-center">
-        <h2 className="text-3xl font-bold  mb-10">Testimonials</h2>
+        <h2 className="text-3xl font-bold mb-10 text-primary">Testimonials</h2>
 
         <div className="relative max-w-xl mx-auto">
           {testimonialsData.map((testimonial, index) => (
@@ -45,29 +45,29 @@ const Testimonials = () => {
               key={testimonial.id}
               className={`${
                 index === current ? "block" : "hidden"
-              } bg-gray-700 p-6 rounded-2xl shadow-lg transition`}
+              } bg-base-100 p-8 rounded-2xl shadow-lg transition transform hover:-translate-y-1`}
             >
               <img
                 src={testimonial.photo}
                 alt={testimonial.name}
-                className="w-16 h-16 rounded-full mx-auto mb-4 object-cover border-2 border-yellow-400"
+                className="w-16 h-16 rounded-full mx-auto mb-4 object-cover border-2 border-primary"
               />
-              <p className="text-gray-300 mb-4">"{testimonial.message}"</p>
-              <h3 className="text-white font-semibold">{testimonial.name}</h3>
-              <p className="text-yellow-400 text-sm">{testimonial.position}</p>
+              <p className="text-muted mb-4 mx-8">"{testimonial.message}"</p>
+              <h3 className="text-neutral font-semibold">{testimonial.name}</h3>
+              <p className="text-secondary text-sm">{testimonial.position}</p>
             </div>
           ))}
 
           {/* Navigation Buttons */}
           <button
             onClick={prevSlide}
-            className="absolute left-0 top-1/2 -translate-y-1/2 bg-purple-600 hover:bg-purple-700 text-white p-2 rounded-full"
+            className="absolute left-0 top-1/2 -translate-y-1/2 bg-primary hover:bg-secondary text-base-100 p-2 rounded-full shadow-lg"
           >
             &#8592;
           </button>
           <button
             onClick={nextSlide}
-            className="absolute right-0 top-1/2 -translate-y-1/2 bg-purple-600 hover:bg-purple-700 text-white p-2 rounded-full"
+            className="absolute right-0 top-1/2 -translate-y-1/2 bg-primary hover:bg-secondary text-base-100 p-2 rounded-full shadow-lg"
           >
             &#8594;
           </button>

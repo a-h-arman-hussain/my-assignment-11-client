@@ -51,16 +51,18 @@ const ManageUsers = () => {
         );
 
   return (
-    <div>
-      <h1 className="text-3xl font-bold mb-6">Manage Users</h1>
+    <div className="min-h-screen p-6 bg-base-200 text-neutral max-w-11/12 mx-auto">
+      <h1 className="text-3xl font-bold mb-6 text-primary text-center">
+        Manage Users
+      </h1>
 
       {/* Role Filter */}
-      <div className="mb-4">
-        <label className="font-semibold mr-2">Filter by Role:</label>
+      <div className="mb-4 flex items-center gap-3">
+        <label className="font-semibold text-neutral">Filter by Role:</label>
         <select
           value={roleFilter}
           onChange={(e) => setRoleFilter(e.target.value)}
-          className="select select-bordered"
+          className="select select-bordered select-sm bg-base-100 text-neutral"
         >
           <option value="All">All</option>
           <option value="Student">Student</option>
@@ -69,9 +71,9 @@ const ManageUsers = () => {
       </div>
 
       {/* Users Table */}
-      <div className="overflow-x-auto">
+      <div className="overflow-x-auto bg-base-100 rounded-lg shadow border border-base-300 p-4">
         <table className="table table-zebra w-full">
-          <thead>
+          <thead className="bg-base-300 text-neutral font-semibold">
             <tr>
               <th>#</th>
               <th>Name</th>
@@ -83,7 +85,7 @@ const ManageUsers = () => {
           <tbody>
             {filteredUsers.length === 0 ? (
               <tr>
-                <td colSpan="5" className="text-center text-gray-500">
+                <td colSpan="5" className="text-center text-muted">
                   No users found.
                 </td>
               </tr>
@@ -94,30 +96,25 @@ const ManageUsers = () => {
                   <td>{user.name}</td>
                   <td>{user.email}</td>
                   <td>{user.role}</td>
-                  <td className="text-center">
-                    <div className="inline-flex items-center gap-2">
-                      {/* Role Change */}
-                      {user.role !== "Admin" && (
-                        <select
-                          value={user.role}
-                          onChange={(e) =>
-                            handleRoleChange(user._id, e.target.value)
-                          }
-                          className="select select-sm select-bordered"
-                        >
-                          <option value="Student">Student</option>
-                          <option value="Moderator">Moderator</option>
-                        </select>
-                      )}
-
-                      {/* Delete User */}
-                      <button
-                        className="btn btn-sm btn-error"
-                        onClick={() => handleDelete(user._id)}
+                  <td className="flex gap-2 justify-center">
+                    {user.role !== "Admin" && (
+                      <select
+                        value={user.role}
+                        onChange={(e) =>
+                          handleRoleChange(user._id, e.target.value)
+                        }
+                        className="select select-sm select-bordered bg-base-100 text-neutral"
                       >
-                        Delete
-                      </button>
-                    </div>
+                        <option value="Student">Student</option>
+                        <option value="Moderator">Moderator</option>
+                      </select>
+                    )}
+                    <button
+                      className="btn btn-sm btn-error"
+                      onClick={() => handleDelete(user._id)}
+                    >
+                      Delete
+                    </button>
                   </td>
                 </tr>
               ))

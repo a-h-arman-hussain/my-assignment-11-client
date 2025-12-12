@@ -11,14 +11,17 @@ const ApplicationDetailsModal = ({ application, closeModal }) => {
         exit={{ opacity: 0 }}
       >
         <motion.div
-          initial={{ scale: 0.7, opacity: 0, y: 40 }}
+          initial={{ scale: 0.8, opacity: 0, y: 30 }}
           animate={{ scale: 1, opacity: 1, y: 0 }}
-          exit={{ scale: 0.7, opacity: 0, y: 40 }}
+          exit={{ scale: 0.8, opacity: 0, y: 30 }}
           transition={{ duration: 0.25 }}
-          className="bg-white p-6 rounded-2xl shadow-2xl w-full max-w-lg"
+          className="bg-base-100 p-6 rounded-xl shadow-2xl w-full max-w-lg"
         >
-          <h2 className="text-2xl font-bold mb-4">Application Details</h2>
-          <div className="space-y-2">
+          <h2 className="text-2xl font-bold mb-4 text-primary text-center">
+            Application Details
+          </h2>
+
+          <div className="space-y-2 text-neutral">
             <p>
               <strong>Student Name:</strong> {application.studentName}
             </p>
@@ -60,8 +63,9 @@ const ApplicationDetailsModal = ({ application, closeModal }) => {
               {application.feedback || "No feedback yet"}
             </p>
           </div>
+
           <div className="flex justify-end mt-4">
-            <button className="btn btn-sm btn-outline" onClick={closeModal}>
+            <button className="btn btn-sm btn-neutral" onClick={closeModal}>
               Close
             </button>
           </div>

@@ -6,6 +6,7 @@ import useAuth from "../../../../hooks/useAuth";
 const AddReview = ({ application, closeModal }) => {
   const [rating, setRating] = useState(0);
   const [comment, setComment] = useState("");
+  const [loading, setLoading] = useState(false);
   const axiosSecure = useAxiosSecure();
   const { user } = useAuth();
 
@@ -15,6 +16,7 @@ const AddReview = ({ application, closeModal }) => {
       return;
     }
 
+    setLoading(true);
     try {
       await axiosSecure.post("/add-review", {
         rating,
@@ -26,12 +28,13 @@ const AddReview = ({ application, closeModal }) => {
         universityName: application.universityName,
         createdAt: new Date(),
       });
-
       alert("Review submitted successfully!");
       closeModal();
     } catch (err) {
       console.error(err);
-      alert("Failed to submit review");
+      alert("Already you submit review");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -44,13 +47,21 @@ const AddReview = ({ application, closeModal }) => {
         exit={{ opacity: 0 }}
       >
         <motion.div
-          initial={{ scale: 0.7, opacity: 0, y: 40 }}
+          initial={{ scale: 0.8, opacity: 0, y: 30 }}
           animate={{ scale: 1, opacity: 1, y: 0 }}
-          exit={{ scale: 0.7, opacity: 0, y: 40 }}
+          exit={{ scale: 0.8, opacity: 0, y: 30 }}
           transition={{ duration: 0.25 }}
-          className="bg-white p-6 rounded-2xl shadow-2xl w-full max-w-md"
+          className="bg-base-100 p-6 rounded-2xl shadow-xl w-full max-w-md border border-base-300"
         >
-          <h2 className="text-2xl font-bold mb-4">Add Review</h2>
+          {/* Header */}
+          <h2 className="text-2xl font-bold mb-2 text-primary text-center">
+            Add Review
+          </h2>
+          <p className="text-sm text-gray-500 mb-4 text-center">
+            Review for{" "}
+            <span className="font-medium">{application.scholarshipName}</span>{" "}
+            at <span className="font-medium">{application.universityName}</span>
+          </p>
 
           {/* Rating */}
           <div className="mb-4">
@@ -59,9 +70,9 @@ const AddReview = ({ application, closeModal }) => {
               {[1, 2, 3, 4, 5].map((star) => (
                 <span
                   key={star}
-                  className={`cursor-pointer text-2xl ${
+                  className={`cursor-pointer text-2xl transition-colors ${
                     star <= rating ? "text-yellow-400" : "text-gray-300"
-                  }`}
+                  } hover:text-yellow-500`}
                   onClick={() => setRating(star)}
                 >
                   ★
@@ -77,16 +88,24 @@ const AddReview = ({ application, closeModal }) => {
               value={comment}
               onChange={(e) => setComment(e.target.value)}
               placeholder="Write your review here..."
-              className="textarea textarea-bordered w-full h-24"
+              className="textarea textarea-bordered w-full h-24 resize-none focus:outline-none focus:ring-2 focus:ring-primary bg-base-200 text-neutral"
             />
           </div>
 
           {/* Buttons */}
           <div className="flex justify-end gap-3 mt-3">
-            <button onClick={closeModal} className="btn btn-sm btn-neutral">
+            <button
+              onClick={closeModal}
+              className="btn btn-sm btn-outline"
+              disabled={loading}
+            >
               Cancel
             </button>
-            <button onClick={handleSubmit} className="btn btn-sm btn-success">
+            <button
+              onClick={handleSubmit}
+              className={`btn btn-sm btn-primary ${loading ? "loading" : ""}`}
+              disabled={loading}
+            >
               Submit
             </button>
           </div>

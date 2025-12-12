@@ -1,40 +1,47 @@
 import axios from "axios";
+import React, { useEffect } from "react";
 import useAuth from "./useAuth";
-import { useEffect } from "react";
+import { useNavigate } from "react-router";
 
 const axiosSecure = axios.create({
   baseURL: "http://localhost:5000",
 });
-// logOut
 
 const useAxiosSecure = () => {
-  const { user } = useAuth();
+  const { user, logOut } = useAuth();
+  const navigate = useNavigate();
 
   useEffect(() => {
-    // Request Interceptor → add JWT Token to headers
-    axiosSecure.interceptors.request.use(
-      (config) => {
-        // const token = localStorage.getItem("access-token");
+    // intercept request
+    const reqInterceptor = axiosSecure.interceptors.request.use((config) => {
+      config.headers.Authorization = `Bearer ${user?.accessToken}`;
+      return config;
+    });
 
-        // if (token) {
-          config.headers.Authorization = `Bearer ${user.accessToken}`;
-        // }
-        return config;
+    // interceptor response
+    const resInterceptor = axiosSecure.interceptors.response.use(
+      (response) => {
+        return response;
       },
-      // (error) => Promise.reject(error)
-    );
+      (error) => {
+        console.log(error);
 
-    // Response Interceptor → if 401 or 403 → logout
-    axiosSecure.interceptors.response.use(
-      (response) => response,
-      async (error) => {
-        if (error.response?.status === 401 || error.response?.status === 403) {
-          // await logOut();
+        const statusCode = error.status;
+        if (statusCode === 401 || statusCode === 403) {
+          logOut().then(() => {
+            navigate("/login");
+          });
         }
+
         return Promise.reject(error);
       }
     );
-  }, [user]);
+
+    return () => {
+      axiosSecure.interceptors.request.eject(reqInterceptor);
+      axiosSecure.interceptors.response.eject(resInterceptor);
+    };
+  }, [user, logOut, navigate]);
 
   return axiosSecure;
 };

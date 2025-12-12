@@ -8,8 +8,12 @@ export default function AllReviews() {
 
   // Load all reviews
   const fetchReviews = async () => {
-    const res = await axiosSecure.get("/reviews");
-    setReviews(res.data);
+    try {
+      const res = await axiosSecure.get("/reviews");
+      setReviews(res.data);
+    } catch (err) {
+      console.error("Failed to fetch reviews:", err);
+    }
   };
 
   useEffect(() => {
@@ -23,58 +27,62 @@ export default function AllReviews() {
     );
     if (!confirm) return;
 
-    const res = await axiosSecure.delete(`/reviews/${id}`);
-
-    if (res.data.deletedCount > 0) {
-      alert("Review deleted!");
-      fetchReviews();
-    } else {
+    try {
+      const res = await axiosSecure.delete(`/reviews/${id}`);
+      if (res.data.deletedCount > 0) {
+        alert("Review deleted!");
+        fetchReviews();
+      } else {
+        alert("Failed to delete!");
+      }
+    } catch (err) {
+      console.error(err);
       alert("Failed to delete!");
     }
   };
 
   return (
-    <div className="p-6">
-      <h1 className="text-3xl font-semibold mb-6">All Reviews</h1>
+    <div className="min-h-screen p-6 bg-base-200 text-neutral">
+      <h1 className="text-3xl font-bold mb-6 text-primary text-center">
+        All Reviews
+      </h1>
 
-      <div className="overflow-x-auto">
-        <table className="table w-full">
-          <thead>
+      <div className="overflow-x-auto bg-base-100 rounded-lg shadow border border-base-300 p-4">
+        <table className="table table-zebra w-full">
+          <thead className="bg-base-300 text-neutral font-semibold">
             <tr>
               <th>Student</th>
               <th>Scholarship</th>
               <th>Rating</th>
               <th>Review</th>
-              <th>Action</th>
+              <th className="text-center">Action</th>
             </tr>
           </thead>
 
           <tbody>
-            {reviews.map((review) => (
-              <tr key={review._id}>
-                {console.log(review)}
-                <td>{review.studentName}</td>
-                <td>{review.scholarshipName}</td>
-                <td>{review.rating} ⭐</td>
-                <td className="max-w-xs truncate">{review.comment}</td>
-
-                <td>
-                  <button
-                    onClick={() => handleDelete(review._id)}
-                    className="btn btn-sm btn-error text-white"
-                  >
-                    <FaTrash />
-                  </button>
-                </td>
-              </tr>
-            ))}
-
-            {reviews.length === 0 && (
+            {reviews.length === 0 ? (
               <tr>
-                <td colSpan="5" className="text-center py-6">
+                <td colSpan="5" className="text-center text-muted py-6">
                   No reviews found
                 </td>
               </tr>
+            ) : (
+              reviews.map((review) => (
+                <tr key={review._id}>
+                  <td>{review.studentName}</td>
+                  <td>{review.scholarshipName}</td>
+                  <td>{review.rating} ⭐</td>
+                  <td className="max-w-xs truncate">{review.comment}</td>
+                  <td className="text-center">
+                    <button
+                      onClick={() => handleDelete(review._id)}
+                      className="btn btn-sm btn-error text-white"
+                    >
+                      <FaTrash />
+                    </button>
+                  </td>
+                </tr>
+              ))
             )}
           </tbody>
         </table>

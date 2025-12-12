@@ -14,210 +14,142 @@ import useAuth from "../../hooks/useAuth";
 
 const DashboardLayout = () => {
   const { user } = useAuth();
-  console.log(user);
   const { role } = useRole();
+
   return (
-    <div className="drawer lg:drawer-open">
+    <div className="drawer lg:drawer-open bg-base-200 text-neutral h-screen overflow-auto">
       <input id="my-drawer-4" type="checkbox" className="drawer-toggle" />
-      <div className="drawer-content">
-        {/* Navbar */}
-        <nav className="navbar w-full bg-base-300 sticky top-0 z-50">
-          <label
-            htmlFor="my-drawer-4"
-            aria-label="open sidebar"
-            className="btn btn-square btn-ghost"
-          >
-            {/* Sidebar toggle icon */}
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 24 24"
-              strokeLinejoin="round"
-              strokeLinecap="round"
-              strokeWidth="2"
-              fill="none"
-              stroke="currentColor"
-              className="my-1.5 inline-block size-6"
+
+      {/* 🔹 NAVBAR */}
+      <div className="drawer-content flex flex-col">
+        <nav className="navbar w-full bg-base-100 shadow-md sticky top-0 z-50 px-6">
+          <div className="flex-1">
+            <label
+              htmlFor="my-drawer-4"
+              className="btn btn-square btn-ghost lg:hidden text-primary"
             >
-              <path d="M4 4m0 2a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2z"></path>
-              <path d="M9 4v16"></path>
-              <path d="M14 10l2 2l-2 2"></path>
-            </svg>
-          </label>
-          <Link to="/" className="px-4">
-            ScholarStream
-          </Link>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth={2}
+                stroke="currentColor"
+                className="w-6 h-6"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M4 6h16M4 12h16M4 18h16"
+                />
+              </svg>
+            </label>
+            <Link to="/" className="text-primary font-bold text-xl ml-4">
+              ScholarStream
+            </Link>
+          </div>
         </nav>
-        {/* Page content here */}
-        <Outlet></Outlet>
+
+        {/* MAIN CONTENT */}
+        <main className="p-6 flex-1 overflow-auto">
+          <Outlet />
+        </main>
       </div>
 
-      <div className="drawer-side is-drawer-close:overflow-visible">
-        <label
-          htmlFor="my-drawer-4"
-          aria-label="close sidebar"
-          className="drawer-overlay"
-        ></label>
-        <div className="flex min-h-full flex-col items-start bg-base-200 is-drawer-close:w-14 is-drawer-open:w-64">
-          {/* Sidebar content here */}
-          <ul className="menu w-full grow">
-            {/* List item */}
-            <li className="mt-14 md:mt-2">
-              <NavLink
-                to="/dashboard/user-profile"
-                className={({ isActive }) =>
-                  `is-drawer-close:tooltip is-drawer-close:tooltip-right flex items-center gap-2
-                ${isActive ? "text-purple-500 font-semibold" : ""}`
-                }
-              >
-                <img
-                  className="rounded-full w-8 h-8 object-cover"
-                  src={user?.photoURL}
-                  alt=""
-                />
+      {/* 🔹 SIDEBAR */}
+      <div className="drawer-side">
+        <label htmlFor="my-drawer-4" className="drawer-overlay"></label>
+        <aside className="flex flex-col bg-base-100 w-64 border-r border-base-300 shadow-lg sticky  mt-14 md:mt-0 top-0 z-50 h-full">
+          {/* User Profile */}
+          <div className="flex flex-col items-center py-6 border-b border-base-300">
+            <img
+              src={user?.photoURL || "https://i.ibb.co/4pDNd9p/avatar.png"}
+              alt="User Avatar"
+              className="w-16 h-16 rounded-full border-2 border-primary"
+            />
+            <h3 className="mt-2 font-semibold text-neutral">
+              {user?.displayName}
+            </h3>
+            <p className="text-sm text-muted">{role}</p>
+          </div>
 
-                <span className="is-drawer-close:hidden">My Profile</span>
-              </NavLink>
-            </li>
-
-            {/* Admin role */}
+          <ul className="menu grow p-4 space-y-2">
+            {/* ---------------- ADMIN ---------------- */}
             {role === "Admin" && (
               <>
-                <li>
-                  <NavLink
-                    to="/dashboard/add-scholarship"
-                    className={({ isActive }) =>
-                      `is-drawer-close:tooltip is-drawer-close:tooltip-right flex items-center gap-2 
-                ${isActive ? "text-purple-500 font-semibold" : ""}`
-                    }
-                    data-tip="Add Scholarship"
-                  >
-                    <FaPlusCircle size={26} />
-
-                    <span className="is-drawer-close:hidden">
-                      Add Scholarship
-                    </span>
-                  </NavLink>
-                </li>
-                <li>
-                  <NavLink
-                    to="/dashboard/manage-scholarships"
-                    className={({ isActive }) =>
-                      `is-drawer-close:tooltip is-drawer-close:tooltip-right flex items-center gap-2 
-                ${isActive ? "text-purple-500 font-semibold" : ""}`
-                    }
-                    data-tip="Manage Scholarships"
-                  >
-                    <FaUniversity size={26} />
-
-                    <span className="is-drawer-close:hidden">
-                      Manage Scholarships
-                    </span>
-                  </NavLink>
-                </li>
-                <li>
-                  <NavLink
-                    to="/dashboard/manage-users"
-                    className={({ isActive }) =>
-                      `is-drawer-close:tooltip is-drawer-close:tooltip-right flex items-center gap-2 
-                ${isActive ? "text-purple-500 font-semibold" : ""}`
-                    }
-                    data-tip="Manage Users"
-                  >
-                    <FaUsersCog size={26} />
-
-                    <span className="is-drawer-close:hidden">Manage Users</span>
-                  </NavLink>
-                </li>
-                <li>
-                  <NavLink
-                    to="/dashboard/analytics"
-                    className={({ isActive }) =>
-                      `is-drawer-close:tooltip is-drawer-close:tooltip-right flex items-center gap-2 
-                ${isActive ? "text-purple-500 font-semibold" : ""}`
-                    }
-                    data-tip="Analytics"
-                  >
-                    <FaUsersCog size={26} />
-
-                    <span className="is-drawer-close:hidden">Analytics</span>
-                  </NavLink>
-                </li>
+                <DashboardLink
+                  to="/dashboard/add-scholarship"
+                  icon={FaPlusCircle}
+                >
+                  Add Scholarship
+                </DashboardLink>
+                <DashboardLink
+                  to="/dashboard/manage-scholarships"
+                  icon={FaUniversity}
+                >
+                  Manage Scholarships
+                </DashboardLink>
+                <DashboardLink to="/dashboard/manage-users" icon={FaUsersCog}>
+                  Manage Users
+                </DashboardLink>
+                <DashboardLink to="/dashboard/analytics" icon={FaTasks}>
+                  Analytics
+                </DashboardLink>
               </>
             )}
 
-            {/* Moderator role */}
+            {/* ---------------- MODERATOR ---------------- */}
             {role === "Moderator" && (
               <>
-                <li>
-                  <NavLink
-                    to="/dashboard/manage-applications"
-                    className={({ isActive }) =>
-                      `is-drawer-close:tooltip is-drawer-close:tooltip-right flex items-center gap-2 
-                ${isActive ? "text-purple-500 font-semibold" : ""}`
-                    }
-                    data-tip="Manage Applications"
-                  >
-                    <FaTasks size={26} />
-                    <span className="is-drawer-close:hidden">
-                      Manage Applications
-                    </span>
-                  </NavLink>
-                </li>
-                <li>
-                  <NavLink
-                    to="/dashboard/all-reviews"
-                    className={({ isActive }) =>
-                      `is-drawer-close:tooltip is-drawer-close:tooltip-right flex items-center gap-2 
-                ${isActive ? "text-purple-500 font-semibold" : ""}`
-                    }
-                    data-tip="All Reviews"
-                  >
-                    <FaCommentDots size={26} />
-                    <span className="is-drawer-close:hidden">All Reviews</span>
-                  </NavLink>
-                </li>
+                <DashboardLink
+                  to="/dashboard/manage-applications"
+                  icon={FaTasks}
+                >
+                  Manage Applications
+                </DashboardLink>
+                <DashboardLink to="/dashboard/all-reviews" icon={FaCommentDots}>
+                  All Reviews
+                </DashboardLink>
               </>
             )}
 
-            {/* Student role */}
+            {/* ---------------- STUDENT ---------------- */}
             {role === "Student" && (
               <>
-                <li>
-                  <NavLink
-                    to="/dashboard/my-applications"
-                    className={({ isActive }) =>
-                      `is-drawer-close:tooltip is-drawer-close:tooltip-right flex items-center gap-2 
-                ${isActive ? "text-purple-500 font-semibold" : ""}`
-                    }
-                    data-tip="My Applications"
-                  >
-                    <FaClipboardList size={26} />
-                    <span className="is-drawer-close:hidden">
-                      My Applications
-                    </span>
-                  </NavLink>
-                </li>
-                <li>
-                  <NavLink
-                    to="/dashboard/my-reviews"
-                    className={({ isActive }) =>
-                      `is-drawer-close:tooltip is-drawer-close:tooltip-right flex items-center gap-2 
-                ${isActive ? "text-purple-500 font-semibold" : ""}`
-                    }
-                    data-tip="My Reviews"
-                  >
-                    <FaStar size={26} />
-
-                    <span className="is-drawer-close:hidden">My Reviews</span>
-                  </NavLink>
-                </li>
+                <DashboardLink
+                  to="/dashboard/my-applications"
+                  icon={FaClipboardList}
+                >
+                  My Applications
+                </DashboardLink>
+                <DashboardLink to="/dashboard/my-reviews" icon={FaStar}>
+                  My Reviews
+                </DashboardLink>
               </>
             )}
           </ul>
-        </div>
+        </aside>
       </div>
     </div>
   );
 };
 
 export default DashboardLayout;
+
+// 🔹 DashboardLink Component for Modern Sidebar
+const DashboardLink = ({ to, icon: Icon, children }) => (
+  <li>
+    <NavLink
+      to={to}
+      className={({ isActive }) =>
+        `flex items-center gap-3 p-2 rounded-lg transition-all hover:bg-gradient-to-r hover:from-primary/20 hover:to-secondary/20 ${
+          isActive
+            ? "bg-gradient-to-r from-primary/40 to-secondary/40 text-base-100 font-semibold"
+            : "text-neutral"
+        }`
+      }
+    >
+      <Icon size={20} />
+      <span>{children}</span>
+    </NavLink>
+  </li>
+);

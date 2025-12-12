@@ -6,20 +6,30 @@ const PaymentSuccess = () => {
   const [searchParams] = useSearchParams();
   const sessionId = searchParams.get("session_id");
   const axiosSecure = useAxiosSecure();
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
+
+  // useEffect(() => {
+  //   if (sessionId) {
+  //     axiosSecure
+  //       .patch(`/payment-success?session_id=${sessionId}`)
+  //       .then(() => {
+  //         setTimeout(() => {
+  //           navigate("/dashboard/my-applications");
+  //         }, 3000);
+  //       })
+  //       .catch((err) => console.error(err));
+  //   }
+  // }, [sessionId, axiosSecure, navigate]);
 
   useEffect(() => {
     if (sessionId) {
       axiosSecure
         .patch(`/payment-success?session_id=${sessionId}`)
-        .then(() => {
-          setTimeout(() => {
-            navigate("/dashboard/my-applications"); 
-          }, 3000);
-        })
-        .catch((err) => console.error(err));
+        .then((res) => {
+          console.log(res.data);
+        });
     }
-  }, [sessionId, axiosSecure, navigate]);
+  }, [axiosSecure, sessionId]);
 
   return (
     <div className="text-center mt-20">

@@ -28,7 +28,7 @@ const LatestScholarships = () => {
   return (
     <section className="py-12">
       <div className="container mx-auto px-6">
-        <h2 className="text-3xl font-bold mb-8 text-center">
+        <h2 className="text-3xl font-bold mb-8 text-center text-primary">
           Latest Scholarships
         </h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
@@ -37,7 +37,7 @@ const LatestScholarships = () => {
               <ScholarshipCard key={scholar._id} scholar={scholar} />
             ))
           ) : (
-            <p className="text-gray-400 text-center col-span-full">
+            <p className="text-muted text-center col-span-full">
               No scholarships found.
             </p>
           )}

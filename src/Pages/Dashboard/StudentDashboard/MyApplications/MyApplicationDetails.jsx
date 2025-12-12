@@ -12,34 +12,28 @@ const MyApplicationDetails = ({ application, closeModal }) => {
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
       >
-        {/* Modal Box */}
         <motion.div
-          initial={{ scale: 0.7, opacity: 0, y: 40 }}
+          initial={{ scale: 0.8, opacity: 0, y: 20 }}
           animate={{ scale: 1, opacity: 1, y: 0 }}
-          exit={{ scale: 0.7, opacity: 0, y: 40 }}
+          exit={{ scale: 0.8, opacity: 0, y: 20 }}
           transition={{ duration: 0.25 }}
-          className="bg-white/80 backdrop-blur-xl rounded-2xl shadow-2xl w-full max-w-xl p-6 relative border border-white/20"
+          className="bg-base-100 p-6 rounded-2xl shadow border border-base-300 w-full max-w-xl relative"
         >
           {/* Close button */}
           <button
             onClick={closeModal}
-            className="absolute right-3 top-3 text-xl text-gray-600 hover:text-red-500 transition"
+            className="absolute right-4 top-4 transition text-lg"
           >
             ✖
           </button>
 
           {/* Header */}
-          <div className="mb-5">
-            <h2 className="text-3xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 text-transparent bg-clip-text">
-              Application Summary
-            </h2>
-            <p className="text-sm text-gray-600 mt-1">
-              All details at a glance
-            </p>
-          </div>
+          <h2 className="text-2xl font-bold mb-4 text-primary text-center">
+            Application Details
+          </h2>
 
           {/* Content */}
-          <div className="space-y-4 text-gray-700">
+          <div className="space-y-3 text-neutral">
             <Item label="Scholarship" value={application.scholarshipName} />
             <Item label="University" value={application.universityName} />
             <Item label="Country" value={application.universityCountry} />
@@ -47,40 +41,23 @@ const MyApplicationDetails = ({ application, closeModal }) => {
               label="Application Fees"
               value={`$${application.applicationFees}`}
             />
-
-            <div className="flex justify-between">
-              <p className="font-semibold">Payment Status:</p>
-              <span
-                className={`font-bold ${
-                  application.paymentStatus === "paid"
-                    ? "text-green-600"
-                    : "text-red-600"
-                }`}
-              >
-                {application.paymentStatus.toUpperCase()}
-              </span>
-            </div>
-
+            <Item
+              label="Payment Status"
+              value={application.paymentStatus.toUpperCase()}
+              highlight={application.paymentStatus === "paid"}
+            />
             <Item
               label="Applied At"
               value={new Date(application.appliedAt).toLocaleString()}
             />
-
             {application.trackingId && (
-              <Item
-                label="Tracking ID"
-                value={application.trackingId}
-                highlight
-              />
+              <Item label="Tracking ID" value={application.trackingId} />
             )}
           </div>
 
-          {/* Footer Button */}
-          <div className="mt-6 text-right">
-            <button
-              onClick={closeModal}
-              className="px-5 py-2 rounded-xl bg-gradient-to-r from-purple-600 to-blue-600 text-white font-semibold shadow-md hover:shadow-lg transition"
-            >
+          {/* Footer */}
+          <div className="mt-6 flex justify-end">
+            <button onClick={closeModal} className="btn btn-sm btn-neutral">
               Close
             </button>
           </div>
@@ -90,17 +67,11 @@ const MyApplicationDetails = ({ application, closeModal }) => {
   );
 };
 
-// Reusable Item Component
-const Item = ({ label, value, highlight }) => (
+// Reusable Item component
+const Item = ({ label, value }) => (
   <div className="flex justify-between">
-    <p className="font-semibold">{label}:</p>
-    <p
-      className={`font-medium ${
-        highlight ? "text-purple-600" : "text-gray-800"
-      }`}
-    >
-      {value}
-    </p>
+    <p className="font-semibold text-secondary">{label}:</p>
+    <p className="font-medium">{value}</p>
   </div>
 );
 

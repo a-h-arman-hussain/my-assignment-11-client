@@ -2,51 +2,63 @@ import React, { useEffect, useState } from "react";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
 import ScholarshipCard from "./ScholarshipCard";
 import Loader from "../Shared/Loader/Loader";
+import SectionHeading from "../Shared/SectionHeading/SectionHeading";
 
 const AllScholarships = () => {
+  const axiosSecure = useAxiosSecure();
+
+  // Data states
   const [scholarships, setScholarships] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // Search & Filter states
+  // Filters/search
   const [search, setSearch] = useState("");
   const [subjectCategory, setSubjectCategory] = useState("");
   const [scholarshipCategory, setScholarshipCategory] = useState("");
   const [degree, setDegree] = useState("");
 
+  // Dropdown options
   const [subjects, setSubjects] = useState([]);
   const [categories, setCategories] = useState([]);
   const [degrees, setDegrees] = useState([]);
 
-  const axiosSecure = useAxiosSecure();
+  // Pagination
+  const [page, setPage] = useState(1);
+  const itemsPerPage = 8;
 
-  // Fetch scholarships from server
+  // Fetch data
   useEffect(() => {
     const fetchScholarships = async () => {
+      setLoading(true);
       try {
         const res = await axiosSecure.get("/all-scholarships");
-        setScholarships(res.data);
+        const list = Array.isArray(res.data) ? res.data : res.data?.data || [];
+        setScholarships(list);
 
-        // Extract unique values for filters
-        setSubjects([...new Set(res.data.map((s) => s.subjectCategory))]);
-        setCategories([...new Set(res.data.map((s) => s.scholarshipCategory))]);
-        setDegrees([...new Set(res.data.map((s) => s.degree))]);
+        setSubjects([
+          ...new Set(list.map((s) => s.subjectCategory).filter(Boolean)),
+        ]);
+        setCategories([
+          ...new Set(list.map((s) => s.scholarshipCategory).filter(Boolean)),
+        ]);
+        setDegrees([...new Set(list.map((s) => s.degree).filter(Boolean))]);
       } catch (err) {
         console.error("Failed to fetch scholarships:", err);
+        setScholarships([]);
       } finally {
         setLoading(false);
       }
     };
+
     fetchScholarships();
   }, [axiosSecure]);
 
-  if (loading) return <Loader />;
-
-  // Filter scholarships
+  // Filtered scholarships
   const filteredScholarships = scholarships.filter((scholar) => {
     const matchesSearch =
-      scholar.scholarshipName.toLowerCase().includes(search.toLowerCase()) ||
-      scholar.universityName.toLowerCase().includes(search.toLowerCase()) ||
-      scholar.degree.toLowerCase().includes(search.toLowerCase());
+      scholar.scholarshipName?.toLowerCase().includes(search.toLowerCase()) ||
+      scholar.universityName?.toLowerCase().includes(search.toLowerCase()) ||
+      scholar.degree?.toLowerCase().includes(search.toLowerCase());
 
     const matchesSubject = subjectCategory
       ? scholar.subjectCategory?.toLowerCase().trim() ===
@@ -65,68 +77,157 @@ const AllScholarships = () => {
     return matchesSearch && matchesSubject && matchesCategory && matchesDegree;
   });
 
+  // Pagination logic
+  const totalPages = filteredScholarships.length
+    ? Math.ceil(filteredScholarships.length / itemsPerPage)
+    : 1;
+
+  // Ensure current page is valid when filters/search change
+  useEffect(() => {
+    if (page > totalPages) setPage(1);
+  }, [page, totalPages, search, subjectCategory, scholarshipCategory, degree]);
+
+  if (loading) return <Loader />;
+
+  const startIndex = (page - 1) * itemsPerPage;
+  const paginatedScholarships = filteredScholarships.slice(
+    startIndex,
+    startIndex + itemsPerPage
+  );
+
+  // Page numbers (show max 5)
+  const pageNumbers = [];
+  const startPage = Math.max(1, page - 2);
+  const endPage = Math.min(totalPages, page + 2);
+  for (let i = startPage; i <= endPage; i++) pageNumbers.push(i);
+
   return (
-    <div className="min-h-screen p-6">
-      <h1 className="text-3xl font-bold mb-6 text-center">All Scholarships</h1>
-
-      {/* Search & Filters */}
-      <div className="flex flex-col md:flex-row gap-3 mb-6">
-        <input
-          type="text"
-          placeholder="Search by Scholarship, University, or Degree"
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          className="border border-gray-300 rounded-lg p-2 flex-1"
-        />
-
-        <select
-          value={subjectCategory}
-          onChange={(e) => setSubjectCategory(e.target.value)}
-          className="border border-gray-300 rounded-lg p-2"
-        >
-          <option value="">All Subjects</option>
-          {subjects.map((subj, i) => (
-            <option key={i} value={subj}>
-              {subj}
-            </option>
-          ))}
-        </select>
-
-        <select
-          value={scholarshipCategory}
-          onChange={(e) => setScholarshipCategory(e.target.value)}
-          className="border border-gray-300 rounded-lg p-2"
-        >
-          <option value="">All Categories</option>
-          {categories.map((cat, i) => (
-            <option key={i} value={cat}>
-              {cat}
-            </option>
-          ))}
-        </select>
-
-        <select
-          value={degree}
-          onChange={(e) => setDegree(e.target.value)}
-          className="border border-gray-300 rounded-lg p-2"
-        >
-          <option value="">All Degrees</option>
-          {degrees.map((d, i) => (
-            <option key={i} value={d}>
-              {d}
-            </option>
-          ))}
-        </select>
+    <div className="min-h-screen p-6 max-w-7xl mx-auto space-y-8">
+      {/* Heading */}
+      <div className="text-center">
+        <h1 className="text-3xl font-bold text-primary">All Scholarships</h1>
+        <p className="text-muted mt-1">
+          Find scholarships that match your needs
+        </p>
       </div>
 
-      {/* Scholarships Grid */}
-      {filteredScholarships.length === 0 ? (
-        <p className="text-center text-gray-400">No scholarships found.</p>
+      {/* Filters */}
+      <div className="bg-base-100 p-5 rounded-2xl shadow-md border border-base-300">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+          {/* Search */}
+          <input
+            type="text"
+            placeholder="Search scholarships, universities, degrees..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="input input-bordered w-full bg-base-100 border-base-300 focus:outline-none focus:border-2 focus:border-primary"
+          />
+
+          {/* Subject */}
+          <select
+            value={subjectCategory}
+            onChange={(e) => setSubjectCategory(e.target.value)}
+            className="input input-bordered w-full bg-base-100 border-base-300 focus:outline-none focus:border-2 focus:border-primary"
+          >
+            <option value="">All Subjects</option>
+            {subjects.map((subj, i) => (
+              <option key={i} value={subj}>
+                {subj}
+              </option>
+            ))}
+          </select>
+
+          {/* Scholarship Category */}
+          <select
+            value={scholarshipCategory}
+            onChange={(e) => setScholarshipCategory(e.target.value)}
+            className="input input-bordered w-full bg-base-100 border-base-300 focus:outline-none focus:border-2 focus:border-primary"
+          >
+            <option value="">All Categories</option>
+            {categories.map((cat, i) => (
+              <option key={i} value={cat}>
+                {cat}
+              </option>
+            ))}
+          </select>
+
+          {/* Degree */}
+          <select
+            value={degree}
+            onChange={(e) => setDegree(e.target.value)}
+            className="input input-bordered w-full bg-base-100 border-base-300 focus:outline-none focus:border-2 focus:border-primary"
+          >
+            <option value="">All Degrees</option>
+            {degrees.map((d, i) => (
+              <option key={i} value={d}>
+                {d}
+              </option>
+            ))}
+          </select>
+        </div>
+      </div>
+
+      {/* Grid */}
+      {paginatedScholarships.length === 0 ? (
+        <p className="text-center text-base text-muted mt-6">
+          No scholarships found.
+        </p>
       ) : (
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {filteredScholarships.map((scholar) => (
+          {paginatedScholarships.map((scholar) => (
             <ScholarshipCard key={scholar._id} scholar={scholar} />
           ))}
+        </div>
+      )}
+
+      {/* Pagination */}
+      {totalPages > 1 && (
+        <div className="flex justify-center items-center gap-2 mt-10">
+          <button
+            onClick={() => setPage(1)}
+            disabled={page === 1}
+            className="btn btn-sm btn-outline border-base-300 text-primary disabled:opacity-40"
+          >
+            First
+          </button>
+
+          <button
+            onClick={() => setPage((p) => Math.max(1, p - 1))}
+            disabled={page === 1}
+            className="btn btn-sm btn-outline border-base-300 text-primary disabled:opacity-40"
+          >
+            Prev
+          </button>
+
+          {pageNumbers.map((p) => (
+            <button
+              key={p}
+              onClick={() => setPage(p)}
+              className={`btn btn-sm ${
+                p === page
+                  ? "bg-primary text-white border-primary"
+                  : "btn-outline border-base-300 text-primary"
+              }`}
+            >
+              {p}
+            </button>
+          ))}
+
+          <button
+            onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+            disabled={page === totalPages}
+            className="btn btn-sm btn-outline border-base-300 text-primary disabled:opacity-40"
+          >
+            Next
+          </button>
+
+          <button
+            onClick={() => setPage(totalPages)}
+            disabled={page === totalPages}
+            className="btn btn-sm btn-outline border-base-300 text-primary disabled:opacity-40"
+          >
+            Last
+          </button>
         </div>
       )}
     </div>

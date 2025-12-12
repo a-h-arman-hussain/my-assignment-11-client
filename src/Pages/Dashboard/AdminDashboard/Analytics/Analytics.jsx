@@ -33,20 +33,16 @@ const Analytics = () => {
   useEffect(() => {
     const fetchAnalytics = async () => {
       try {
-        // Fetch users
         const usersRes = await axiosSecure.get("/users");
         setUsersCount(usersRes.data.length);
 
-        // Fetch scholarships
         const scholarshipsRes = await axiosSecure.get("/all-scholarships");
         const scholarships = scholarshipsRes.data;
         setTotalScholarships(scholarships.length);
 
-        // Fetch all applications
         const applicationsRes = await axiosSecure.get("/applications");
         const applications = applicationsRes.data;
 
-        // Calculate total fees dynamically
         const fees = applications.reduce((acc, curr) => {
           const scholarship = scholarships.find(
             (s) => s._id === curr.scholarshipId
@@ -56,7 +52,6 @@ const Analytics = () => {
         }, 0);
         setTotalFees(fees);
 
-        // Prepare chart data (applications per university)
         const chartMap = {};
         applications.forEach((app) => {
           const scholarship = scholarships.find(
@@ -70,15 +65,10 @@ const Analytics = () => {
         });
 
         const chartData = Object.entries(chartMap).map(
-          ([name, applications]) => ({
-            name,
-            applications,
-          })
+          ([name, applications]) => ({ name, applications })
         );
-
         setApplicationsData(chartData);
 
-        // Generate colors
         const uniNames = chartData.map((item) => item.name);
         setColorMap(generateColorMap(uniNames));
       } catch (err) {
@@ -90,23 +80,27 @@ const Analytics = () => {
   }, [axiosSecure]);
 
   return (
-    <div className="min-h-screen p-6 bg-gray-100">
-      <h1 className="text-3xl font-bold mb-6 text-center">
+    <div className="min-h-screen p-6 bg-base-200 text-neutral">
+      <h1 className="text-3xl font-bold mb-6 text-center text-primary">
         Platform Analytics
       </h1>
 
       {/* Summary cards */}
       <div className="grid md:grid-cols-3 gap-6 mb-12">
-        <div className="p-6 bg-white shadow rounded-lg text-center">
-          <h2 className="text-xl font-semibold">Total Users</h2>
+        <div className="p-6 bg-base-100 shadow rounded-lg text-center border border-base-300">
+          <h2 className="text-xl font-semibold text-secondary">Total Users</h2>
           <p className="text-3xl font-bold mt-2">{usersCount}</p>
         </div>
-        <div className="p-6 bg-white shadow rounded-lg text-center">
-          <h2 className="text-xl font-semibold">Total Fees Collected</h2>
+        <div className="p-6 bg-base-100 shadow rounded-lg text-center border border-base-300">
+          <h2 className="text-xl font-semibold text-secondary">
+            Total Fees Collected
+          </h2>
           <p className="text-3xl font-bold mt-2">${totalFees}</p>
         </div>
-        <div className="p-6 bg-white shadow rounded-lg text-center">
-          <h2 className="text-xl font-semibold">Total Scholarships</h2>
+        <div className="p-6 bg-base-100 shadow rounded-lg text-center border border-base-300">
+          <h2 className="text-xl font-semibold text-secondary">
+            Total Scholarships
+          </h2>
           <p className="text-3xl font-bold mt-2">{totalScholarships}</p>
         </div>
       </div>
@@ -114,26 +108,29 @@ const Analytics = () => {
       {/* Charts */}
       <div className="grid md:grid-cols-2 gap-12">
         {/* Bar Chart */}
-        <div className="bg-white p-6 rounded-lg shadow">
-          <h2 className="text-xl font-semibold mb-4 text-center">
+        <div className="bg-base-100 p-6 rounded-lg shadow border border-base-300">
+          <h2 className="text-xl font-semibold mb-4 text-center text-primary">
             Applications per University
           </h2>
           <BarChart
-            width={500}
+            width={400}
             height={300}
             data={applicationsData}
-            margin={{ top: 5, right: 20, left: 0, bottom: 5 }}
+            margin={{ top: 5, right: 30, left: 0, bottom: 5 }}
           >
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="name" />
-            <YAxis />
-            <Tooltip />
+            <CartesianGrid strokeDasharray="3 3" stroke="#d1d5db" />
+            <XAxis dataKey="name" stroke="var(--color-neutral)" />
+            <YAxis stroke="var(--color-neutral)" />
+            <Tooltip
+              contentStyle={{ backgroundColor: "var(--color-base-100)" }}
+              itemStyle={{ color: "var(--color-neutral)" }}
+            />
             <Legend />
             <Bar dataKey="applications">
               {applicationsData.map((entry) => (
                 <Cell
                   key={`bar-${entry.name}`}
-                  fill={colorMap[entry.name] || "#8884d8"}
+                  fill={colorMap[entry.name] || "var(--color-primary)"}
                 />
               ))}
             </Bar>
@@ -141,8 +138,8 @@ const Analytics = () => {
         </div>
 
         {/* Pie Chart */}
-        <div className="bg-white p-6 rounded-lg shadow">
-          <h2 className="text-xl font-semibold mb-4 text-center">
+        <div className="bg-base-100 p-6 rounded-lg shadow border border-base-300">
+          <h2 className="text-xl font-semibold mb-4 text-center text-primary">
             Applications Distribution
           </h2>
           <PieChart width={400} height={300}>
@@ -158,11 +155,14 @@ const Analytics = () => {
               {applicationsData.map((entry) => (
                 <Cell
                   key={`pie-${entry.name}`}
-                  fill={colorMap[entry.name] || "#82ca9d"}
+                  fill={colorMap[entry.name] || "var(--color-accent)"}
                 />
               ))}
             </Pie>
-            <Tooltip />
+            <Tooltip
+              contentStyle={{ backgroundColor: "var(--color-base-100)" }}
+              itemStyle={{ color: "var(--color-neutral)" }}
+            />
           </PieChart>
         </div>
       </div>

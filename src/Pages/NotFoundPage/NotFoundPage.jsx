@@ -3,17 +3,17 @@ import { Link } from "react-router";
 
 const NotFoundPage = () => {
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-gray-900 text-white px-4">
-      <h1 className="text-9xl font-extrabold text-yellow-400 mb-6">404</h1>
+    <div className="relative min-h-screen flex flex-col items-center justify-center bg-base-100 text-neutral px-4">
+      <h1 className="text-9xl font-extrabold text-primary mb-6">404</h1>
       <h2 className="text-3xl md:text-4xl font-bold mb-4">
         Oops! Page Not Found
       </h2>
-      <p className="text-gray-300 mb-8 text-center">
+      <p className="text-muted mb-8 text-center max-w-md">
         The page you are looking for doesn't exist or has been moved.
       </p>
       <Link
         to="/"
-        className="bg-purple-600 hover:bg-purple-700 text-white font-semibold px-6 py-3 rounded-full transition-shadow shadow-md hover:shadow-xl"
+        className="bg-primary hover:bg-secondary text-base-100 font-semibold px-6 py-3 rounded-full transition-shadow shadow-md hover:shadow-xl"
       >
         Go Back Home
       </Link>

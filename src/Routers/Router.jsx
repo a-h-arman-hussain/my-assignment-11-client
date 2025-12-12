@@ -21,6 +21,7 @@ import AllReviews from "../Pages/Dashboard/ModeratorDashboard/AllReviews/AllRevi
 import UserProfile from "../Pages/Dashboard/UserProfile/UserProfile";
 import AdminRoute from "./AdminRoute";
 import Analytics from "../Pages/Dashboard/AdminDashboard/Analytics/Analytics";
+import ModeratorRoute from "./ModeratorRoute";
 
 const router = createBrowserRouter([
   {
@@ -83,8 +84,22 @@ const router = createBrowserRouter([
         ),
       },
 
-      { path: "manage-applications", Component: ManageApplications },
-      { path: "all-reviews", Component: AllReviews },
+      {
+        path: "manage-applications",
+        element: (
+          <ModeratorRoute>
+            <ManageApplications></ManageApplications>
+          </ModeratorRoute>
+        ),
+      },
+      {
+        path: "all-reviews",
+        element: (
+          <ModeratorRoute>
+            <AllReviews></AllReviews>
+          </ModeratorRoute>
+        ),
+      },
       { path: "user-profile", Component: UserProfile },
 
       {

@@ -1,3 +1,4 @@
+// EditMyApplication.jsx
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -29,47 +30,50 @@ const EditMyApplication = ({ application, closeModal, onUpdate }) => {
           animate={{ scale: 1, opacity: 1, y: 0 }}
           exit={{ scale: 0.7, opacity: 0, y: 40 }}
           transition={{ duration: 0.25 }}
-          className="bg-white p-6 rounded-2xl shadow-2xl w-full max-w-lg"
+          className="bg-white p-6 rounded-2xl shadow-2xl w-full max-w-lg border border-white/20"
         >
-          <h2 className="text-2xl font-bold mb-4">Update Application</h2>
+          {/* Header */}
+          <h2 className="text-3xl font-bold mb-6 text-primary text-center">
+            Update Application
+          </h2>
 
-          <div className="space-y-3">
-            <div>
-              <label className="font-semibold">Phone</label>
-              <input
-                name="phone"
-                value={formData.phone}
-                onChange={handleChange}
-                className="input input-bordered w-full mt-1"
-              />
-            </div>
-
-            <div>
-              <label className="font-semibold">Address</label>
-              <input
-                name="address"
-                value={formData.address}
-                onChange={handleChange}
-                className="input input-bordered w-full mt-1"
-              />
-            </div>
-
-            <div>
-              <label className="font-semibold">Previous Education</label>
-              <input
-                name="previousEducation"
-                value={formData.previousEducation}
-                onChange={handleChange}
-                className="input input-bordered w-full mt-1"
-              />
-            </div>
+          {/* Form Inputs */}
+          <div className="space-y-4 text-neutral">
+            <InputField
+              label="Phone"
+              name="phone"
+              value={formData.phone}
+              onChange={handleChange}
+              placeholder="Enter phone number"
+            />
+            <InputField
+              label="Address"
+              name="address"
+              value={formData.address}
+              onChange={handleChange}
+              placeholder="Enter address"
+            />
+            <InputField
+              label="Previous Education"
+              name="previousEducation"
+              value={formData.previousEducation}
+              onChange={handleChange}
+              placeholder="Enter previous education"
+            />
           </div>
 
-          <div className="flex justify-end gap-3 mt-5">
-            <button onClick={closeModal} className="btn btn-sm">
+          {/* Footer Buttons */}
+          <div className="flex justify-end gap-3 mt-6">
+            <button
+              onClick={closeModal}
+              className="px-4 py-2 rounded-xl bg-gray-300 text-gray-700 font-semibold hover:bg-gray-400 transition"
+            >
               Cancel
             </button>
-            <button onClick={handleSubmit} className="btn btn-sm btn-success">
+            <button
+              onClick={handleSubmit}
+              className="px-4 py-2 rounded-xl bg-gradient-to-r from-green-500 to-green-600 text-white font-semibold shadow hover:shadow-lg transition"
+            >
               Save Changes
             </button>
           </div>
@@ -78,5 +82,20 @@ const EditMyApplication = ({ application, closeModal, onUpdate }) => {
     </AnimatePresence>
   );
 };
+
+// Reusable Input Field
+const InputField = ({ label, name, value, onChange, placeholder }) => (
+  <div>
+    <label className="font-semibold block mb-1">{label}</label>
+    <input
+      type="text"
+      name={name}
+      value={value}
+      onChange={onChange}
+      placeholder={placeholder}
+      className="input input-bordered w-full bg-base-100 text-neutral"
+    />
+  </div>
+);
 
 export default EditMyApplication;

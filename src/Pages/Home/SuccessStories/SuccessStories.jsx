@@ -34,28 +34,28 @@ const SuccessStories = () => {
   return (
     <section className="py-12">
       <div className="container mx-auto px-6">
-        <h2 className="text-3xl font-bold text-center mb-10">
+        <h2 className="text-3xl font-bold text-center mb-10 text-primary">
           Success Stories
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {successStoriesData.map((story) => (
             <div
               key={story.id}
-              className="bg-gray-800 p-6 rounded-2xl shadow-lg hover:shadow-2xl transition"
+              className="bg-base-100 p-6 rounded-2xl shadow-lg hover:shadow-2xl transition transform hover:-translate-y-1"
             >
               <div className="flex items-center gap-4 mb-4">
                 <img
                   src={story.photo}
                   alt={story.name}
-                  className="w-14 h-14 rounded-full object-cover border-2 border-purple-500"
+                  className="w-14 h-14 rounded-full object-cover border-2 border-primary"
                 />
                 <div>
-                  <h3 className="text-white font-semibold">{story.name}</h3>
-                  <p className="text-purple-400 text-sm">{story.university}</p>
+                  <h3 className="text-neutral font-semibold">{story.name}</h3>
+                  <p className="text-secondary text-sm">{story.university}</p>
                 </div>
               </div>
-              <p className="text-gray-300 text-sm">{story.story}</p>
-              <span className="inline-block mt-4 px-3 py-1 bg-purple-600 rounded-full text-xs font-semibold text-white">
+              <p className="text-muted text-sm">{story.story}</p>
+              <span className="inline-block mt-4 px-3 py-1 bg-primary rounded-full text-xs font-semibold text-base-100">
                 {story.scholarship}
               </span>
             </div>

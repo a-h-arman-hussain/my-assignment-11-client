@@ -18,17 +18,17 @@ const ManageApplications = () => {
   const { data: applications = [], isLoading } = useQuery({
     queryKey: ["allApplications"],
     queryFn: async () => {
-      const res = await axiosSecure.get("/applications"); // backend route
+      const res = await axiosSecure.get("/applications");
       return res.data;
     },
   });
 
   if (isLoading) return <Loader />;
+
   const handleStatusUpdate = async (id, newStatus) => {
+    console.log("Updating:", id, newStatus); // debug
     try {
-      await axiosSecure.patch(`/applications/${id}`, {
-        status: newStatus,
-      });
+      await axiosSecure.patch(`/applications/${id}`, { status: newStatus }); // check backend key
       queryClient.invalidateQueries(["allApplications"]);
     } catch (err) {
       console.error(err);
@@ -41,7 +41,7 @@ const ManageApplications = () => {
       return;
     try {
       await axiosSecure.patch(`/applications/${id}`, {
-        status: "rejected",
+        applicationStatus: "rejected",
       });
       queryClient.invalidateQueries(["allApplications"]);
     } catch (err) {
@@ -49,12 +49,16 @@ const ManageApplications = () => {
       alert("Failed to reject application");
     }
   };
+
   return (
-    <div>
-      <h1 className="text-3xl font-bold mb-6">Manage Applied Applications</h1>
-      <div className="overflow-x-auto">
+    <div className="bg-base-200 min-h-screen p-6 rounded-lg">
+      <h1 className="text-3xl font-bold mb-6 text-primary text-center">
+        Manage Applications
+      </h1>
+
+      <div className="overflow-x-auto bg-base-100 rounded-lg shadow border border-base-300 p-4">
         <table className="table table-zebra w-full">
-          <thead>
+          <thead className="bg-base-300 text-neutral font-semibold">
             <tr>
               <th>#</th>
               <th>Applicant Name</th>
@@ -69,20 +73,22 @@ const ManageApplications = () => {
           <tbody>
             {applications.length === 0 ? (
               <tr>
-                <td colSpan="8" className="text-center text-gray-500">
-                  No applications found.
+                <td colSpan="8" className="text-center text-muted py-6">
+                  No applications found
                 </td>
               </tr>
             ) : (
               applications.map((app, index) => (
                 <tr key={app._id}>
                   <th>{index + 1}</th>
-                  <td>{app.studentName}</td>
-                  <td>{app.studentEmail}</td>
-                  <td>{app.universityName}</td>
-                  <td>{app.feedback || "No feedback"}</td>
-                  <td>{app.applicationStatus}</td>
-                  <td>{app.paymentStatus}</td>
+                  <td className="text-neutral">{app.studentName}</td>
+                  <td className="text-neutral">{app.studentEmail}</td>
+                  <td className="text-neutral">{app.universityName}</td>
+                  <td className="text-neutral">
+                    {app.feedback || "No feedback"}
+                  </td>
+                  <td className="text-neutral">{app.applicationStatus}</td>
+                  <td className="text-neutral">{app.paymentStatus}</td>
                   <td className="text-center">
                     <div className="inline-flex gap-2 justify-center">
                       <button
@@ -102,17 +108,11 @@ const ManageApplications = () => {
                         onChange={(e) =>
                           handleStatusUpdate(app._id, e.target.value)
                         }
-                        className="select select-sm border border-green-500"
+                        className="select select-sm select-bordered bg-base-100 text-neutral"
                       >
-                        <option className="text-amber-500" value="pending">
-                          Pending
-                        </option>
-                        <option className="text-blue-500" value="processing">
-                          Processing
-                        </option>
-                        <option className="text-green-500" value="completed">
-                          Completed
-                        </option>
+                        <option value="pending">Pending</option>
+                        <option value="processing">Processing</option>
+                        <option value="completed">Completed</option>
                       </select>
                       <button
                         className="btn btn-sm btn-error text-white"

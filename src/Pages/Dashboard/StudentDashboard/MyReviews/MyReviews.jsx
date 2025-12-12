@@ -4,7 +4,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import useAxiosSecure from "../../../../hooks/useAxiosSecure";
 import useAuth from "../../../../hooks/useAuth";
 import Loader from "../../../Shared/Loader/Loader";
-import EditReview from "./EditReview";
+import EditReview from "../MyReviews/EditReview"
 
 const MyReviews = () => {
   const { user } = useAuth();
@@ -13,7 +13,6 @@ const MyReviews = () => {
 
   const [editingReview, setEditingReview] = useState(null);
 
-  // Fetch user's reviews
   const { data: reviews = [], isLoading } = useQuery({
     queryKey: ["myReviews", user?.email],
     queryFn: async () => {
@@ -24,10 +23,8 @@ const MyReviews = () => {
     enabled: !!user?.email,
   });
 
-  // Delete review
   const handleDelete = async (id) => {
     if (!window.confirm("Are you sure you want to delete this review?")) return;
-
     try {
       await axiosSecure.delete(`/delete-review/${id}`);
       alert("Review deleted successfully!");
@@ -38,7 +35,6 @@ const MyReviews = () => {
     }
   };
 
-  // Update review
   const handleUpdate = async (id, data) => {
     try {
       await axiosSecure.patch(`/update-review/${id}`, data);
@@ -54,12 +50,14 @@ const MyReviews = () => {
   if (isLoading) return <Loader />;
 
   return (
-    <div className="p-6">
-      <h1 className="text-3xl font-bold mb-6">My Reviews</h1>
+    <div className="p-6 bg-base-200 min-h-screen rounded-lg">
+      <h1 className="text-3xl font-bold mb-6 text-primary text-center">
+        My Reviews
+      </h1>
 
-      <div className="overflow-x-auto">
+      <div className="overflow-x-auto bg-base-100 rounded-lg shadow border border-base-300 p-4">
         <table className="table table-zebra w-full">
-          <thead>
+          <thead className="bg-base-300 text-neutral font-semibold">
             <tr>
               <th>#</th>
               <th>Scholarship</th>
@@ -73,7 +71,7 @@ const MyReviews = () => {
           <tbody>
             {reviews.length === 0 ? (
               <tr>
-                <td colSpan="7" className="text-center text-gray-500">
+                <td colSpan="7" className="text-center text-muted py-6">
                   No reviews found.
                 </td>
               </tr>
@@ -89,13 +87,13 @@ const MyReviews = () => {
                   <td className="flex gap-2 justify-center">
                     <button
                       onClick={() => setEditingReview(rev)}
-                      className="btn btn-sm btn-warning"
+                      className="btn btn-sm btn-warning text-white"
                     >
                       Edit
                     </button>
                     <button
                       onClick={() => handleDelete(rev._id)}
-                      className="btn btn-sm btn-error"
+                      className="btn btn-sm btn-error text-white"
                     >
                       Delete
                     </button>

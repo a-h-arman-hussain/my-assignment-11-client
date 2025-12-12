@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import useAxiosSecure from "../../../../hooks/useAxiosSecure";
 
-const FeedbackModal = ({ application, closeModal, onSubmit }) => {
+const FeedbackModal = ({ application, closeModal }) => {
   const axiosSecure = useAxiosSecure();
   const [feedback, setFeedback] = useState(application.feedback || "");
 
@@ -38,20 +38,22 @@ const FeedbackModal = ({ application, closeModal, onSubmit }) => {
         exit={{ opacity: 0 }}
       >
         <motion.div
-          initial={{ scale: 0.7, opacity: 0, y: 40 }}
+          initial={{ scale: 0.8, opacity: 0, y: 30 }}
           animate={{ scale: 1, opacity: 1, y: 0 }}
-          exit={{ scale: 0.7, opacity: 0, y: 40 }}
+          exit={{ scale: 0.8, opacity: 0, y: 30 }}
           transition={{ duration: 0.25 }}
-          className="bg-white p-6 rounded-2xl shadow-2xl w-full max-w-md"
+          className="bg-base-100 p-6 rounded-xl shadow-2xl w-full max-w-md"
         >
-          <h2 className="text-2xl font-bold mb-4">Write Feedback</h2>
+          <h2 className="text-2xl font-bold mb-4 text-primary text-center">
+            Write Feedback
+          </h2>
           <textarea
             value={feedback}
             onChange={(e) => setFeedback(e.target.value)}
             placeholder="Write feedback here..."
-            className="textarea textarea-bordered w-full h-32 mb-4"
+            className="textarea textarea-bordered w-full h-32 mb-4 bg-base-200 text-neutral"
           />
-          <div className="flex justify-end gap-2">
+          <div className="flex justify-end gap-3">
             <button className="btn btn-sm btn-neutral" onClick={closeModal}>
               Cancel
             </button>

@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
-const EditReview = ({ review, closeModal, onSubmit }) => {
+export default function EditReview({ review, closeModal, onSubmit }) {
   const [rating, setRating] = useState(review?.rating || 0);
   const [comment, setComment] = useState(review?.comment || "");
 
@@ -11,7 +11,6 @@ const EditReview = ({ review, closeModal, onSubmit }) => {
       alert("Please provide both rating and comment.");
       return;
     }
-
     onSubmit(review._id, { rating, comment });
     closeModal();
   };
@@ -25,13 +24,16 @@ const EditReview = ({ review, closeModal, onSubmit }) => {
         exit={{ opacity: 0 }}
       >
         <motion.div
-          initial={{ scale: 0.8, opacity: 0, y: 30 }}
+          initial={{ scale: 0.7, opacity: 0, y: 40 }}
           animate={{ scale: 1, opacity: 1, y: 0 }}
-          exit={{ scale: 0.8, opacity: 0, y: 30 }}
+          exit={{ scale: 0.7, opacity: 0, y: 40 }}
           transition={{ duration: 0.25 }}
-          className="bg-white p-6 rounded-2xl shadow-2xl w-full max-w-md"
+          className="bg-white p-6 rounded-2xl shadow-2xl w-full max-w-md border border-white/20"
         >
-          <h2 className="text-2xl font-bold mb-4">Edit Review</h2>
+          {/* Header */}
+          <h2 className="text-3xl font-bold mb-6 text-primary text-center">
+            Edit Review
+          </h2>
 
           {/* Rating */}
           <div className="mb-4">
@@ -57,23 +59,28 @@ const EditReview = ({ review, closeModal, onSubmit }) => {
             <textarea
               value={comment}
               onChange={(e) => setComment(e.target.value)}
-              className="textarea textarea-bordered w-full h-24"
+              placeholder="Update your review here..."
+              className="textarea textarea-bordered w-full bg-base-100 text-neutral h-24"
             />
           </div>
 
-          {/* Buttons */}
-          <div className="flex justify-end gap-3 mt-3">
-            <button onClick={closeModal} className="btn btn-sm btn-neutral">
+          {/* Footer Buttons */}
+          <div className="flex justify-end gap-3 mt-6">
+            <button
+              onClick={closeModal}
+              className="px-4 py-2 rounded-xl bg-gray-300 text-gray-700 font-semibold hover:bg-gray-400 transition"
+            >
               Cancel
             </button>
-            <button onClick={handleSubmit} className="btn btn-sm btn-success">
-              Save
+            <button
+              onClick={handleSubmit}
+              className="px-4 py-2 rounded-xl bg-gradient-to-r from-green-500 to-green-600 text-white font-semibold shadow hover:shadow-lg transition"
+            >
+              Save Changes
             </button>
           </div>
         </motion.div>
       </motion.div>
     </AnimatePresence>
   );
-};
-
-export default EditReview;
+}

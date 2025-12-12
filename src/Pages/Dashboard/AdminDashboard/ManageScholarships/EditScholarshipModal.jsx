@@ -43,9 +43,11 @@ const EditScholarshipModal = ({ scholarship, closeModal, onUpdate }) => {
           animate={{ scale: 1, opacity: 1, y: 0 }}
           exit={{ scale: 0.7, opacity: 0, y: 40 }}
           transition={{ duration: 0.25 }}
-          className="bg-white p-6 rounded-2xl shadow-2xl w-full max-w-lg"
+          className="bg-base-100 p-6 rounded-2xl shadow-2xl w-full max-w-lg"
         >
-          <h2 className="text-2xl font-bold mb-4">Edit Scholarship</h2>
+          <h2 className="text-2xl font-bold mb-4 text-primary">
+            Edit Scholarship
+          </h2>
 
           <div className="space-y-3">
             <input
@@ -54,7 +56,7 @@ const EditScholarshipModal = ({ scholarship, closeModal, onUpdate }) => {
               value={formData.scholarshipName}
               onChange={handleChange}
               placeholder="Scholarship Name"
-              className="input input-bordered w-full"
+              className="input input-bordered w-full bg-base-200 text-neutral"
             />
             <input
               type="text"
@@ -62,7 +64,7 @@ const EditScholarshipModal = ({ scholarship, closeModal, onUpdate }) => {
               value={formData.universityName}
               onChange={handleChange}
               placeholder="University Name"
-              className="input input-bordered w-full"
+              className="input input-bordered w-full bg-base-200 text-neutral"
             />
             <input
               type="text"
@@ -70,7 +72,7 @@ const EditScholarshipModal = ({ scholarship, closeModal, onUpdate }) => {
               value={formData.universityCountry}
               onChange={handleChange}
               placeholder="Country"
-              className="input input-bordered w-full"
+              className="input input-bordered w-full bg-base-200 text-neutral"
             />
             <input
               type="text"
@@ -78,7 +80,7 @@ const EditScholarshipModal = ({ scholarship, closeModal, onUpdate }) => {
               value={formData.universityCity}
               onChange={handleChange}
               placeholder="City"
-              className="input input-bordered w-full"
+              className="input input-bordered w-full bg-base-200 text-neutral"
             />
             <input
               type="text"
@@ -86,38 +88,48 @@ const EditScholarshipModal = ({ scholarship, closeModal, onUpdate }) => {
               value={formData.subjectCategory}
               onChange={handleChange}
               placeholder="Subject Category"
-              className="input input-bordered w-full"
+              className="input input-bordered w-full bg-base-200 text-neutral"
             />
-            <input
-              type="text"
+            <select
               name="scholarshipCategory"
               value={formData.scholarshipCategory}
               onChange={handleChange}
-              placeholder="Scholarship Category"
-              className="input input-bordered w-full"
-            />
-            <input
-              type="text"
+              className="select select-bordered w-full bg-base-200 text-neutral"
+            >
+              <option>Full fund</option>
+              <option>Partial</option>
+              <option>Self-fund</option>
+            </select>
+            <select
               name="degree"
               value={formData.degree}
               onChange={handleChange}
-              placeholder="Degree"
-              className="input input-bordered w-full"
-            />
+              className="select select-bordered w-full bg-base-200 text-neutral"
+            >
+              <option>Bachelor</option>
+              <option>Masters</option>
+              <option>Diploma</option>
+            </select>
             <input
               type="date"
               name="deadline"
               value={formData.deadline}
               onChange={handleChange}
-              className="input input-bordered w-full"
+              className="input input-bordered w-full bg-base-200 text-neutral"
             />
           </div>
 
           <div className="flex justify-end gap-3 mt-5">
-            <button onClick={closeModal} className="btn btn-sm btn-neutral">
+            <button
+              onClick={closeModal}
+              className="btn btn-sm btn-neutral text-neutral-content"
+            >
               Cancel
             </button>
-            <button onClick={handleSubmit} className="btn btn-sm btn-success">
+            <button
+              onClick={handleSubmit}
+              className="btn btn-sm btn-success text-neutral-content"
+            >
               Save Changes
             </button>
           </div>

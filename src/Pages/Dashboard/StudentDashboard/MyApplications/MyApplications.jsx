@@ -13,6 +13,7 @@ import {
   MdOutlinePayment,
   MdPreview,
 } from "react-icons/md";
+import { a } from "framer-motion/client";
 
 const MyApplications = () => {
   const { user } = useAuth();
@@ -23,7 +24,6 @@ const MyApplications = () => {
   const [updatingApp, setUpdatingApp] = useState(null);
   const [reviewingApp, setReviewingApp] = useState(null);
 
-  // Fetch user's applications
   const { data: applications = [], isLoading } = useQuery({
     queryKey: ["myApplications", user?.email],
     queryFn: async () => {
@@ -63,7 +63,6 @@ const MyApplications = () => {
   const handleDelete = async (id) => {
     if (!window.confirm("Are you sure you want to delete this application?"))
       return;
-
     try {
       await axiosSecure.delete(`/delete-application/${id}`);
       alert("Application deleted successfully!");
@@ -77,12 +76,14 @@ const MyApplications = () => {
   if (isLoading) return <Loader />;
 
   return (
-    <div>
-      <h1 className="text-3xl font-bold mb-6">My Applications</h1>
+    <div className="min-h-screen p-6 bg-base-200 text-neutral">
+      <h1 className="text-3xl font-bold mb-6 text-primary text-center">
+        My Applications
+      </h1>
 
-      <div className="overflow-x-auto">
+      <div className="overflow-x-auto bg-base-100 rounded-lg shadow border border-base-300 p-4">
         <table className="table table-zebra w-full">
-          <thead>
+          <thead className="bg-base-300 text-neutral font-semibold">
             <tr>
               <th>#</th>
               <th>University Name</th>
@@ -97,7 +98,7 @@ const MyApplications = () => {
           <tbody>
             {applications.length === 0 ? (
               <tr>
-                <td colSpan="8" className="text-center text-gray-500">
+                <td colSpan="8" className="text-center text-muted">
                   No applications found.
                 </td>
               </tr>
@@ -105,29 +106,31 @@ const MyApplications = () => {
               applications.map((app, index) => (
                 <tr key={app._id}>
                   <th>{index + 1}</th>
-                  <td>{app.universityName}</td>
-                  <td>{app.universityCity}</td>
-                  <td>{app.feedback || "-"}</td>
-                  <td>{app.subjectCategory}</td>
-                  <td>${app.applicationFees}</td>
+                  <td className="text-neutral">{app.universityName}</td>
+                  <td className="text-neutral">{app.universityCity}</td>
+                  <td className="text-neutral">{app.feedback || "-"}</td>
+                  <td className="text-neutral">{app.subjectCategory}</td>
+                  <td className="text-neutral">${app.applicationFees}</td>
                   <td
-                    className={
+                    className={`font-medium ${
                       app.applicationStatus === "completed"
                         ? "text-green-500"
                         : app.applicationStatus === "pending"
                         ? "text-yellow-500"
-                        : app.applicationStatus === 'processing' ? "text-gray-500" : 'text-red-500'
-                    }
+                        : app.applicationStatus === "processing"
+                        ? "text-gray-500"
+                        : "text-red-500"
+                    }`}
                   >
                     {app.applicationStatus}
                   </td>
-                  <td className="flex flex-wrap gap-2 justify-center">
+                  <td className="flex gap-2 justify-center flex-wrap">
                     {/* DETAILS */}
                     <button
                       onClick={() => setSelectedApp(app)}
                       className="btn btn-sm btn-info text-white"
                     >
-                      <IoInformationCircleSharp size={22} />
+                      <IoInformationCircleSharp size={20} />
                     </button>
 
                     {/* EDIT */}
@@ -136,7 +139,7 @@ const MyApplications = () => {
                         onClick={() => setUpdatingApp(app)}
                         className="btn btn-sm btn-warning text-white"
                       >
-                        <CiEdit size={22} />
+                        <CiEdit size={20} />
                       </button>
                     )}
 
@@ -146,7 +149,7 @@ const MyApplications = () => {
                         onClick={() => handlePayment(app)}
                         className="btn btn-sm btn-success text-white"
                       >
-                        <MdOutlinePayment size={22} />
+                        <MdOutlinePayment size={20} />
                       </button>
                     )}
 
@@ -156,17 +159,17 @@ const MyApplications = () => {
                         onClick={() => handleDelete(app._id)}
                         className="btn btn-sm btn-error text-white"
                       >
-                        <MdOutlineDeleteForever size={22} />
+                        <MdOutlineDeleteForever size={20} />
                       </button>
                     )}
 
                     {/* ADD REVIEW */}
-                    {app.applicationStatus === "completed" && (
+                    {app.applicationStatus === "completed"  && (
                       <button
                         onClick={() => setReviewingApp(app)}
                         className="btn btn-sm btn-primary text-white"
                       >
-                        <MdPreview size={22} />
+                        <MdPreview size={20} />
                       </button>
                     )}
                   </td>
@@ -193,7 +196,6 @@ const MyApplications = () => {
         />
       )}
 
-      {/* Add Review Modal Placeholder */}
       {reviewingApp && (
         <AddReview
           application={reviewingApp}

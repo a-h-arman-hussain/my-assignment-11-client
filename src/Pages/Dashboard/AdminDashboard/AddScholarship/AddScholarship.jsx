@@ -39,6 +39,9 @@ const AddScholarship = () => {
         icon: "success",
         title: "Scholarship Added!",
         text: "Your scholarship has been added successfully.",
+        background: "var(--color-base-100)",
+        color: "var(--color-neutral)",
+        confirmButtonColor: "var(--color-primary)",
       });
       navigate("/all-scholarships");
     } catch (err) {
@@ -47,64 +50,71 @@ const AddScholarship = () => {
         icon: "error",
         title: "Error",
         text: "Failed to add scholarship. Try again.",
+        background: "var(--color-base-100)",
+        color: "var(--color-neutral)",
+        confirmButtonColor: "var(--color-error)",
       });
     }
   };
 
   return (
-    <div className="max-w-3xl mx-auto p-6 rounded-lg shadow-lg">
-      <h1 className="text-2xl font-bold mb-6">Add Scholarship</h1>
+    <div className="max-w-3xl mx-auto p-6 rounded-lg shadow-lg bg-base-100 border border-base-300 mt-6">
+      <h1 className="text-3xl font-bold mb-6 text-primary text-center">
+        Add Scholarship
+      </h1>
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
-          <label className="font-semibold">Scholarship Name</label>
+          <label className="font-semibold text-neutral">Scholarship Name</label>
           <input
             name="scholarshipName"
             value={formData.scholarshipName}
             onChange={handleChange}
-            className="input input-bordered w-full"
+            className="input input-bordered w-full bg-base-200 border-base-300 text-neutral"
             required
           />
         </div>
 
         <div>
-          <label className="font-semibold">University Name</label>
+          <label className="font-semibold text-neutral">University Name</label>
           <input
             name="universityName"
             value={formData.universityName}
             onChange={handleChange}
-            className="input input-bordered w-full"
+            className="input input-bordered w-full bg-base-200 border-base-300 text-neutral"
             required
           />
         </div>
 
         <div>
-          <label className="font-semibold">University Image URL</label>
+          <label className="font-semibold text-neutral">
+            University Image URL
+          </label>
           <input
             name="universityImage"
             value={formData.universityImage}
             onChange={handleChange}
-            className="input input-bordered w-full"
+            className="input input-bordered w-full bg-base-200 border-base-300 text-neutral"
           />
         </div>
 
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <label className="font-semibold">Country</label>
+            <label className="font-semibold text-neutral">Country</label>
             <input
               name="universityCountry"
               value={formData.universityCountry}
               onChange={handleChange}
-              className="input input-bordered w-full"
+              className="input input-bordered w-full bg-base-200 border-base-300 text-neutral"
               required
             />
           </div>
           <div>
-            <label className="font-semibold">City</label>
+            <label className="font-semibold text-neutral">City</label>
             <input
               name="universityCity"
               value={formData.universityCity}
               onChange={handleChange}
-              className="input input-bordered w-full"
+              className="input input-bordered w-full bg-base-200 border-base-300 text-neutral"
               required
             />
           </div>
@@ -112,34 +122,38 @@ const AddScholarship = () => {
 
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <label className="font-semibold">World Rank</label>
+            <label className="font-semibold text-neutral">World Rank</label>
             <input
               type="number"
               name="universityWorldRank"
               value={formData.universityWorldRank}
               onChange={handleChange}
-              className="input input-bordered w-full"
+              className="input input-bordered w-full bg-base-200 border-base-300 text-neutral"
             />
           </div>
           <div>
-            <label className="font-semibold">Subject Category</label>
+            <label className="font-semibold text-neutral">
+              Subject Category
+            </label>
             <input
               name="subjectCategory"
               value={formData.subjectCategory}
               onChange={handleChange}
-              className="input input-bordered w-full"
+              className="input input-bordered w-full bg-base-200 border-base-300 text-neutral"
             />
           </div>
         </div>
 
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <label className="font-semibold">Scholarship Category</label>
+            <label className="font-semibold text-neutral">
+              Scholarship Category
+            </label>
             <select
               name="scholarshipCategory"
               value={formData.scholarshipCategory}
               onChange={handleChange}
-              className="select select-bordered w-full"
+              className="select select-bordered w-full bg-base-200 border-base-300 text-neutral"
             >
               <option>Full fund</option>
               <option>Partial</option>
@@ -147,12 +161,12 @@ const AddScholarship = () => {
             </select>
           </div>
           <div>
-            <label className="font-semibold">Degree</label>
+            <label className="font-semibold text-neutral">Degree</label>
             <select
               name="degree"
               value={formData.degree}
               onChange={handleChange}
-              className="select select-bordered w-full"
+              className="select select-bordered w-full bg-base-200 border-base-300 text-neutral"
             >
               <option>Bachelor</option>
               <option>Masters</option>
@@ -163,34 +177,38 @@ const AddScholarship = () => {
 
         <div className="grid grid-cols-3 gap-4">
           <div>
-            <label className="font-semibold">Tuition Fees (Optional)</label>
+            <label className="font-semibold text-neutral">
+              Tuition Fees (Optional)
+            </label>
             <input
               type="number"
               name="tuitionFees"
               value={formData.tuitionFees}
               onChange={handleChange}
-              className="input input-bordered w-full"
+              className="input input-bordered w-full bg-base-200 border-base-300 text-neutral"
             />
           </div>
           <div>
-            <label className="font-semibold">Application Fees</label>
+            <label className="font-semibold text-neutral">
+              Application Fees
+            </label>
             <input
               type="number"
               name="applicationFees"
               value={formData.applicationFees}
               onChange={handleChange}
-              className="input input-bordered w-full"
+              className="input input-bordered w-full bg-base-200 border-base-300 text-neutral"
               required
             />
           </div>
           <div>
-            <label className="font-semibold">Service Charge</label>
+            <label className="font-semibold text-neutral">Service Charge</label>
             <input
               type="number"
               name="serviceCharge"
               value={formData.serviceCharge}
               onChange={handleChange}
-              className="input input-bordered w-full"
+              className="input input-bordered w-full bg-base-200 border-base-300 text-neutral"
               required
             />
           </div>
@@ -198,28 +216,31 @@ const AddScholarship = () => {
 
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <label className="font-semibold">Deadline</label>
+            <label className="font-semibold text-neutral">Deadline</label>
             <input
               type="date"
               name="deadline"
               value={formData.deadline}
               onChange={handleChange}
-              className="input input-bordered w-full"
+              className="input input-bordered w-full bg-base-200 border-base-300 text-neutral"
               required
             />
           </div>
           <div>
-            <label className="font-semibold">Post Date</label>
+            <label className="font-semibold text-neutral">Post Date</label>
             <input
               type="date"
               name="postDate"
               value={formData.postDate}
-              className="input input-bordered w-full"
+              className="input input-bordered w-full bg-base-200 border-base-300 text-neutral"
             />
           </div>
         </div>
 
-        <button type="submit" className="btn btn-success mt-4">
+        <button
+          type="submit"
+          className="btn w-full bg-primary hover:bg-primary/90 text-base-100 mt-4"
+        >
           Add Scholarship
         </button>
       </form>

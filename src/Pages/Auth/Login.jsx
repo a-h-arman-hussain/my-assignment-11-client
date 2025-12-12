@@ -25,9 +25,9 @@ export default function Login() {
         title: "Welcome Back! 👋",
         text: "Login Successful",
         icon: "success",
-        background: "rgba(31, 41, 55, 0.8)",
-        color: "#fff",
-        confirmButtonColor: "#8b5cf6",
+        background: "var(--color-base-200)",
+        color: "var(--color-neutral)",
+        confirmButtonColor: "var(--color-primary)",
       });
 
       navigate("/");
@@ -36,9 +36,9 @@ export default function Login() {
         title: "Login Failed!",
         text: err.message,
         icon: "error",
-        background: "rgba(31, 41, 55, 0.8)",
-        color: "#fff",
-        confirmButtonColor: "#ef4444",
+        background: "var(--color-base-200)",
+        color: "var(--color-neutral)",
+        confirmButtonColor: "var(--color-error)",
       });
     }
   };
@@ -46,16 +46,15 @@ export default function Login() {
   // Google Login + DB save
   const handleGoogleLogin = async () => {
     try {
-      // Google Login
       const result = await signInGoogle();
       const user = result.user;
+      const token = await user.getIdToken();
+      localStorage.setItem("fb-token", token);
 
-      // 1️⃣ Check if user already exists in DB
       const { data: existingUser } = await axiosSecure.get(
         `/users/${user.email}`
       );
 
-      // 2️⃣ If user DOES NOT exist → Create new user
       if (!existingUser) {
         const savedUser = {
           name: user.displayName,
@@ -63,20 +62,18 @@ export default function Login() {
           photo: user.photoURL,
           role: "Student",
         };
-
         await axiosSecure.post("/users", savedUser);
       }
 
-      // SweetAlert
       Swal.fire({
         title: "Google Login Successful 🔥",
         text: existingUser
           ? "Welcome back to ScholarStream!"
           : "Account created & logged in successfully!",
         icon: "success",
-        background: "rgba(31, 41, 55, 0.8)",
-        color: "#fff",
-        confirmButtonColor: "#8b5cf6",
+        background: "var(--color-base-200)",
+        color: "var(--color-neutral)",
+        confirmButtonColor: "var(--color-primary)",
       });
 
       navigate("/");
@@ -85,46 +82,44 @@ export default function Login() {
         title: "Google Login Failed!",
         text: err.message,
         icon: "error",
-        background: "rgba(31, 41, 55, 0.8)",
-        color: "#fff",
-        confirmButtonColor: "#ef4444",
+        background: "var(--color-base-200)",
+        color: "var(--color-neutral)",
+        confirmButtonColor: "var(--color-error)",
       });
     }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-900 to-gray-800 px-4">
-      <div className="w-full max-w-md bg-gray-800/60 backdrop-blur-lg p-8 rounded-2xl shadow-2xl border border-gray-700">
-        <h2 className="text-3xl font-bold text-center mb-6 text-white">
+    <div className="min-h-screen flex items-center justify-center bg-base-200 px-4">
+      <div className="w-full max-w-md bg-base-100/80 backdrop-blur-lg p-8 rounded-2xl shadow-2xl border border-base-300">
+        <h2 className="text-3xl font-bold text-center mb-6 text-primary">
           Login to Your Account
         </h2>
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
           {/* Email */}
           <div>
-            <label className="font-medium text-gray-300">Email Address</label>
+            <label className="font-medium text-muted">Email Address</label>
             <input
               type="email"
               {...register("email", { required: "Email is required" })}
-              className="w-full p-3 bg-gray-900 border border-gray-700 rounded-lg text-white mt-1 focus:outline-none focus:border-purple-500"
+              className="w-full p-3 bg-base-100 border border-base-300 rounded-lg text-neutral mt-1 focus:outline-none focus:border-primary"
             />
             {errors.email && (
-              <p className="text-red-400 text-sm mt-1">
-                {errors.email.message}
-              </p>
+              <p className="text-error text-sm mt-1">{errors.email.message}</p>
             )}
           </div>
 
           {/* Password */}
           <div>
-            <label className="font-medium text-gray-300">Password</label>
+            <label className="font-medium text-muted">Password</label>
             <input
               type="password"
               {...register("password", { required: "Password is required" })}
-              className="w-full p-3 bg-gray-900 border border-gray-700 rounded-lg text-white mt-1 focus:outline-none focus:border-purple-500"
+              className="w-full p-3 bg-base-100 border border-base-300 rounded-lg text-neutral mt-1 focus:outline-none focus:border-primary"
             />
             {errors.password && (
-              <p className="text-red-400 text-sm mt-1">
+              <p className="text-error text-sm mt-1">
                 {errors.password.message}
               </p>
             )}
@@ -132,27 +127,27 @@ export default function Login() {
 
           <button
             type="submit"
-            className="w-full bg-purple-600 hover:bg-purple-700 text-white p-3 rounded-lg font-semibold transition shadow-lg shadow-purple-500/20"
+            className="w-full bg-primary hover:bg-primary/90 text-base-100 p-3 rounded-lg font-semibold transition shadow-md"
           >
             Login
           </button>
         </form>
 
         <div className="mt-6 text-center">
-          <p className="text-gray-400 mb-3">Or login with</p>
+          <p className="text-muted mb-3">Or login with</p>
           <button
             onClick={handleGoogleLogin}
-            className="w-full bg-green-600 hover:bg-green-700 text-white p-3 rounded-lg font-semibold transition shadow-lg shadow-red-500/20"
+            className="w-full bg-secondary hover:bg-secondary/90 text-base-100 p-3 rounded-lg font-semibold transition shadow-md"
           >
             Google Login
           </button>
         </div>
 
-        <p className="mt-6 text-center text-gray-400">
+        <p className="mt-6 text-center text-muted">
           Don't have an account?{" "}
           <Link
             to="/register"
-            className="text-purple-500 font-semibold hover:underline"
+            className="text-accent font-semibold hover:underline"
           >
             Register
           </Link>

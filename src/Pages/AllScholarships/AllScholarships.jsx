@@ -16,6 +16,7 @@ const AllScholarships = () => {
   const [subjectCategory, setSubjectCategory] = useState("");
   const [scholarshipCategory, setScholarshipCategory] = useState("");
   const [degree, setDegree] = useState("");
+  const [sortOrder, setSortOrder] = useState("");
 
   // Dropdown options
   const [subjects, setSubjects] = useState([]);
@@ -52,6 +53,30 @@ const AllScholarships = () => {
 
     fetchScholarships();
   }, [axiosSecure]);
+
+  useEffect(() => {
+    const loadScholarships = async () => {
+      const [field, order] = sortOrder.split("-");
+
+      let sortField = "postDate";
+      let sortOrderValue = "desc";
+
+      if (field === "fees") {
+        sortField = "applicationFees";
+        sortOrderValue = order;
+      } else if (field === "date") {
+        sortField = "postDate";
+        sortOrderValue = order;
+      }
+
+      const res = await axiosSecure.get(
+        `/scholarships?sortField=${sortField}&sortOrder=${sortOrderValue}`
+      );
+      setScholarships(res.data);
+    };
+
+    loadScholarships();
+  }, [sortOrder]);
 
   // Filtered scholarships
   const filteredScholarships = scholarships.filter((scholar) => {
@@ -102,7 +127,7 @@ const AllScholarships = () => {
   for (let i = startPage; i <= endPage; i++) pageNumbers.push(i);
 
   return (
-    <div className="min-h-screen p-6 max-w-7xl mx-auto space-y-8">
+    <div className="p-6 max-w-7xl mx-auto space-y-8">
       {/* Heading */}
       <div className="text-center">
         <h1 className="text-3xl font-bold text-primary">All Scholarships</h1>
@@ -112,58 +137,75 @@ const AllScholarships = () => {
       </div>
 
       {/* Filters */}
-      <div className="bg-base-100 p-5 rounded-2xl shadow-md border border-base-300">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+      {/* md:grid md:grid-cols-5  */}
+      <div className="bg-base-100 p-4 rounded-2xl shadow-md border border-base-300">
+        <div className="flex flex-col md:flex-row gap-4">
           {/* Search */}
           <input
             type="text"
             placeholder="Search scholarships, universities, degrees..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="input input-bordered w-full bg-base-100 border-base-300 focus:outline-none focus:border-2 focus:border-primary"
+            className="input input-bordered w-full md:w-1/3 bg-base-100 border-base-300 focus:outline-none focus:ring-2 focus:ring-primary rounded-lg"
           />
 
-          {/* Subject */}
-          <select
-            value={subjectCategory}
-            onChange={(e) => setSubjectCategory(e.target.value)}
-            className="input input-bordered w-full bg-base-100 border-base-300 focus:outline-none focus:border-2 focus:border-primary"
-          >
-            <option value="">All Subjects</option>
-            {subjects.map((subj, i) => (
-              <option key={i} value={subj}>
-                {subj}
-              </option>
-            ))}
-          </select>
+          {/* Filters & Sort */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 flex-1">
+            {/* Subject */}
+            <select
+              value={subjectCategory}
+              onChange={(e) => setSubjectCategory(e.target.value)}
+              className="input input-bordered w-full bg-base-100 border-base-300 focus:outline-none focus:ring-2 focus:ring-primary rounded-lg"
+            >
+              <option value="">All Subjects</option>
+              {subjects.map((subj, i) => (
+                <option key={i} value={subj}>
+                  {subj}
+                </option>
+              ))}
+            </select>
 
-          {/* Scholarship Category */}
-          <select
-            value={scholarshipCategory}
-            onChange={(e) => setScholarshipCategory(e.target.value)}
-            className="input input-bordered w-full bg-base-100 border-base-300 focus:outline-none focus:border-2 focus:border-primary"
-          >
-            <option value="">All Categories</option>
-            {categories.map((cat, i) => (
-              <option key={i} value={cat}>
-                {cat}
-              </option>
-            ))}
-          </select>
+            {/* Scholarship Category */}
+            <select
+              value={scholarshipCategory}
+              onChange={(e) => setScholarshipCategory(e.target.value)}
+              className="input input-bordered w-full bg-base-100 border-base-300 focus:outline-none focus:ring-2 focus:ring-primary rounded-lg"
+            >
+              <option value="">All Categories</option>
+              {categories.map((cat, i) => (
+                <option key={i} value={cat}>
+                  {cat}
+                </option>
+              ))}
+            </select>
 
-          {/* Degree */}
-          <select
-            value={degree}
-            onChange={(e) => setDegree(e.target.value)}
-            className="input input-bordered w-full bg-base-100 border-base-300 focus:outline-none focus:border-2 focus:border-primary"
-          >
-            <option value="">All Degrees</option>
-            {degrees.map((d, i) => (
-              <option key={i} value={d}>
-                {d}
-              </option>
-            ))}
-          </select>
+            {/* Degree */}
+            <select
+              value={degree}
+              onChange={(e) => setDegree(e.target.value)}
+              className="input input-bordered w-full bg-base-100 border-base-300 focus:outline-none focus:ring-2 focus:ring-primary rounded-lg"
+            >
+              <option value="">All Degrees</option>
+              {degrees.map((d, i) => (
+                <option key={i} value={d}>
+                  {d}
+                </option>
+              ))}
+            </select>
+
+            {/* Sort */}
+            <select
+              value={sortOrder}
+              onChange={(e) => setSortOrder(e.target.value)}
+              className="input input-bordered w-full bg-base-100 border-base-300 focus:outline-none focus:ring-2 focus:ring-primary rounded-lg"
+            >
+              <option value="">Default (Latest)</option>
+              <option value="fees-asc">Application Fees: Low to High</option>
+              <option value="fees-desc">Application Fees: High to Low</option>
+              <option value="date-desc">Newest First</option>
+              <option value="date-asc">Oldest First</option>
+            </select>
+          </div>
         </div>
       </div>
 

@@ -4,7 +4,9 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import useAxiosSecure from "../../../../hooks/useAxiosSecure";
 import useAuth from "../../../../hooks/useAuth";
 import Loader from "../../../Shared/Loader/Loader";
-import EditReview from "../MyReviews/EditReview"
+import EditReview from "../MyReviews/EditReview";
+import { CiEdit } from "react-icons/ci";
+import { MdOutlineDeleteForever } from "react-icons/md";
 
 const MyReviews = () => {
   const { user } = useAuth();
@@ -89,13 +91,13 @@ const MyReviews = () => {
                       onClick={() => setEditingReview(rev)}
                       className="btn btn-sm btn-warning text-white"
                     >
-                      Edit
+                      <CiEdit size={20} />
                     </button>
                     <button
                       onClick={() => handleDelete(rev._id)}
                       className="btn btn-sm btn-error text-white"
                     >
-                      Delete
+                      <MdOutlineDeleteForever size={20} />
                     </button>
                   </td>
                 </tr>

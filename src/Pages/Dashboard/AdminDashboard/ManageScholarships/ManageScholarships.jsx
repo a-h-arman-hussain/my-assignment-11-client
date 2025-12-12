@@ -3,6 +3,8 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import useAxiosSecure from "../../../../hooks/useAxiosSecure";
 import Loader from "../../../Shared/Loader/Loader";
 import EditScholarshipModal from "./EditScholarshipModal"; // নিচে বানানো হবে
+import { CiEdit } from "react-icons/ci";
+import { MdOutlineDeleteForever } from "react-icons/md";
 
 const ManageScholarships = () => {
   const axiosSecure = useAxiosSecure();
@@ -75,16 +77,16 @@ const ManageScholarships = () => {
                   <td>{new Date(sch.deadline).toLocaleDateString()}</td>
                   <td className="flex gap-2">
                     <button
-                      className="btn btn-sm btn-accent"
+                      className="btn btn-sm btn-warning text-white"
                       onClick={() => setEditingScholarship(sch)}
                     >
-                      Update
+                      <CiEdit size={20} />
                     </button>
                     <button
-                      className="btn btn-sm btn-error"
+                      className="btn btn-sm btn-error text-white"
                       onClick={() => handleDelete(sch._id)}
                     >
-                      Delete
+                      <MdOutlineDeleteForever size={20} />
                     </button>
                   </td>
                 </tr>

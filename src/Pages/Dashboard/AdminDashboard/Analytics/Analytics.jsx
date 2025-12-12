@@ -11,6 +11,7 @@ import {
   PieChart,
   Pie,
   Cell,
+  ResponsiveContainer,
 } from "recharts";
 
 const generateColorMap = (names) => {
@@ -112,58 +113,60 @@ const Analytics = () => {
           <h2 className="text-xl font-semibold mb-4 text-center text-primary">
             Applications per University
           </h2>
-          <BarChart
-            width={400}
-            height={300}
-            data={applicationsData}
-            margin={{ top: 5, right: 30, left: 0, bottom: 5 }}
-          >
-            <CartesianGrid strokeDasharray="3 3" stroke="#d1d5db" />
-            <XAxis dataKey="name" stroke="var(--color-neutral)" />
-            <YAxis stroke="var(--color-neutral)" />
-            <Tooltip
-              contentStyle={{ backgroundColor: "var(--color-base-100)" }}
-              itemStyle={{ color: "var(--color-neutral)" }}
-            />
-            <Legend />
-            <Bar dataKey="applications">
-              {applicationsData.map((entry) => (
-                <Cell
-                  key={`bar-${entry.name}`}
-                  fill={colorMap[entry.name] || "var(--color-primary)"}
-                />
-              ))}
-            </Bar>
-          </BarChart>
+          <ResponsiveContainer width="100%" height={300}>
+            <BarChart
+              data={applicationsData}
+              margin={{ top: 5, right: 30, left: 0, bottom: 5 }}
+            >
+              <CartesianGrid strokeDasharray="3 3" stroke="#d1d5db" />
+              <XAxis dataKey="name" stroke="var(--color-neutral)" />
+              <YAxis stroke="var(--color-neutral)" />
+              <Tooltip
+                contentStyle={{ backgroundColor: "var(--color-base-100)" }}
+                itemStyle={{ color: "var(--color-neutral)" }}
+              />
+              <Legend />
+              <Bar dataKey="applications">
+                {applicationsData.map((entry) => (
+                  <Cell
+                    key={`bar-${entry.name}`}
+                    fill={colorMap[entry.name] || "var(--color-primary)"}
+                  />
+                ))}
+              </Bar>
+            </BarChart>
+          </ResponsiveContainer>
         </div>
 
         {/* Pie Chart */}
-        <div className="bg-base-100 p-6 rounded-lg shadow border border-base-300">
+        <div className="bg-base-100 p-6 rounded-lg shadow border border-base-300 mt-6">
           <h2 className="text-xl font-semibold mb-4 text-center text-primary">
             Applications Distribution
           </h2>
-          <PieChart width={400} height={300}>
-            <Pie
-              data={applicationsData}
-              dataKey="applications"
-              nameKey="name"
-              cx="50%"
-              cy="50%"
-              outerRadius={100}
-              label
-            >
-              {applicationsData.map((entry) => (
-                <Cell
-                  key={`pie-${entry.name}`}
-                  fill={colorMap[entry.name] || "var(--color-accent)"}
-                />
-              ))}
-            </Pie>
-            <Tooltip
-              contentStyle={{ backgroundColor: "var(--color-base-100)" }}
-              itemStyle={{ color: "var(--color-neutral)" }}
-            />
-          </PieChart>
+          <ResponsiveContainer width="100%" height={300}>
+            <PieChart>
+              <Pie
+                data={applicationsData}
+                dataKey="applications"
+                nameKey="name"
+                cx="50%"
+                cy="50%"
+                outerRadius={100}
+                label
+              >
+                {applicationsData.map((entry) => (
+                  <Cell
+                    key={`pie-${entry.name}`}
+                    fill={colorMap[entry.name] || "var(--color-accent)"}
+                  />
+                ))}
+              </Pie>
+              <Tooltip
+                contentStyle={{ backgroundColor: "var(--color-base-100)" }}
+                itemStyle={{ color: "var(--color-neutral)" }}
+              />
+            </PieChart>
+          </ResponsiveContainer>
         </div>
       </div>
     </div>

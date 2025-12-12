@@ -7,17 +7,17 @@ const AuthLayout = () => {
   return (
     <div className="bg-base-200 text-neutral min-h-screen flex flex-col">
       {/* Header */}
-      <header className="sticky top-0 z-50 bg-base-100 shadow-md shadow-primary/20">
+      <header className="sticky top-0 z-50 bg-primary/10 shadow-md backdrop-blur-xl">
         <Navbar />
       </header>
 
       {/* Main Content */}
-      <main className="flex-grow max-w-11/12 mx-auto">
+      <main className="flex-grow max-w-11/12 mx-auto p-4">
         <Outlet />
       </main>
 
       {/* Footer */}
-      <footer className="text-neutral border-t border-base-200 mt-10">
+      <footer className="bg-neutral text-neutral border-t border-base-200">
         <Footer />
       </footer>
     </div>

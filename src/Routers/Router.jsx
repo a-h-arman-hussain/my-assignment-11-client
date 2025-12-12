@@ -22,6 +22,8 @@ import UserProfile from "../Pages/Dashboard/UserProfile/UserProfile";
 import AdminRoute from "./AdminRoute";
 import Analytics from "../Pages/Dashboard/AdminDashboard/Analytics/Analytics";
 import ModeratorRoute from "./ModeratorRoute";
+import AboutPage from "../Pages/AboutPage/AboutPage";
+import ContactUs from "../Pages/ContactUs/ContactUs";
 
 const router = createBrowserRouter([
   {
@@ -31,6 +33,8 @@ const router = createBrowserRouter([
       { index: true, Component: Home },
       { path: "/all-scholarships", Component: AllScholarships },
       { path: "/scholarship-details/:id", Component: ScholarshipDetails },
+      { path: "/about", Component: AboutPage },
+      { path: "/contact", Component: ContactUs },
     ],
   },
   {

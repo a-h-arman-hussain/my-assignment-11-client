@@ -34,16 +34,16 @@ const Hero = () => {
   };
 
   return (
-    <section className="relative w-full min-h-screen bg-gradient-to-br from-primary to-secondary flex items-center">
+    <section className="mt-0 relative w-full md:h-[400px] bg-gradient-to-br from-primary to-secondary flex items-center rounded-b-2xl py-10">
       <div className="container mx-auto flex flex-col-reverse md:flex-row items-center px-6 md:px-16">
         {/* Left Content */}
         <div className="flex-1 text-center md:text-left">
-          <h1 className="text-4xl md:text-6xl font-extrabold text-base-100 leading-tight mb-4">
+          <h1 className="text-3xl md:text-4xl font-extrabold text-base-100 leading-tight">
             Unlock Your Future with{" "}
             <span className="text-yellow-400">Global Scholarships</span>
           </h1>
 
-          <p className="text-base-200 text-lg md:text-xl mb-6">
+          <p className="text-base-200 text-md md:text-lg mb-6">
             Explore thousands of scholarships worldwide. Apply easily, get
             funded, and achieve your dreams.
           </p>
@@ -51,7 +51,7 @@ const Hero = () => {
           {/* Search Form */}
           <form
             onSubmit={handleSubmit(onSearch)}
-            className="relative max-w-md mx-auto md:mx-0 mb-6"
+            className="relative max-w-md mx-auto md:mx-0"
           >
             <div className="flex items-center bg-base-100 rounded-full shadow-lg overflow-hidden border border-base-300 transition">
               <input
@@ -62,7 +62,7 @@ const Hero = () => {
               />
               <button
                 type="submit"
-                className="bg-accent hover:bg-secondary text-base-100 font-bold px-6 py-3 rounded-full transition transform hover:scale-105 shadow-md hover:shadow-lg"
+                className="bg-accent hover:bg-secondary text-base-100 font-bold px-6 py-3 rounded-full transition transform hover:scale-105 shadow-md hover:shadow-lg cursor-pointer"
               >
                 Search
               </button>
@@ -90,7 +90,7 @@ const Hero = () => {
             )}
           </form>
 
-          <p className="text-base-200 text-sm md:text-base">
+          <p className="ml-3 text-base-200/50">
             Search by university, scholarship name, or category.
           </p>
         </div>

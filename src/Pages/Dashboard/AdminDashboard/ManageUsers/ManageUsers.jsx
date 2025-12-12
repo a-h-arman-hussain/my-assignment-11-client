@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import useAxiosSecure from "../../../../hooks/useAxiosSecure";
 import Loader from "../../../Shared/Loader/Loader";
+import { MdOutlineDeleteForever } from "react-icons/md";
 
 const ManageUsers = () => {
   const axiosSecure = useAxiosSecure();
@@ -110,10 +111,10 @@ const ManageUsers = () => {
                       </select>
                     )}
                     <button
-                      className="btn btn-sm btn-error"
+                      className="btn btn-sm btn-error text-white"
                       onClick={() => handleDelete(user._id)}
                     >
-                      Delete
+                      <MdOutlineDeleteForever size={20} />
                     </button>
                   </td>
                 </tr>

@@ -84,7 +84,7 @@ const ScholarshipDetails = () => {
           alt={scholarship.universityName}
           className="w-full h-80 object-cover"
         />
-        <span className="absolute top-4 left-4 bg-gradient-to-r from-primary to-secondary text-base-100 px-4 py-1 rounded-full text-sm font-semibold shadow-md">
+        <span className="absolute top-4 left-4 bg-accent text-base-100 px-4 py-1 rounded-full text-sm font-semibold shadow-md">
           {scholarship.scholarshipCategory}
         </span>
       </div>
@@ -116,20 +116,22 @@ const ScholarshipDetails = () => {
             label="Service Charge"
             value={`$${scholarship.serviceCharge}`}
           />
-          <InfoCard label="Deadline" value={scholarship.applicationDeadline} />
+          <InfoCard label="Deadline" value={scholarship.deadline} />
         </div>
 
         <p className="text-muted">
           <span className="font-semibold">Posted On:</span>{" "}
-          {scholarship.scholarshipPostDate}
+          {scholarship.postDate}
         </p>
 
-        <button
-          onClick={handleApply}
-          className="w-full bg-gradient-to-r from-primary to-secondary hover:from-secondary hover:to-primary text-base-100 p-3 rounded-lg font-semibold transition shadow-lg"
-        >
-          Apply Now
-        </button>
+        {scholarship.userEmail !== user?.email && (
+          <button
+            onClick={handleApply}
+            className="w-full bg-primary text-base-100 p-3 rounded-lg font-semibold transition shadow-lg cursor-pointer"
+          >
+            Apply Now
+          </button>
+        )}
       </div>
 
       {/* Reviews */}

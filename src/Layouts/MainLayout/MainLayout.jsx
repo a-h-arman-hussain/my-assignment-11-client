@@ -6,7 +6,7 @@ import Footer from "../../Pages/Shared/Footer/Footer";
 const MainLayout = () => {
   return (
     <div className="bg-base-200 text-neutral min-h-screen flex flex-col">
-      <header className="sticky top-0 z-50 bg-base-100 shadow-md border-b border-base-300">
+      <header className="sticky top-0 z-50 bg-primary/10 shadow-md backdrop-blur-xl">
         <Navbar />
       </header>
 
@@ -14,7 +14,7 @@ const MainLayout = () => {
         <Outlet />
       </main>
 
-      <footer className="bg-base-100 border-t border-base-300 mt-10">
+      <footer className="bg-neutral border-t border-base-300">
         <Footer />
       </footer>
     </div>

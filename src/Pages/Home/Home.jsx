@@ -3,7 +3,6 @@ import Hero from "./Hero/Hero";
 import LatestScholarships from "./LatestScholarships/LatestScholarships";
 import SuccessStories from "./SuccessStories/SuccessStories";
 import Testimonials from "./Testimonials/Testimonials";
-import ContactUs from "./ContactUs/ContactUs";
 
 const Home = () => {
   return (
@@ -12,7 +11,6 @@ const Home = () => {
       <LatestScholarships></LatestScholarships>
       <SuccessStories></SuccessStories>
       <Testimonials></Testimonials>
-      <ContactUs></ContactUs>
     </div>
   );
 };

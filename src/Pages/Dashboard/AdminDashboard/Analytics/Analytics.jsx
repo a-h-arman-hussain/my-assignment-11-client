@@ -96,7 +96,9 @@ const Analytics = () => {
           <h2 className="text-xl font-semibold text-secondary">
             Total Fees Collected
           </h2>
-          <p className="text-3xl font-bold mt-2">${totalFees}</p>
+          <p className="text-xl sm:text-2xl md:text-3xl font-bold mt-2">
+            ${String(totalFees).slice(0, 5)}+
+          </p>
         </div>
         <div className="p-6 bg-base-100 shadow rounded-lg text-center border border-base-300">
           <h2 className="text-xl font-semibold text-secondary">

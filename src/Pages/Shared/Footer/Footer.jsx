@@ -1,5 +1,6 @@
 import React from "react";
 import { Link } from "react-router";
+import logo from "../../../assets/Screenshot_2025-12-13_191151-removebg-preview.png";
 
 const Footer = () => {
   return (
@@ -8,9 +9,9 @@ const Footer = () => {
         {/* Logo & Description */}
         <div className="flex-1">
           <Link to="/">
-            <h2 className="text-2xl font-bold text-primary mb-4">
-              ScholarStream
-            </h2>
+            <Link to="/">
+              <img src={logo} alt="" className="w-40 h-12" />
+            </Link>
           </Link>
           <p className="text-muted">
             Discover global scholarships, apply easily, and unlock your future.

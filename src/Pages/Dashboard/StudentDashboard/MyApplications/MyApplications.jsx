@@ -73,7 +73,6 @@ const MyApplications = () => {
         studentName: app.studentName,
       };
 
-      console.log("Payment payload:", paymentPayload);
 
       const res = await axiosSecure.post("/payments/init", paymentPayload);
 

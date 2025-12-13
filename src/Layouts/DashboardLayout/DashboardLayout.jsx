@@ -1,5 +1,5 @@
 import React from "react";
-import { Link, NavLink, Outlet } from "react-router";
+import { Link, Navigate, NavLink, Outlet } from "react-router";
 import {
   FaClipboardList,
   FaCommentDots,
@@ -14,10 +14,20 @@ import useAuth from "../../hooks/useAuth";
 import { MdAnalytics, MdPayment } from "react-icons/md";
 import { FiLogOut } from "react-icons/fi";
 import { RiAccountCircleLine } from "react-icons/ri";
+import logo from "../../assets/Screenshot_2025-12-13_191151-removebg-preview.png";
+import Loader from "../../Pages/Shared/Loader/Loader";
 
 const DashboardLayout = () => {
   const { user, logOut } = useAuth();
-  const { role } = useRole();
+  const { role, roleLoading } = useRole();
+
+  if (roleLoading) return <Loader />;
+
+  if (role === "Admin") <Navigate to="analytics" />;
+  if (role === "Moderator") <Navigate to="manage-applications" />;
+  if (role === "Student") <Navigate to="my-applications" />;
+
+  console.log(role);
 
   return (
     <div className="drawer lg:drawer-open bg-base-200 text-neutral h-screen overflow-auto">
@@ -46,11 +56,10 @@ const DashboardLayout = () => {
                 />
               </svg>
             </label>
-            <Link
-              to="/"
-              className="text-2xl font-extrabold bg-primary text-transparent bg-clip-text"
-            >
-              ScholarStream
+            <Link to="/">
+              <Link to="/">
+                <img src={logo} alt="" className="w-40 h-12" />
+              </Link>
             </Link>
           </div>
         </nav>
@@ -61,7 +70,7 @@ const DashboardLayout = () => {
         </main>
       </div>
 
-      {/* 🔹 SIDEBAR */}
+      {/* SIDEBAR */}
       <div className="drawer-side">
         <label
           htmlFor="my-drawer-4"
@@ -74,16 +83,28 @@ const DashboardLayout = () => {
           min-h-screen overflow-y-hidden transition-all duration-300 md:pt-0"
         >
           {/* User Profile */}
-          <div className="flex flex-col items-center py-6 border-b border-base-300">
+          <div className="flex flex-col items-center py-6 border-b border-base-300 ml-2">
             <img
               src={user?.photoURL || "https://i.ibb.co/4pDNd9p/avatar.png"}
               alt="User Avatar"
               className="w-15 h-15 rounded-full border-2 border-primary shadow-sm"
             />
-            <h3 className="mt-3 text-lg font-semibold text-neutral">
+            <h3 className="mt-3 text-lg font-semibold text-neutral text-center">
               {user?.displayName}
             </h3>
-            <p className="text-sm text-muted">{role}</p>
+            <p
+              className={`text-sm font-medium px-3 pb-0.5 rounded-xl text-white ${
+                role === "Admin"
+                  ? "bg-primary"
+                  : role === "Moderator"
+                  ? "bg-secondary"
+                  : role === "Student"
+                  ? "bg-blue-500"
+                  : "text-muted"
+              }`}
+            >
+              {role}
+            </p>
           </div>
 
           {/* Menu Items */}
@@ -168,7 +189,6 @@ const DashboardLayout = () => {
 
 export default DashboardLayout;
 
-// 🔹 DashboardLink Component for Modern Sidebar
 const DashboardLink = ({ to, icon: Icon, children }) => (
   <li>
     <NavLink

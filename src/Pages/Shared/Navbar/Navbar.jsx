@@ -3,6 +3,7 @@ import { Link, NavLink } from "react-router";
 import useAuth from "../../../hooks/useAuth";
 import { motion, AnimatePresence } from "framer-motion";
 import { FiLogIn } from "react-icons/fi";
+import logo from "../../../assets/Screenshot_2025-12-13_191151-removebg-preview.png";
 
 const Navbar = () => {
   const { user, logOut } = useAuth();
@@ -69,11 +70,8 @@ const Navbar = () => {
             />
           </svg>
         </button>
-        <Link
-          to="/"
-          className="text-2xl font-extrabold bg-primary text-transparent bg-clip-text"
-        >
-          ScholarStream
+        <Link to="/">
+          <img src={logo} alt="" className="w-40 h-12" />
         </Link>
 
         {/* Desktop Links */}

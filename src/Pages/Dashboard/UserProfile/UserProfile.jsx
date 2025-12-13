@@ -29,7 +29,7 @@ const UserProfile = () => {
       bg-white/20 backdrop-blur-xl border border-white/20"
     >
       {/* Profile Header */}
-      <div className="flex items-center gap-6">
+      <div className="flex flex-col md:flex-row justify-center items-center gap-6">
         <img
           src={user.photoURL || "https://i.ibb.co/4pDNd9p/avatar.png"}
           alt="User Avatar"
@@ -65,12 +65,6 @@ const UserProfile = () => {
           value={new Date(user.metadata.lastSignInTime).toLocaleDateString()}
           icon={<FiLogIn />}
         />
-        {user.phoneNumber && (
-          <InfoCard label="Phone" value={user.phoneNumber} icon={<FiPhone />} />
-        )}
-        {user.address && (
-          <InfoCard label="Address" value={user.address} icon={<FiMapPin />} />
-        )}
       </div>
     </div>
   );

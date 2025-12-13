@@ -27,7 +27,6 @@ const ManageApplications = () => {
   if (isLoading) return <Loader />;
 
   const handleStatusUpdate = async (id, newStatus) => {
-    console.log("Updating:", id, newStatus); // debug
 
     try {
       await axiosSecure.patch(`/applications/${id}`, { status: newStatus });

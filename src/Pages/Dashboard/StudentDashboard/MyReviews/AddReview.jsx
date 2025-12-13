@@ -28,6 +28,7 @@ const AddReview = ({ application, closeModal }) => {
         comment,
         studentEmail: user.email,
         studentName: user.displayName,
+        studentImage: user.photo,
         scholarshipId: application.scholarshipId,
         scholarshipName: application.scholarshipName,
         universityName: application.universityName,

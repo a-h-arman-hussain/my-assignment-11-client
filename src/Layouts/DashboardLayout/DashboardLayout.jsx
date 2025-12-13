@@ -1,5 +1,5 @@
-import React from "react";
-import { Link, Navigate, NavLink, Outlet } from "react-router";
+import React, { useEffect } from "react";
+import { Link, NavLink, Outlet, useLocation, useNavigate } from "react-router";
 import {
   FaClipboardList,
   FaCommentDots,
@@ -21,13 +21,25 @@ const DashboardLayout = () => {
   const { user, logOut } = useAuth();
   const { role, roleLoading } = useRole();
 
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  useEffect(() => {
+    if (roleLoading) return;
+
+    // শুধু /dashboard এ ঢুকলেই redirect হবে
+    if (location.pathname === "/dashboard") {
+      if (role === "Admin") {
+        navigate("analytics", { replace: true });
+      } else if (role === "Moderator") {
+        navigate("manage-applications", { replace: true });
+      } else if (role === "Student") {
+        navigate("my-applications", { replace: true });
+      }
+    }
+  }, [role, roleLoading, navigate, location.pathname]);
+
   if (roleLoading) return <Loader />;
-
-  if (role === "Admin") <Navigate to="analytics" />;
-  if (role === "Moderator") <Navigate to="manage-applications" />;
-  if (role === "Student") <Navigate to="my-applications" />;
-
-  console.log(role);
 
   return (
     <div className="drawer lg:drawer-open bg-base-200 text-neutral h-screen overflow-auto">

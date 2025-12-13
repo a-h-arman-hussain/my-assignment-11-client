@@ -46,14 +46,17 @@ const DashboardLayout = () => {
                 />
               </svg>
             </label>
-            <Link to="/" className="text-primary font-bold text-xl ml-4">
+            <Link
+              to="/"
+              className="text-2xl font-extrabold bg-gradient-to-r from-primary to-secondary text-transparent bg-clip-text"
+            >
               ScholarStream
             </Link>
           </div>
         </nav>
 
         {/* MAIN CONTENT */}
-        <main className="p-6 flex-1 overflow-auto">
+        <main className="p-2 md:p-6 flex-1 overflow-auto">
           <Outlet />
         </main>
       </div>
@@ -65,7 +68,11 @@ const DashboardLayout = () => {
           className="drawer-overlay bg-white"
         ></label>
 
-        <aside className="flex flex-col w-64 bg-gradient-to-b from-primary/10 to-white border-r border-base-300 shadow-lg sticky top-0 z-50 h-screen overflow-y-auto transition-all duration-300 mt-14 md:mt-0">
+        <aside
+          className="flex flex-col w-64 bg-gradient-to-b from-primary/10 to-white 
+  border-r border-base-300 shadow-lg sticky top-0 z-50 
+  min-h-screen overflow-y-hidden transition-all duration-300 pt-14 md:pt-0"
+        >
           {/* User Profile */}
           <div className="flex flex-col items-center py-6 border-b border-base-300">
             <img
@@ -80,7 +87,7 @@ const DashboardLayout = () => {
           </div>
 
           {/* Menu Items */}
-          <ul className="menu grow p-4 space-y-2">
+          <ul className="menu grow p-4 space-y-2 overflow-y-auto md:overflow-y-visible">
             {/* ---------------- ADMIN ---------------- */}
             {role === "Admin" && (
               <>

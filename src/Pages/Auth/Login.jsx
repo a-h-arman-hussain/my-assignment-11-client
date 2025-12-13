@@ -90,8 +90,8 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-base-200 px-4">
-      <div className="w-full max-w-md bg-base-100/80 backdrop-blur-lg p-8 rounded-2xl shadow-2xl border border-base-300">
+    <div className="flex items-center justify-center bg-base-200 px-2">
+      <div className="w-full max-w-md bg-base-100/80 backdrop-blur-lg p-5 md:p-8 rounded-2xl shadow-2xl border border-base-300">
         <h2 className="text-3xl font-bold text-center mb-6 text-primary">
           Login to Your Account
         </h2>

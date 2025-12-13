@@ -52,7 +52,7 @@ const ManageUsers = () => {
         );
 
   return (
-    <div className="min-h-screen p-6 bg-base-200 text-neutral max-w-11/12 mx-auto">
+    <div className="min-h-screen p-2 md:p-6 bg-base-200 text-neutral max-w-11/12 mx-auto">
       <h1 className="text-3xl font-bold mb-6 text-primary text-center">
         Manage Users
       </h1>

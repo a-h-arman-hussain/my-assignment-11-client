@@ -37,13 +37,13 @@ const Hero = () => {
     <section className="mt-0 relative w-full md:h-[400px] bg-gradient-to-br from-primary to-secondary flex items-center rounded-b-2xl py-10">
       <div className="container mx-auto flex flex-col-reverse md:flex-row items-center px-6 md:px-16">
         {/* Left Content */}
-        <div className="flex-1 text-center md:text-left">
-          <h1 className="text-3xl md:text-4xl font-extrabold text-base-100 leading-tight">
+        <div className="flex-1 text-center md:text-left w-full max-w-full">
+          <h1 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-base-100 leading-snug break-words">
             Unlock Your Future with{" "}
             <span className="text-yellow-400">Global Scholarships</span>
           </h1>
 
-          <p className="text-base-200 text-md md:text-lg mb-6">
+          <p className="text-base-200 text-sm sm:text-base md:text-lg mb-4 break-words">
             Explore thousands of scholarships worldwide. Apply easily, get
             funded, and achieve your dreams.
           </p>
@@ -51,30 +51,32 @@ const Hero = () => {
           {/* Search Form */}
           <form
             onSubmit={handleSubmit(onSearch)}
-            className="relative max-w-md mx-auto md:mx-0"
+            className="relative w-full max-w-md mx-auto md:mx-0"
           >
-            <div className="flex items-center bg-base-100 rounded-full shadow-lg overflow-hidden border border-base-300 transition">
+            <div className="flex items-center bg-base-100 rounded-full shadow-lg overflow-hidden border border-base-300 transition w-full">
               <input
                 type="text"
                 {...register("search")}
                 placeholder="Search Scholarship"
-                className="flex-1 px-6 py-3 text-neutral placeholder-muted focus:outline-none  rounded-full transition"
+                className="flex-1 px-3 sm:px-4 h-11 sm:h-12 md:h-14 text-neutral placeholder-muted focus:outline-none text-sm sm:text-base"
               />
+
               <button
                 type="submit"
-                className="bg-accent hover:bg-secondary text-base-100 font-bold px-6 py-3 rounded-full transition transform hover:scale-105 shadow-md hover:shadow-lg cursor-pointer"
+                className="h-11 sm:h-12 md:h-14 px-3 sm:px-4 md:px-6 bg-accent hover:bg-secondary 
+        text-base-100 font-bold rounded-full transition transform hover:scale-105 
+        shadow-md hover:shadow-lg text-xs sm:text-sm md:text-base whitespace-nowrap"
               >
                 Search
               </button>
             </div>
 
-            {/* Suggestions dropdown */}
             {suggestions.length > 0 && (
-              <ul className="absolute top-full mt-1 w-full bg-base-100 rounded-xl shadow-lg border border-base-300 z-50">
+              <ul className="absolute left-0 right-0 mt-1 bg-base-100 rounded-xl shadow-lg border border-base-300 z-50 max-h-60 overflow-y-auto">
                 {suggestions.map((s) => (
                   <li
                     key={s._id}
-                    className="px-4 py-2 cursor-pointer hover:bg-primary/20 transition text-neutral"
+                    className="px-3 py-2 cursor-pointer hover:bg-primary/20 transition text-neutral text-sm sm:text-base"
                     onClick={() =>
                       navigate(
                         `/all-scholarships?search=${encodeURIComponent(
@@ -90,7 +92,7 @@ const Hero = () => {
             )}
           </form>
 
-          <p className="ml-3 text-base-200/50">
+          <p className="mt-2 text-base-200/50 text-xs sm:text-sm break-words">
             Search by university, scholarship name, or category.
           </p>
         </div>

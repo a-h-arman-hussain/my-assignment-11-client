@@ -46,18 +46,40 @@ const MyApplications = () => {
     }
   };
 
+  // const handlePayment = async (app) => {
+  //   const paymentInfo = {
+  //     applicationFees: app.applicationFees,
+  //     scholarshipId: app.scholarshipId,
+  //     email: user.email,
+  //     scholarshipName: app.scholarshipName,
+  //   };
+  //   const res = await axiosSecure.post(
+  //     "/payment-checkout-session",
+  //     paymentInfo
+  //   );
+  //   window.location.assign(res.data.url);
+  // };
+
   const handlePayment = async (app) => {
-    const paymentInfo = {
-      applicationFees: app.applicationFees,
-      scholarshipId: app.scholarshipId,
-      email: user.email,
-      scholarshipName: app.scholarshipName,
-    };
-    const res = await axiosSecure.post(
-      "/payment-checkout-session",
-      paymentInfo
-    );
-    window.location.assign(res.data.url);
+    try {
+      const paymentPayload = {
+        applicationId: app._id,
+        scholarshipId: app.scholarshipId,
+        scholarshipName: app.scholarshipName,
+        universityName: app.universityName,
+        amount: Number(app.applicationFees),
+        userEmail: app.userEmail,
+        studentEmail: app.studentEmail,
+        studentName: app.studentName,
+      };
+
+      const res = await axiosSecure.post("/payments/init", paymentPayload);
+
+      window.location.assign(res.data.url);
+    } catch (err) {
+      console.error(err);
+      alert("Payment failed");
+    }
   };
 
   const handleDelete = async (id) => {
@@ -164,7 +186,7 @@ const MyApplications = () => {
                     )}
 
                     {/* ADD REVIEW */}
-                    {app.applicationStatus === "completed"  && (
+                    {app.applicationStatus === "completed" && (
                       <button
                         onClick={() => setReviewingApp(app)}
                         className="btn btn-sm btn-primary text-white"

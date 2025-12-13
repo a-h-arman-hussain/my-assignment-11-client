@@ -5,31 +5,29 @@ import useAxiosSecure from "../../../hooks/useAxiosSecure";
 const PaymentSuccess = () => {
   const [searchParams] = useSearchParams();
   const sessionId = searchParams.get("session_id");
+  const applicationId = searchParams.get("applicationId"); // ✅ from success_url
   const axiosSecure = useAxiosSecure();
-  // const navigate = useNavigate();
-
-  // useEffect(() => {
-  //   if (sessionId) {
-  //     axiosSecure
-  //       .patch(`/payment-success?session_id=${sessionId}`)
-  //       .then(() => {
-  //         setTimeout(() => {
-  //           navigate("/dashboard/my-applications");
-  //         }, 3000);
-  //       })
-  //       .catch((err) => console.error(err));
-  //   }
-  // }, [sessionId, axiosSecure, navigate]);
+  const navigate = useNavigate();
 
   useEffect(() => {
-    if (sessionId) {
+    if (sessionId && applicationId) {
       axiosSecure
-        .patch(`/payment-success?session_id=${sessionId}`)
+        .patch(`/payments/complete/${applicationId}`, {
+          sessionId,
+        })
         .then((res) => {
-          console.log(res.data);
+          console.log("Payment success data:", res.data);
+
+          // 3 seconds later redirect to My Applications
+          setTimeout(() => {
+            navigate("/dashboard/my-applications");
+          }, 3000);
+        })
+        .catch((err) => {
+          console.error("Payment patch error:", err);
         });
     }
-  }, [axiosSecure, sessionId]);
+  }, [sessionId, applicationId, axiosSecure, navigate]);
 
   return (
     <div className="text-center mt-20">

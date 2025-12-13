@@ -12,7 +12,7 @@ const AuthLayout = () => {
       </header>
 
       {/* Main Content */}
-      <main className="flex-grow max-w-11/12 mx-auto p-4">
+      <main className="flex-grow max-w-11/12 mx-auto py-8">
         <Outlet />
       </main>
 

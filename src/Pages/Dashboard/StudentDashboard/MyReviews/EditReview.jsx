@@ -1,6 +1,7 @@
 // EditReview.jsx
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import Swal from "sweetalert2";
 
 export default function EditReview({ review, closeModal, onSubmit }) {
   const [rating, setRating] = useState(review?.rating || 0);
@@ -8,11 +9,24 @@ export default function EditReview({ review, closeModal, onSubmit }) {
 
   const handleSubmit = () => {
     if (rating === 0 || comment.trim() === "") {
-      alert("Please provide both rating and comment.");
+      Swal.fire({
+        icon: "warning",
+        title: "Incomplete Review",
+        text: "Please provide both rating and comment.",
+      });
       return;
     }
+
     onSubmit(review._id, { rating, comment });
     closeModal();
+
+    Swal.fire({
+      icon: "success",
+      title: "Submitted!",
+      text: "Your review has been submitted successfully.",
+      timer: 1500,
+      showConfirmButton: false,
+    });
   };
 
   return (
@@ -68,13 +82,13 @@ export default function EditReview({ review, closeModal, onSubmit }) {
           <div className="flex justify-end gap-3 mt-6">
             <button
               onClick={closeModal}
-              className="px-4 py-2 rounded-xl bg-gray-300 text-gray-700 font-semibold hover:bg-gray-400 transition"
+              className="btn btn-sm btn-outline"
             >
               Cancel
             </button>
             <button
               onClick={handleSubmit}
-              className="px-4 py-2 rounded-xl bg-gradient-to-r from-green-500 to-green-600 text-white font-semibold shadow hover:shadow-lg transition"
+              className="btn btn-sm btn-primary"
             >
               Save Changes
             </button>

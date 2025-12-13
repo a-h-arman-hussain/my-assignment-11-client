@@ -19,14 +19,6 @@ const MyApplicationDetails = ({ application, closeModal }) => {
           transition={{ duration: 0.25 }}
           className="bg-base-100 p-6 rounded-2xl shadow border border-base-300 w-full max-w-xl relative"
         >
-          {/* Close button */}
-          <button
-            onClick={closeModal}
-            className="absolute right-4 top-4 transition text-lg"
-          >
-            ✖
-          </button>
-
           {/* Header */}
           <h2 className="text-2xl font-bold mb-4 text-primary text-center">
             Application Details

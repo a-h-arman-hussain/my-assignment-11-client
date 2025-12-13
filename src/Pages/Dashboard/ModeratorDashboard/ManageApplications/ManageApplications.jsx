@@ -6,6 +6,7 @@ import ApplicationDetailsModal from "./ApplicationDetailsModal";
 import FeedbackModal from "./FeedbackModal";
 import { IoInformationCircleSharp } from "react-icons/io5";
 import { MdCancel, MdFeedback } from "react-icons/md";
+import Swal from "sweetalert2";
 
 const ManageApplications = () => {
   const axiosSecure = useAxiosSecure();
@@ -27,26 +28,65 @@ const ManageApplications = () => {
 
   const handleStatusUpdate = async (id, newStatus) => {
     console.log("Updating:", id, newStatus); // debug
+
     try {
-      await axiosSecure.patch(`/applications/${id}`, { status: newStatus }); // check backend key
+      await axiosSecure.patch(`/applications/${id}`, { status: newStatus });
+
+      Swal.fire({
+        icon: "success",
+        title: "Status Updated!",
+        text: `Application status changed to "${newStatus}".`,
+        timer: 1200,
+        showConfirmButton: false,
+      });
+
       queryClient.invalidateQueries(["allApplications"]);
     } catch (err) {
       console.error(err);
-      alert("Failed to update status");
+
+      Swal.fire({
+        icon: "error",
+        title: "Update Failed",
+        text: "Failed to update application status.",
+      });
     }
   };
 
   const handleCancel = async (id) => {
-    if (!window.confirm("Are you sure you want to reject this application?"))
-      return;
+    const result = await Swal.fire({
+      title: "Are you sure?",
+      text: "This application will be rejected!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+      confirmButtonText: "Yes, reject it",
+    });
+
+    if (!result.isConfirmed) return;
+
     try {
       await axiosSecure.patch(`/applications/${id}`, {
         applicationStatus: "rejected",
       });
+
+      Swal.fire({
+        icon: "success",
+        title: "Rejected!",
+        text: "Application rejected successfully.",
+        timer: 1500,
+        showConfirmButton: false,
+      });
+
       queryClient.invalidateQueries(["allApplications"]);
     } catch (err) {
       console.error(err);
-      alert("Failed to reject application");
+
+      Swal.fire({
+        icon: "error",
+        title: "Action Failed",
+        text: "Failed to reject application.",
+      });
     }
   };
 

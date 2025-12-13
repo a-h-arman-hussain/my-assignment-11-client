@@ -7,6 +7,7 @@ import Loader from "../../../Shared/Loader/Loader";
 import EditReview from "../MyReviews/EditReview";
 import { CiEdit } from "react-icons/ci";
 import { MdOutlineDeleteForever } from "react-icons/md";
+import Swal from "sweetalert2";
 
 const MyReviews = () => {
   const { user } = useAuth();
@@ -26,26 +27,48 @@ const MyReviews = () => {
   });
 
   const handleDelete = async (id) => {
-    if (!window.confirm("Are you sure you want to delete this review?")) return;
+    const result = await Swal.fire({
+      title: "Are you sure?",
+      text: "This review will be permanently deleted!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+      confirmButtonText: "Yes, delete it!",
+    });
+
+    if (!result.isConfirmed) return;
+
     try {
       await axiosSecure.delete(`/delete-review/${id}`);
-      alert("Review deleted successfully!");
+
+      Swal.fire({
+        icon: "success",
+        title: "Deleted!",
+        text: "Review deleted successfully.",
+        timer: 1500,
+        showConfirmButton: false,
+      });
+
       queryClient.invalidateQueries(["myReviews", user?.email]);
     } catch (err) {
       console.error(err);
-      alert("Failed to delete review");
+
+      Swal.fire({
+        icon: "error",
+        title: "Failed",
+        text: "Failed to delete review. Please try again.",
+      });
     }
   };
 
   const handleUpdate = async (id, data) => {
     try {
       await axiosSecure.patch(`/update-review/${id}`, data);
-      alert("Review updated successfully!");
       queryClient.invalidateQueries(["myReviews", user?.email]);
       setEditingReview(null);
     } catch (err) {
       console.error(err);
-      alert("Failed to update review");
     }
   };
 

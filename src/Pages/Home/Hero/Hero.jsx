@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router";
 import useAxiosSecure from "../../../hooks/useAxiosSecure";
+import heroImg from "../../../assets/Oxford (Inglaterra) 🏴______.jpeg";
 
 const Hero = () => {
   const { register, watch, handleSubmit } = useForm();
@@ -63,9 +64,9 @@ const Hero = () => {
 
               <button
                 type="submit"
-                className="h-11 sm:h-12 md:h-14 px-3 sm:px-4 md:px-6 bg-accent hover:bg-secondary 
-        text-base-100 font-bold rounded-full transition transform hover:scale-105 
-        shadow-md hover:shadow-lg text-xs sm:text-sm md:text-base whitespace-nowrap"
+                className="h-11 sm:h-12 md:h-14 px-3 sm:px-4 md:px-6 bg-primary hover:bg-secondary 
+                text-base-100 font-bold rounded-full transition transform hover:scale-105 
+                shadow-md hover:shadow-lg text-xs sm:text-sm md:text-base whitespace-nowrap cursor-pointer"
               >
                 Search
               </button>
@@ -100,9 +101,9 @@ const Hero = () => {
         {/* Right Image */}
         <div className="flex-1 mb-10 md:mb-0">
           <img
-            src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=800&q=80"
+            src={heroImg}
             alt="Scholarship Hero"
-            className="w-full max-w-md mx-auto rounded-2xl shadow-2xl border border-base-300"
+            className="w-full max-w-md mx-auto rounded-2xl shadow-2xl"
           />
         </div>
       </div>

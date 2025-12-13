@@ -3,6 +3,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import useAxiosSecure from "../../../../hooks/useAxiosSecure";
 import Loader from "../../../Shared/Loader/Loader";
 import { MdOutlineDeleteForever } from "react-icons/md";
+import Swal from "sweetalert2";
 
 const ManageUsers = () => {
   const axiosSecure = useAxiosSecure();
@@ -21,24 +22,60 @@ const ManageUsers = () => {
   const handleRoleChange = async (userId, newRole) => {
     try {
       await axiosSecure.patch(`/users/${userId}/role`, { role: newRole });
-      alert("Role updated successfully!");
+
+      Swal.fire({
+        icon: "success",
+        title: "Role Updated!",
+        text: "User role updated successfully.",
+        timer: 1500,
+        showConfirmButton: false,
+      });
+
       queryClient.invalidateQueries(["users"]);
     } catch (err) {
       console.error(err);
-      alert("Failed to update role");
+
+      Swal.fire({
+        icon: "error",
+        title: "Update Failed",
+        text: "Failed to update role. Please try again.",
+      });
     }
   };
 
   const handleDelete = async (userId) => {
-    if (!window.confirm("Are you sure you want to delete this user?")) return;
+    const result = await Swal.fire({
+      title: "Are you sure?",
+      text: "This user will be permanently deleted!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+      confirmButtonText: "Yes, delete user",
+    });
+
+    if (!result.isConfirmed) return;
 
     try {
       await axiosSecure.delete(`/users/${userId}`);
-      alert("User deleted successfully!");
+
+      Swal.fire({
+        icon: "success",
+        title: "Deleted!",
+        text: "User deleted successfully.",
+        timer: 1500,
+        showConfirmButton: false,
+      });
+
       queryClient.invalidateQueries(["users"]);
     } catch (err) {
       console.error(err);
-      alert("Failed to delete user");
+
+      Swal.fire({
+        icon: "error",
+        title: "Delete Failed",
+        text: "Failed to delete user. Please try again.",
+      });
     }
   };
 

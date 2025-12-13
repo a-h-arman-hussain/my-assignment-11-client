@@ -46,7 +46,7 @@ const Navbar = () => {
         paddingBottom: scrolled ? "0.25rem" : "0.5rem",
       }}
     >
-      <div className="max-w-11/12 mx-auto flex justify-between items-center h-16">
+      <div className="flex justify-between items-center h-12 px-[5%]">
         {/* Logo */}
         <button
           className="lg:hidden btn-ghost text-primary cursor-pointer"
@@ -71,7 +71,7 @@ const Navbar = () => {
         </button>
         <Link
           to="/"
-          className="text-2xl font-extrabold bg-gradient-to-r from-primary to-secondary text-transparent bg-clip-text"
+          className="text-2xl font-extrabold bg-primary text-transparent bg-clip-text"
         >
           ScholarStream
         </Link>
@@ -170,7 +170,7 @@ const Navbar = () => {
               initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
-              className="absolute top-18 left-0 w-full bg-base-200 shadow-md border-t border-base-300 flex flex-col lg:hidden"
+              className="absolute top-14 left-0 w-full bg-base-200 shadow-md border-t border-base-300 flex flex-col lg:hidden"
             >
               {links.map((link) => (
                 <li key={link.to} className="border-b border-base-300">

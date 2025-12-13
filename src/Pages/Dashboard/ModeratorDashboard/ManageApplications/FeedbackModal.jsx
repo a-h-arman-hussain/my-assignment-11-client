@@ -1,33 +1,54 @@
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import useAxiosSecure from "../../../../hooks/useAxiosSecure";
+import Swal from "sweetalert2";
 
 const FeedbackModal = ({ application, closeModal }) => {
   const axiosSecure = useAxiosSecure();
   const [feedback, setFeedback] = useState(application.feedback || "");
 
   const handleSubmit = async () => {
-    if (!feedback.trim()) {
-      alert("Feedback cannot be empty");
-      return;
-    }
+  if (!feedback.trim()) {
+    Swal.fire({
+      icon: "warning",
+      title: "Empty Feedback",
+      text: "Feedback cannot be empty.",
+    });
+    return;
+  }
 
-    try {
-      const res = await axiosSecure.patch(
-        `/update-application/${application._id}`,
-        { feedback }
-      );
-      if (res.data.success) {
-        alert("Feedback submitted successfully!");
-        closeModal();
-      } else {
-        alert("Failed to submit feedback");
-      }
-    } catch (err) {
-      console.error(err);
-      alert("Failed to submit feedback");
+  try {
+    const res = await axiosSecure.patch(
+      `/update-application/${application._id}`,
+      { feedback }
+    );
+
+    if (res.data.success) {
+      Swal.fire({
+        icon: "success",
+        title: "Submitted!",
+        text: "Feedback submitted successfully.",
+        timer: 1500,
+        showConfirmButton: false,
+      });
+
+      closeModal();
+    } else {
+      Swal.fire({
+        icon: "error",
+        title: "Failed",
+        text: "Failed to submit feedback.",
+      });
     }
-  };
+  } catch (err) {
+    console.error(err);
+    Swal.fire({
+      icon: "error",
+      title: "Error",
+      text: "Failed to submit feedback. Please try again.",
+    });
+  }
+};
 
   return (
     <AnimatePresence>

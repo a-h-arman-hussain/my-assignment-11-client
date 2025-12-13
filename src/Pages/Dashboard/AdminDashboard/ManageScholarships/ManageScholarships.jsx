@@ -5,6 +5,7 @@ import Loader from "../../../Shared/Loader/Loader";
 import EditScholarshipModal from "./EditScholarshipModal"; // নিচে বানানো হবে
 import { CiEdit } from "react-icons/ci";
 import { MdOutlineDeleteForever } from "react-icons/md";
+import Swal from "sweetalert2";
 
 const ManageScholarships = () => {
   const axiosSecure = useAxiosSecure();
@@ -20,18 +21,40 @@ const ManageScholarships = () => {
   });
 
   const handleDelete = async (id) => {
-    if (!window.confirm("Are you sure you want to delete this scholarship?"))
-      return;
+  const result = await Swal.fire({
+    title: "Are you sure?",
+    text: "This scholarship will be permanently deleted!",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonColor: "#d33",
+    cancelButtonColor: "#3085d6",
+    confirmButtonText: "Yes, delete it!",
+  });
 
-    try {
-      await axiosSecure.delete(`/scholarships/${id}`);
-      alert("Scholarship deleted successfully!");
-      queryClient.invalidateQueries(["scholarships"]);
-    } catch (err) {
-      console.error(err);
-      alert("Failed to delete scholarship");
-    }
-  };
+  if (!result.isConfirmed) return;
+
+  try {
+    await axiosSecure.delete(`/scholarships/${id}`);
+
+    Swal.fire({
+      title: "Deleted!",
+      text: "Scholarship deleted successfully.",
+      icon: "success",
+      timer: 1500,
+      showConfirmButton: false,
+    });
+
+    queryClient.invalidateQueries(["scholarships"]);
+  } catch (err) {
+    console.error(err);
+    Swal.fire({
+      title: "Error!",
+      text: "Failed to delete scholarship.",
+      icon: "error",
+    });
+  }
+};
+
 
   if (isLoading) return <Loader />;
 

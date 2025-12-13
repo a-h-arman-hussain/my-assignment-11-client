@@ -25,11 +25,11 @@ const DashboardLayout = () => {
 
       {/* 🔹 NAVBAR */}
       <div className="drawer-content flex flex-col">
-        <nav className="navbar w-full bg-primary/10 shadow-md backdrop-blur-xl sticky top-0 z-50 px-6">
-          <div className="flex-1">
+        <nav className="navbar w-full bg-primary/10 shadow-md backdrop-blur-xl sticky top-0 z-10 px-6">
+          <div className="flex-1 flex items-center justify-start">
             <label
               htmlFor="my-drawer-4"
-              className="btn btn-square btn-ghost lg:hidden text-primary"
+              className="lg:hidden text-primary mr-2 cursor-pointer"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -48,7 +48,7 @@ const DashboardLayout = () => {
             </label>
             <Link
               to="/"
-              className="text-2xl font-extrabold bg-gradient-to-r from-primary to-secondary text-transparent bg-clip-text"
+              className="text-2xl font-extrabold bg-primary text-transparent bg-clip-text"
             >
               ScholarStream
             </Link>
@@ -65,13 +65,13 @@ const DashboardLayout = () => {
       <div className="drawer-side">
         <label
           htmlFor="my-drawer-4"
-          className="drawer-overlay bg-white"
+          className="drawer-overlay bg-primary/10 backdrop-blur-lg sticky top-0 z-50"
         ></label>
 
         <aside
-          className="flex flex-col w-64 bg-gradient-to-b from-primary/10 to-white 
-  border-r border-base-300 shadow-lg sticky top-0 z-50 
-  min-h-screen overflow-y-hidden transition-all duration-300 pt-14 md:pt-0"
+          className="flex flex-col w-64 bg-gradient-to-b from-primary/20 to-white 
+          md:border-r border-base-300 shadow-lg sticky top-0 z-50 
+          min-h-screen overflow-y-hidden transition-all duration-300 md:pt-0"
         >
           {/* User Profile */}
           <div className="flex flex-col items-center py-6 border-b border-base-300">

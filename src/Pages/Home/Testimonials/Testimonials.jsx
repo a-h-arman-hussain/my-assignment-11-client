@@ -61,13 +61,13 @@ const Testimonials = () => {
           {/* Navigation Buttons */}
           <button
             onClick={prevSlide}
-            className="absolute left-0 top-1/2 -translate-y-1/2 bg-primary hover:bg-secondary text-base-100 p-2 rounded-full shadow-lg"
+            className="absolute left-0 top-1/2 -translate-y-1/2 bg-primary hover:bg-secondary text-base-100 p-2 rounded-full shadow-lg cursor-pointer"
           >
             &#8592;
           </button>
           <button
             onClick={nextSlide}
-            className="absolute right-0 top-1/2 -translate-y-1/2 bg-primary hover:bg-secondary text-base-100 p-2 rounded-full shadow-lg"
+            className="absolute right-0 top-1/2 -translate-y-1/2 bg-primary hover:bg-secondary text-base-100 p-2 rounded-full shadow-lg cursor-pointer"
           >
             &#8594;
           </button>

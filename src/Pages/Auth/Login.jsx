@@ -4,6 +4,8 @@ import { Link, useNavigate } from "react-router";
 import useAuth from "../../hooks/useAuth";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
 import Swal from "sweetalert2";
+import { FiLogIn } from "react-icons/fi";
+import { FcGoogle } from "react-icons/fc";
 
 export default function Login() {
   const { signInUser, signInGoogle } = useAuth();
@@ -22,7 +24,7 @@ export default function Login() {
       await signInUser(data.email, data.password);
 
       Swal.fire({
-        title: "Welcome Back! 👋",
+        title: "Welcome Back!",
         text: "Login Successful",
         icon: "success",
         background: "var(--color-base-200)",
@@ -66,7 +68,7 @@ export default function Login() {
       }
 
       Swal.fire({
-        title: "Google Login Successful 🔥",
+        title: "Google Login Successful",
         text: existingUser
           ? "Welcome back to ScholarStream!"
           : "Account created & logged in successfully!",
@@ -92,8 +94,8 @@ export default function Login() {
   return (
     <div className="flex items-center justify-center bg-base-200 px-2">
       <div className="w-full max-w-md bg-base-100/80 backdrop-blur-lg p-5 md:p-8 rounded-2xl shadow-2xl border border-base-300">
-        <h2 className="text-3xl font-bold text-center mb-6 text-primary">
-          Login to Your Account
+        <h2 className="text-2xl font-bold text-center mb-6 text-primary">
+          Please Login Your Account
         </h2>
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
@@ -127,19 +129,25 @@ export default function Login() {
 
           <button
             type="submit"
-            className="w-full bg-primary hover:bg-primary/90 text-base-100 p-3 rounded-lg font-semibold transition shadow-md"
+            className="w-full bg-primary hover:bg-primary/90 text-base-100 p-2 rounded-lg font-semibold transition shadow-md cursor-pointer"
           >
-            Login
+            <div className="flex items-center justify-center gap-1 text-lg">
+              <FiLogIn />
+              Login
+            </div>
           </button>
         </form>
 
-        <div className="mt-6 text-center">
+        <div className="mt-3 text-center">
           <p className="text-muted mb-3">Or login with</p>
           <button
             onClick={handleGoogleLogin}
-            className="w-full bg-secondary hover:bg-secondary/90 text-base-100 p-3 rounded-lg font-semibold transition shadow-md"
+            className="w-full border border-secondary hover:bg-secondary/90 text-secondary hover:text-white p-2 rounded-lg font-semibold transition shadow-md cursor-pointer"
           >
-            Google Login
+            <div className="flex items-center justify-center gap-1 text-lg">
+              <FcGoogle />
+              Google Login
+            </div>
           </button>
         </div>
 

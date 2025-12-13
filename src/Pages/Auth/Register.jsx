@@ -4,6 +4,7 @@ import useAuth from "../../hooks/useAuth";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
 import { Link, useNavigate } from "react-router";
 import Swal from "sweetalert2";
+import { FaUserPlus } from "react-icons/fa";
 
 export default function Register() {
   const { registerUser, updateUserProfile } = useAuth();
@@ -36,7 +37,7 @@ export default function Register() {
       await axiosSecure.post("/users", savedUser);
 
       Swal.fire({
-        title: "Registration Successful! 🎉",
+        title: "Registration Successful!",
         text: "Your account has been created successfully.",
         icon: "success",
         background: "var(--color-base-200)",
@@ -62,7 +63,7 @@ export default function Register() {
   return (
     <div className="flex items-center justify-center bg-base-200 px-2">
       <div className="w-full md:max-w-full bg-base-100/80 backdrop-blur-lg p-5 md:p-8 rounded-2xl shadow-2xl border border-base-300">
-        <h2 className="text-3xl font-bold text-center mb-6 text-primary">
+        <h2 className="text-2xl font-bold text-center mb-6 text-primary">
           Create an Account
         </h2>
 
@@ -126,9 +127,12 @@ export default function Register() {
 
           <button
             type="submit"
-            className="w-full bg-primary hover:bg-primary/90 text-base-100 p-3 rounded-lg font-semibold transition shadow-md"
+            className="w-full bg-primary hover:bg-primary/90 text-base-100 p-2 rounded-lg font-semibold transition shadow-md cursor-pointer"
           >
-            Register
+            <div className="flex items-center justify-center gap-1 text-lg">
+              <FaUserPlus />
+              Register
+            </div>
           </button>
         </form>
 

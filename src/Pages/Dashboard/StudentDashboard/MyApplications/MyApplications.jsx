@@ -14,6 +14,7 @@ import {
   MdPreview,
 } from "react-icons/md";
 import { a } from "framer-motion/client";
+import Swal from "sweetalert2";
 
 const MyApplications = () => {
   const { user } = useAuth();
@@ -37,28 +38,27 @@ const MyApplications = () => {
   const handleUpdate = async (id, data) => {
     try {
       await axiosSecure.patch(`/update-application/${id}`, data);
-      alert("Application updated successfully!");
+
+      Swal.fire({
+        icon: "success",
+        title: "Updated!",
+        text: "Application updated successfully.",
+        timer: 1500,
+        showConfirmButton: false,
+      });
+
       queryClient.invalidateQueries(["myApplications", user?.email]);
       setUpdatingApp(null);
     } catch (err) {
       console.error(err);
-      alert("Failed to update application");
+
+      Swal.fire({
+        icon: "error",
+        title: "Update Failed",
+        text: "Failed to update application. Please try again.",
+      });
     }
   };
-
-  // const handlePayment = async (app) => {
-  //   const paymentInfo = {
-  //     applicationFees: app.applicationFees,
-  //     scholarshipId: app.scholarshipId,
-  //     email: user.email,
-  //     scholarshipName: app.scholarshipName,
-  //   };
-  //   const res = await axiosSecure.post(
-  //     "/payment-checkout-session",
-  //     paymentInfo
-  //   );
-  //   window.location.assign(res.data.url);
-  // };
 
   const handlePayment = async (app) => {
     try {
@@ -77,7 +77,6 @@ const MyApplications = () => {
 
       const res = await axiosSecure.post("/payments/init", paymentPayload);
 
-      // redirect to Stripe Checkout
       window.location.assign(res.data.url);
     } catch (err) {
       console.error("Payment init error:", err.response?.data || err.message);
@@ -86,15 +85,38 @@ const MyApplications = () => {
   };
 
   const handleDelete = async (id) => {
-    if (!window.confirm("Are you sure you want to delete this application?"))
-      return;
+    const result = await Swal.fire({
+      title: "Are you sure?",
+      text: "This application will be permanently deleted!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+      confirmButtonText: "Yes, delete it!",
+    });
+
+    if (!result.isConfirmed) return;
+
     try {
       await axiosSecure.delete(`/delete-application/${id}`);
-      alert("Application deleted successfully!");
+
+      Swal.fire({
+        icon: "success",
+        title: "Deleted!",
+        text: "Application deleted successfully.",
+        timer: 1500,
+        showConfirmButton: false,
+      });
+
       queryClient.invalidateQueries(["myApplications", user?.email]);
     } catch (err) {
       console.error(err);
-      alert("Failed to delete application");
+
+      Swal.fire({
+        icon: "error",
+        title: "Failed",
+        text: "Failed to delete application. Please try again.",
+      });
     }
   };
 

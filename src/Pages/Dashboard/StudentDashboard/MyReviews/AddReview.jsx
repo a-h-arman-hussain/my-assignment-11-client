@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import useAxiosSecure from "../../../../hooks/useAxiosSecure";
 import useAuth from "../../../../hooks/useAuth";
+import Swal from "sweetalert2";
 
 const AddReview = ({ application, closeModal }) => {
   const [rating, setRating] = useState(0);
@@ -12,7 +13,11 @@ const AddReview = ({ application, closeModal }) => {
 
   const handleSubmit = async () => {
     if (rating === 0 || comment.trim() === "") {
-      alert("Please provide both rating and comment.");
+      Swal.fire({
+        icon: "warning",
+        title: "Incomplete Review",
+        text: "Please provide both rating and comment.",
+      });
       return;
     }
 
@@ -28,11 +33,24 @@ const AddReview = ({ application, closeModal }) => {
         universityName: application.universityName,
         createdAt: new Date(),
       });
-      alert("Review submitted successfully!");
+
+      Swal.fire({
+        icon: "success",
+        title: "Submitted!",
+        text: "Review submitted successfully.",
+        timer: 1500,
+        showConfirmButton: false,
+      });
+
       closeModal();
     } catch (err) {
       console.error(err);
-      alert("Already you submit review");
+
+      Swal.fire({
+        icon: "error",
+        title: "Submission Failed",
+        text: "You have already submitted a review.",
+      });
     } finally {
       setLoading(false);
     }

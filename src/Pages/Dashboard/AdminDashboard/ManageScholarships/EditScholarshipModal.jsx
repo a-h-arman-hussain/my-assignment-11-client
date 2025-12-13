@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import useAxiosSecure from "../../../../hooks/useAxiosSecure";
+import Swal from "sweetalert2";
 
 const EditScholarshipModal = ({ scholarship, closeModal, onUpdate }) => {
   const axiosSecure = useAxiosSecure();
@@ -20,15 +21,31 @@ const EditScholarshipModal = ({ scholarship, closeModal, onUpdate }) => {
   };
 
   const handleSubmit = async () => {
-    try {
-      await axiosSecure.patch(`/scholarships/${scholarship._id}`, formData);
-      alert("Scholarship updated successfully!");
-      onUpdate();
-    } catch (err) {
-      console.error(err);
-      alert("Failed to update scholarship");
-    }
-  };
+  try {
+    await axiosSecure.patch(
+      `/scholarships/${scholarship._id}`,
+      formData
+    );
+
+    Swal.fire({
+      icon: "success",
+      title: "Updated!",
+      text: "Scholarship updated successfully.",
+      timer: 1500,
+      showConfirmButton: false,
+    });
+
+    onUpdate(); // modal close + refetch
+  } catch (err) {
+    console.error(err);
+
+    Swal.fire({
+      icon: "error",
+      title: "Update Failed",
+      text: "Failed to update scholarship. Please try again.",
+    });
+  }
+};
 
   return (
     <AnimatePresence>

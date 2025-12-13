@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { FaTrash } from "react-icons/fa";
 import useAxiosSecure from "../../../../hooks/useAxiosSecure";
+import Swal from "sweetalert2";
 
 export default function AllReviews() {
   const axiosSecure = useAxiosSecure();
@@ -22,24 +23,47 @@ export default function AllReviews() {
 
   // Delete review
   const handleDelete = async (id) => {
-    const confirm = window.confirm(
-      "Are you sure you want to delete this review?"
-    );
-    if (!confirm) return;
+  const result = await Swal.fire({
+    title: "Are you sure?",
+    text: "This review will be permanently deleted!",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonColor: "#d33",
+    cancelButtonColor: "#3085d6",
+    confirmButtonText: "Yes, delete it!",
+  });
 
-    try {
-      const res = await axiosSecure.delete(`/reviews/${id}`);
-      if (res.data.deletedCount > 0) {
-        alert("Review deleted!");
-        fetchReviews();
-      } else {
-        alert("Failed to delete!");
-      }
-    } catch (err) {
-      console.error(err);
-      alert("Failed to delete!");
+  if (!result.isConfirmed) return;
+
+  try {
+    const res = await axiosSecure.delete(`/reviews/${id}`);
+
+    if (res.data.deletedCount > 0) {
+      Swal.fire({
+        icon: "success",
+        title: "Deleted!",
+        text: "Review deleted successfully.",
+        timer: 1500,
+        showConfirmButton: false,
+      });
+
+      fetchReviews();
+    } else {
+      Swal.fire({
+        icon: "error",
+        title: "Failed",
+        text: "Failed to delete review.",
+      });
     }
-  };
+  } catch (err) {
+    console.error(err);
+    Swal.fire({
+      icon: "error",
+      title: "Error",
+      text: "Failed to delete review. Please try again.",
+    });
+  }
+};
 
   return (
     <div className="min-h-screen p-6 bg-base-200 text-neutral">

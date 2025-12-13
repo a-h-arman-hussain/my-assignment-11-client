@@ -3,6 +3,7 @@ import { useNavigate, useParams } from "react-router";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
 import useAuth from "../../hooks/useAuth";
 import Loader from "../Shared/Loader/Loader";
+import Swal from "sweetalert2";
 
 const ScholarshipDetails = () => {
   const { id } = useParams();
@@ -55,15 +56,32 @@ const ScholarshipDetails = () => {
         "/apply-scholarships",
         applicationData
       );
+
       if (res.data.success) {
-        alert("Application submitted successfully!");
+        Swal.fire({
+          icon: "success",
+          title: "Application Submitted!",
+          text: "Your application has been submitted successfully.",
+          timer: 1500,
+          showConfirmButton: false,
+        });
+
         navigate("/dashboard/my-applications");
       } else {
-        alert(res.data.message);
+        Swal.fire({
+          icon: "warning",
+          title: "Failed",
+          text: res.data.message || "Something went wrong!",
+        });
       }
     } catch (err) {
       console.error(err);
-      alert("Something went wrong!");
+
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: "Something went wrong! Please try again.",
+      });
     }
   };
 

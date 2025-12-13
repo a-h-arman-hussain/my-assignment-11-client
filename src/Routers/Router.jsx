@@ -24,6 +24,7 @@ import Analytics from "../Pages/Dashboard/AdminDashboard/Analytics/Analytics";
 import ModeratorRoute from "./ModeratorRoute";
 import AboutPage from "../Pages/AboutPage/AboutPage";
 import ContactUs from "../Pages/ContactUs/ContactUs";
+import PaymentHistory from "../Pages/Dashboard/Payment/PaymentHistory";
 
 const router = createBrowserRouter([
   {
@@ -53,8 +54,6 @@ const router = createBrowserRouter([
       </PrivateRoute>
     ),
     children: [
-      { path: "my-applications", Component: MyApplications },
-      { path: "my-reviews", Component: MyReviews },
       {
         path: "add-scholarship",
         element: (
@@ -104,8 +103,10 @@ const router = createBrowserRouter([
           </ModeratorRoute>
         ),
       },
+      { path: "my-applications", Component: MyApplications },
+      { path: "my-reviews", Component: MyReviews },
+      { path: "payment-history", Component: PaymentHistory },
       { path: "user-profile", Component: UserProfile },
-
       {
         path: "payment-success",
         Component: PaymentSuccess,

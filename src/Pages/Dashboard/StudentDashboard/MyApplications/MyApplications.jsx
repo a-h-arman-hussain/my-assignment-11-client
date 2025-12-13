@@ -67,18 +67,21 @@ const MyApplications = () => {
         scholarshipId: app.scholarshipId,
         scholarshipName: app.scholarshipName,
         universityName: app.universityName,
-        amount: Number(app.applicationFees),
+        amount: Number(app.applicationFees), // number
         userEmail: app.userEmail,
         studentEmail: app.studentEmail,
         studentName: app.studentName,
       };
 
+      console.log("Payment payload:", paymentPayload);
+
       const res = await axiosSecure.post("/payments/init", paymentPayload);
 
+      // redirect to Stripe Checkout
       window.location.assign(res.data.url);
     } catch (err) {
-      console.error(err);
-      alert("Payment failed");
+      console.error("Payment init error:", err.response?.data || err.message);
+      alert(err.response?.data?.message || "Payment failed");
     }
   };
 

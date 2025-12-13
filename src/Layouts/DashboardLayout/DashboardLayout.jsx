@@ -11,7 +11,7 @@ import {
 } from "react-icons/fa";
 import useRole from "../../hooks/useRole";
 import useAuth from "../../hooks/useAuth";
-import { MdAnalytics } from "react-icons/md";
+import { MdAnalytics, MdPayment } from "react-icons/md";
 import { FiLogOut } from "react-icons/fi";
 import { RiAccountCircleLine } from "react-icons/ri";
 
@@ -138,6 +138,9 @@ const DashboardLayout = () => {
                 </DashboardLink>
                 <DashboardLink to="/dashboard/my-reviews" icon={FaStar}>
                   My Reviews
+                </DashboardLink>
+                <DashboardLink to="/dashboard/payment-history" icon={MdPayment}>
+                  Payment History
                 </DashboardLink>
               </>
             )}

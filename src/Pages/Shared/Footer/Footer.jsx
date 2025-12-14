@@ -9,9 +9,7 @@ const Footer = () => {
         {/* Logo & Description */}
         <div className="flex-1">
           <Link to="/">
-            <Link to="/">
-              <img src={logo} alt="" className="w-40 h-12" />
-            </Link>
+            <img src={logo} alt="" className="w-40 h-12" />
           </Link>
           <p className="text-muted">
             Discover global scholarships, apply easily, and unlock your future.

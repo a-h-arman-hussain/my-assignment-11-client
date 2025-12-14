@@ -5,10 +5,12 @@ import useAuth from "../../hooks/useAuth";
 import Loader from "../Shared/Loader/Loader";
 import Swal from "sweetalert2";
 import ReviewCard from "./ReviewCard";
+import useRole from "../../hooks/useRole";
 
 const ScholarshipDetails = () => {
   const { id } = useParams();
   const { user } = useAuth();
+  // const { role } = useRole();
   const navigate = useNavigate();
   const axiosSecure = useAxiosSecure();
 
@@ -142,16 +144,12 @@ const ScholarshipDetails = () => {
           <span className="font-semibold">Posted On:</span>{" "}
           {scholarship.postDate}
         </p>
-
-        {user?.role !== "Admin" ||
-          (user?.role !== "Moderator" && (
-            <button
-              onClick={handleApply}
-              className="w-full bg-primary text-base-100 p-3 rounded-lg font-semibold transition shadow-lg cursor-pointer"
-            >
-              Apply Now
-            </button>
-          ))}
+        <button
+          onClick={handleApply}
+          className="w-full bg-primary text-base-100 p-3 rounded-lg font-semibold transition shadow-lg cursor-pointer"
+        >
+          Apply Now
+        </button>
       </div>
 
       {/* Reviews */}
@@ -180,5 +178,3 @@ const InfoCard = ({ label, value }) => (
     </p>
   </div>
 );
-
-

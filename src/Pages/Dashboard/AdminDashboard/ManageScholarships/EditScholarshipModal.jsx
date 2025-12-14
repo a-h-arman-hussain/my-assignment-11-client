@@ -21,31 +21,28 @@ const EditScholarshipModal = ({ scholarship, closeModal, onUpdate }) => {
   };
 
   const handleSubmit = async () => {
-  try {
-    await axiosSecure.patch(
-      `/scholarships/${scholarship._id}`,
-      formData
-    );
+    try {
+      await axiosSecure.patch(`/scholarships/${scholarship._id}`, formData);
 
-    Swal.fire({
-      icon: "success",
-      title: "Updated!",
-      text: "Scholarship updated successfully.",
-      timer: 1500,
-      showConfirmButton: false,
-    });
+      Swal.fire({
+        icon: "success",
+        title: "Updated!",
+        text: "Scholarship updated successfully.",
+        timer: 1500,
+        showConfirmButton: false,
+      });
 
-    onUpdate(); // modal close + refetch
-  } catch (err) {
-    console.error(err);
+      onUpdate();
+    } catch (err) {
+      console.error(err);
 
-    Swal.fire({
-      icon: "error",
-      title: "Update Failed",
-      text: "Failed to update scholarship. Please try again.",
-    });
-  }
-};
+      Swal.fire({
+        icon: "error",
+        title: "Update Failed",
+        text: "Failed to update scholarship. Please try again.",
+      });
+    }
+  };
 
   return (
     <AnimatePresence>
@@ -60,13 +57,16 @@ const EditScholarshipModal = ({ scholarship, closeModal, onUpdate }) => {
           animate={{ scale: 1, opacity: 1, y: 0 }}
           exit={{ scale: 0.7, opacity: 0, y: 40 }}
           transition={{ duration: 0.25 }}
-          className="bg-base-100 p-6 rounded-2xl shadow-2xl w-full max-w-lg"
+          className="bg-base-100 p-6 rounded-2xl shadow-2xl w-full max-w-lg - max-h-screen + max-h-[90vh] + overflow-y-auto"
         >
           <h2 className="text-2xl font-bold mb-4 text-primary">
             Edit Scholarship
           </h2>
 
           <div className="space-y-3">
+            <label className="font-semibold text-neutral">
+              Scholarship Name
+            </label>
             <input
               type="text"
               name="scholarshipName"
@@ -75,6 +75,9 @@ const EditScholarshipModal = ({ scholarship, closeModal, onUpdate }) => {
               placeholder="Scholarship Name"
               className="input input-bordered w-full bg-base-200 text-neutral"
             />
+            <label className="font-semibold text-neutral">
+              University Name
+            </label>
             <input
               type="text"
               name="universityName"
@@ -83,6 +86,7 @@ const EditScholarshipModal = ({ scholarship, closeModal, onUpdate }) => {
               placeholder="University Name"
               className="input input-bordered w-full bg-base-200 text-neutral"
             />
+            <label className="font-semibold text-neutral">Country</label>
             <input
               type="text"
               name="universityCountry"
@@ -91,6 +95,7 @@ const EditScholarshipModal = ({ scholarship, closeModal, onUpdate }) => {
               placeholder="Country"
               className="input input-bordered w-full bg-base-200 text-neutral"
             />
+            <label className="font-semibold text-neutral">City</label>
             <input
               type="text"
               name="universityCity"
@@ -99,6 +104,9 @@ const EditScholarshipModal = ({ scholarship, closeModal, onUpdate }) => {
               placeholder="City"
               className="input input-bordered w-full bg-base-200 text-neutral"
             />
+            <label className="font-semibold text-neutral">
+              Subject Category
+            </label>
             <input
               type="text"
               name="subjectCategory"
@@ -107,6 +115,9 @@ const EditScholarshipModal = ({ scholarship, closeModal, onUpdate }) => {
               placeholder="Subject Category"
               className="input input-bordered w-full bg-base-200 text-neutral"
             />
+            <label className="font-semibold text-neutral">
+              Scholarship Category
+            </label>
             <select
               name="scholarshipCategory"
               value={formData.scholarshipCategory}
@@ -117,6 +128,9 @@ const EditScholarshipModal = ({ scholarship, closeModal, onUpdate }) => {
               <option>Partial</option>
               <option>Self-fund</option>
             </select>
+            <label className="font-semibold text-neutral">
+              Degree
+            </label>
             <select
               name="degree"
               value={formData.degree}
@@ -127,6 +141,9 @@ const EditScholarshipModal = ({ scholarship, closeModal, onUpdate }) => {
               <option>Masters</option>
               <option>Diploma</option>
             </select>
+            <label className="font-semibold text-neutral">
+              Deadline
+            </label>
             <input
               type="date"
               name="deadline"

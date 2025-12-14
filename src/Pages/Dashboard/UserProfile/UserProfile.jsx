@@ -35,8 +35,8 @@ const UserProfile = () => {
           alt="User Avatar"
           className="w-24 h-24 rounded-full border-4 border-purple-500 shadow-lg"
         />
-        <div>
-          <h2 className="text-3xl font-bold text-primary">
+        <div className="flex flex-col items-center">
+          <h2 className="text-lg md:text-3xl text-center font-bold text-primary">
             {user.displayName || "Unnamed User"}
           </h2>
           <p className="flex items-center gap-2 mt-1 text-neutral">

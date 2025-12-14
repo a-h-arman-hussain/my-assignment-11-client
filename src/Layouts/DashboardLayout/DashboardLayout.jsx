@@ -27,10 +27,9 @@ const DashboardLayout = () => {
   useEffect(() => {
     if (roleLoading) return;
 
-    // শুধু /dashboard এ ঢুকলেই redirect হবে
     if (location.pathname === "/dashboard") {
       if (role === "Admin") {
-        navigate("analytics", { replace: true });
+        navigate("admin-dashboard", { replace: true });
       } else if (role === "Moderator") {
         navigate("manage-applications", { replace: true });
       } else if (role === "Student") {
@@ -69,9 +68,7 @@ const DashboardLayout = () => {
               </svg>
             </label>
             <Link to="/">
-              <Link to="/">
-                <img src={logo} alt="" className="w-40 h-12" />
-              </Link>
+              <img src={logo} alt="" className="w-40 h-12" />
             </Link>
           </div>
         </nav>
@@ -125,6 +122,12 @@ const DashboardLayout = () => {
             {role === "Admin" && (
               <>
                 <DashboardLink
+                  to="/dashboard/admin-dashboard"
+                  icon={FaPlusCircle}
+                >
+                  Dashboard
+                </DashboardLink>
+                <DashboardLink
                   to="/dashboard/add-scholarship"
                   icon={FaPlusCircle}
                 >
@@ -142,6 +145,18 @@ const DashboardLayout = () => {
                 <DashboardLink to="/dashboard/analytics" icon={MdAnalytics}>
                   Analytics
                 </DashboardLink>
+                <DashboardLink
+                  to="/dashboard/my-applications"
+                  icon={FaClipboardList}
+                >
+                  My Applications
+                </DashboardLink>
+                <DashboardLink to="/dashboard/my-reviews" icon={FaStar}>
+                  My Reviews
+                </DashboardLink>
+                <DashboardLink to="/dashboard/payment-history" icon={MdPayment}>
+                  Payment History
+                </DashboardLink>
               </>
             )}
 
@@ -156,6 +171,18 @@ const DashboardLayout = () => {
                 </DashboardLink>
                 <DashboardLink to="/dashboard/all-reviews" icon={FaCommentDots}>
                   All Reviews
+                </DashboardLink>
+                <DashboardLink
+                  to="/dashboard/my-applications"
+                  icon={FaClipboardList}
+                >
+                  My Applications
+                </DashboardLink>
+                <DashboardLink to="/dashboard/my-reviews" icon={FaStar}>
+                  My Reviews
+                </DashboardLink>
+                <DashboardLink to="/dashboard/payment-history" icon={MdPayment}>
+                  Payment History
                 </DashboardLink>
               </>
             )}

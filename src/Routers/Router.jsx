@@ -25,6 +25,7 @@ import ModeratorRoute from "./ModeratorRoute";
 import AboutPage from "../Pages/AboutPage/AboutPage";
 import ContactUs from "../Pages/ContactUs/ContactUs";
 import PaymentHistory from "../Pages/Dashboard/Payment/PaymentHistory";
+import AdminDashboard from "../Pages/Dashboard/AdminDashboard/AdminDashboard/AdminDashboard";
 
 const router = createBrowserRouter([
   {
@@ -54,6 +55,14 @@ const router = createBrowserRouter([
       </PrivateRoute>
     ),
     children: [
+      {
+        path: "admin-dashboard",
+        element: (
+          <AdminRoute>
+            <AdminDashboard></AdminDashboard>
+          </AdminRoute>
+        ),
+      },
       {
         path: "add-scholarship",
         element: (

@@ -3,11 +3,18 @@ import { useNavigate } from "react-router";
 import useAxiosSecure from "../../../../hooks/useAxiosSecure";
 import useAuth from "../../../../hooks/useAuth";
 import Swal from "sweetalert2";
+import { imageUpload } from "../../../../utils";
 
 const AddScholarship = () => {
   const { user } = useAuth();
   const axiosSecure = useAxiosSecure();
   const navigate = useNavigate();
+
+  // //  Get image file correctly
+  // const imageFile = data.photo[0];
+
+  // //  Upload to imgBB
+  // const universityImage = imageUpload(imageFile);
 
   const [formData, setFormData] = useState({
     scholarshipName: "",
@@ -31,28 +38,61 @@ const AddScholarship = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault();
+  //   try {
+  //     await axiosSecure.post("/add-scholarship", formData);
+  //     Swal.fire({
+  //       icon: "success",
+  //       title: "Scholarship Added!",
+  //       text: "Your scholarship has been added successfully.",
+  //       background: "var(--color-base-100)",
+  //       color: "var(--color-neutral)",
+  //       confirmButtonColor: "var(--color-primary)",
+  //     });
+  //     navigate("/all-scholarships");
+  //   } catch (err) {
+  //     console.error(err);
+  //     Swal.fire({
+  //       icon: "error",
+  //       title: "Error",
+  //       text: "Failed to add scholarship. Try again.",
+  //       background: "var(--color-base-100)",
+  //       color: "var(--color-neutral)",
+  //       confirmButtonColor: "var(--color-error)",
+  //     });
+  //   }
+  // };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     try {
-      await axiosSecure.post("/add-scholarship", formData);
+      let imageUrl = "";
+
+      if (formData.universityImage) {
+        imageUrl = await imageUpload(formData.universityImage);
+      }
+
+      const scholarshipData = {
+        ...formData,
+        universityImage: imageUrl,
+        userEmail: user?.email,
+      };
+
+      await axiosSecure.post("/add-scholarship", scholarshipData);
+
       Swal.fire({
         icon: "success",
         title: "Scholarship Added!",
-        text: "Your scholarship has been added successfully.",
-        background: "var(--color-base-100)",
-        color: "var(--color-neutral)",
-        confirmButtonColor: "var(--color-primary)",
       });
+
       navigate("/all-scholarships");
     } catch (err) {
       console.error(err);
       Swal.fire({
         icon: "error",
-        title: "Error",
-        text: "Failed to add scholarship. Try again.",
-        background: "var(--color-base-100)",
-        color: "var(--color-neutral)",
-        confirmButtonColor: "var(--color-error)",
+        title: "Failed to add scholarship",
       });
     }
   };
@@ -85,19 +125,20 @@ const AddScholarship = () => {
           />
         </div>
 
-        <div>
-          <label className="font-semibold text-neutral">
-            University Image URL
-          </label>
-          <input
-            name="universityImage"
-            value={formData.universityImage}
-            onChange={handleChange}
-            className="input input-bordered w-full bg-base-200 border-base-300 text-neutral"
-          />
-        </div>
-
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid md:grid-cols-3 gap-4">
+          <div>
+            <label className="font-semibold text-neutral">
+              University Image
+            </label>
+            <input
+              type="file"
+              accept="image/*"
+              onChange={(e) =>
+                setFormData({ ...formData, universityImage: e.target.files[0] })
+              }
+              className="file-input input-bordered w-full"
+            />
+          </div>
           <div>
             <label className="font-semibold text-neutral">Country</label>
             <input
@@ -144,7 +185,7 @@ const AddScholarship = () => {
           </div>
         </div>
 
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid md:grid-cols-2 gap-4">
           <div>
             <label className="font-semibold text-neutral">
               Scholarship Category
@@ -175,7 +216,7 @@ const AddScholarship = () => {
           </div>
         </div>
 
-        <div className="grid grid-cols-3 gap-4">
+        <div className="grid md:grid-cols-3 gap-4">
           <div>
             <label className="font-semibold text-neutral">
               Tuition Fees (Optional)

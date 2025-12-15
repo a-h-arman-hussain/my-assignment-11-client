@@ -131,9 +131,26 @@ const ManageUsers = () => {
               filteredUsers.map((user, index) => (
                 <tr key={user._id}>
                   <th>{index + 1}</th>
-                  <td>{user.name}</td>
+                  <td>
+                    <div className="flex items-center gap-1 text-primary">
+                      <img
+                        src={user.photo}
+                        alt=""
+                        className="w-6 h-6 rounded-full"
+                      />
+                      {user.name}
+                    </div>
+                  </td>
                   <td>{user.email}</td>
-                  <td>{user.role}</td>
+                  <td>
+                    <span
+                      className={`text-white px-2 py-0.5 font-semibold rounded-lg ${
+                        user.role === "Moderator" ? "bg-primary" : "bg-blue-500"
+                      }`}
+                    >
+                      {user.role}
+                    </span>
+                  </td>
                   <td className="flex gap-2 justify-center">
                     {user.role !== "Admin" && (
                       <select

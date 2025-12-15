@@ -1,4 +1,7 @@
 import React from "react";
+import arman from "../../assets/arman.jpg";
+import saim from "../../assets/saim.jpg";
+import raihan from "../../assets/raihan.jpg";
 
 export default function AboutPage() {
   return (
@@ -63,31 +66,31 @@ export default function AboutPage() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           <div className="flex flex-col items-center text-center bg-base-100 p-6 rounded-2xl shadow border border-base-300">
             <img
-              src="https://i.ibb.co/4pDNd9p/avatar.png"
+              src={arman}
               alt="Team Member"
               className="w-28 h-28 rounded-full mb-4"
             />
-            <h3 className="text-lg font-semibold">Mohammed Abdul Hakim</h3>
+            <h3 className="text-lg font-semibold">A H Arman Hussain</h3>
             <p className="text-muted text-sm">Founder & Lead Developer</p>
           </div>
 
           <div className="flex flex-col items-center text-center bg-base-100 p-6 rounded-2xl shadow border border-base-300">
             <img
-              src="https://i.ibb.co/4pDNd9p/avatar.png"
+              src={saim}
               alt="Team Member"
               className="w-28 h-28 rounded-full mb-4"
             />
-            <h3 className="text-lg font-semibold">John Doe</h3>
+            <h3 className="text-lg font-semibold">Abdul Karim Saim</h3>
             <p className="text-muted text-sm">Research Specialist</p>
           </div>
 
           <div className="flex flex-col items-center text-center bg-base-100 p-6 rounded-2xl shadow border border-base-300">
             <img
-              src="https://i.ibb.co/4pDNd9p/avatar.png"
+              src={raihan}
               alt="Team Member"
               className="w-28 h-28 rounded-full mb-4"
             />
-            <h3 className="text-lg font-semibold">Sarah Smith</h3>
+            <h3 className="text-lg font-semibold">Mesbah Uddin Raihan</h3>
             <p className="text-muted text-sm">UI/UX Designer</p>
           </div>
         </div>

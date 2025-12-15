@@ -6,8 +6,6 @@ import SectionHeading from "../Shared/SectionHeading/SectionHeading";
 
 const AllScholarships = () => {
   const axiosSecure = useAxiosSecure();
-
-  // Data states
   const [scholarships, setScholarships] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -27,7 +25,6 @@ const AllScholarships = () => {
   const [page, setPage] = useState(1);
   const itemsPerPage = 8;
 
-  // Fetch data
   useEffect(() => {
     const fetchScholarships = async () => {
       setLoading(true);
@@ -78,7 +75,6 @@ const AllScholarships = () => {
     loadScholarships();
   }, [sortOrder]);
 
-  // Filtered scholarships
   const filteredScholarships = scholarships.filter((scholar) => {
     const matchesSearch =
       scholar.scholarshipName?.toLowerCase().includes(search.toLowerCase()) ||
@@ -102,12 +98,10 @@ const AllScholarships = () => {
     return matchesSearch && matchesSubject && matchesCategory && matchesDegree;
   });
 
-  // Pagination logic
   const totalPages = filteredScholarships.length
     ? Math.ceil(filteredScholarships.length / itemsPerPage)
     : 1;
 
-  // Ensure current page is valid when filters/search change
   useEffect(() => {
     if (page > totalPages) setPage(1);
   }, [page, totalPages, search, subjectCategory, scholarshipCategory, degree]);
@@ -120,7 +114,6 @@ const AllScholarships = () => {
     startIndex + itemsPerPage
   );
 
-  // Page numbers (show max 5)
   const pageNumbers = [];
   const startPage = Math.max(1, page - 2);
   const endPage = Math.min(totalPages, page + 2);
@@ -136,8 +129,6 @@ const AllScholarships = () => {
         </p>
       </div>
 
-      {/* Filters */}
-      {/* md:grid md:grid-cols-5  */}
       <div className="bg-base-100 p-4 rounded-2xl shadow-md border border-base-300">
         <div className="flex flex-col md:flex-row gap-4">
           {/* Search */}
@@ -209,7 +200,6 @@ const AllScholarships = () => {
         </div>
       </div>
 
-      {/* Grid */}
       {paginatedScholarships.length === 0 ? (
         <p className="text-center text-base text-muted mt-6">
           No scholarships found.
@@ -222,7 +212,6 @@ const AllScholarships = () => {
         </div>
       )}
 
-      {/* Pagination */}
       {totalPages > 1 && (
         <div className="flex justify-center items-center gap-2 mt-10">
           <button

@@ -15,7 +15,6 @@ const ManageApplications = () => {
   const [selectedApp, setSelectedApp] = useState(null);
   const [feedbackApp, setFeedbackApp] = useState(null);
 
-  // Fetch all student applications
   const { data: applications = [], isLoading } = useQuery({
     queryKey: ["allApplications"],
     queryFn: async () => {

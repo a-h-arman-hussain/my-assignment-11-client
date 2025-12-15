@@ -10,12 +10,6 @@ const AddScholarship = () => {
   const axiosSecure = useAxiosSecure();
   const navigate = useNavigate();
 
-  // //  Get image file correctly
-  // const imageFile = data.photo[0];
-
-  // //  Upload to imgBB
-  // const universityImage = imageUpload(imageFile);
-
   const [formData, setFormData] = useState({
     scholarshipName: "",
     universityName: "",
@@ -37,32 +31,6 @@ const AddScholarship = () => {
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
-
-  // const handleSubmit = async (e) => {
-  //   e.preventDefault();
-  //   try {
-  //     await axiosSecure.post("/add-scholarship", formData);
-  //     Swal.fire({
-  //       icon: "success",
-  //       title: "Scholarship Added!",
-  //       text: "Your scholarship has been added successfully.",
-  //       background: "var(--color-base-100)",
-  //       color: "var(--color-neutral)",
-  //       confirmButtonColor: "var(--color-primary)",
-  //     });
-  //     navigate("/all-scholarships");
-  //   } catch (err) {
-  //     console.error(err);
-  //     Swal.fire({
-  //       icon: "error",
-  //       title: "Error",
-  //       text: "Failed to add scholarship. Try again.",
-  //       background: "var(--color-base-100)",
-  //       color: "var(--color-neutral)",
-  //       confirmButtonColor: "var(--color-error)",
-  //     });
-  //   }
-  // };
 
   const handleSubmit = async (e) => {
     e.preventDefault();

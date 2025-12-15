@@ -11,21 +11,15 @@ const AdminDashboard = ({ token }) => {
   const [users, setUsers] = useState([]);
   const [scholarships, setScholarships] = useState([]);
   const [applications, setApplications] = useState([]);
-  const [activeSection, setActiveSection] = useState("stats");
   const axiosSecure = useAxiosSecure();
 
-  // Fetch all data
   useEffect(() => {
     const fetchData = async () => {
       try {
         const [usersRes, scholarshipsRes, applicationsRes] = await Promise.all([
-          axiosSecure.get("/users", {
-            headers: { Authorization: `Bearer ${token}` },
-          }),
+          axiosSecure.get("/users", {}),
           axiosSecure.get("/all-scholarships"),
-          axiosSecure.get("/applications", {
-            headers: { Authorization: `Bearer ${token}` },
-          }),
+          axiosSecure.get("/applications", {}),
         ]);
 
         setUsers(usersRes.data || []);
@@ -43,31 +37,6 @@ const AdminDashboard = ({ token }) => {
 
     fetchData();
   }, [token, axiosSecure]);
-
-  // Handle scroll to detect active section
-  useEffect(() => {
-    const handleScroll = () => {
-      const sections = ["stats", "users", "scholarships", "applications"];
-      for (let sec of sections) {
-        const element = document.getElementById(sec);
-        if (element) {
-          const top = element.getBoundingClientRect().top;
-          if (top <= 150) {
-            setActiveSection(sec);
-          }
-        }
-      }
-    };
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
-
-  const linkClasses = (section) =>
-    `flex items-center gap-2 px-3 py-2 rounded-md transition text-center ${
-      activeSection === section
-        ? "bg-primary text-white"
-        : "text-gray-700 hover:text-primary"
-    }`;
 
   return (
     <div className="min-h-screen">
@@ -114,9 +83,19 @@ const AdminDashboard = ({ token }) => {
               {Array.isArray(users) &&
                 users.map((u) => (
                   <tr key={u._id}>
-                    <td className="px-6 py-4">{u.name}</td>
+                    <td className="px-6 py-4 text-primary font-semibold">
+                      {u.name}
+                    </td>
                     <td className="px-6 py-4">{u.email}</td>
-                    <td className="px-6 py-4">{u.role}</td>
+                    <td className="px-6 py-4">
+                      <span
+                        className={`text-white px-2 py-0.5 text-sm font-semibold rounded-lg ${
+                          u.role === "Moderator" ? "bg-primary" : "bg-blue-500"
+                        }`}
+                      >
+                        {u.role}
+                      </span>
+                    </td>
                   </tr>
                 ))}
             </tbody>
@@ -157,7 +136,7 @@ const AdminDashboard = ({ token }) => {
 
         {/* Applications Table */}
         <h1 className="text-center text-2xl font-bold mb-2 text-primary">
-          Stats
+          Applications
         </h1>
         <div className="bg-white rounded shadow overflow-x-auto">
           <table className="min-w-full divide-y divide-gray-200">

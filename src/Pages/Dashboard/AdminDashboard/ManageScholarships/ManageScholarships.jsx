@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import useAxiosSecure from "../../../../hooks/useAxiosSecure";
 import Loader from "../../../Shared/Loader/Loader";
-import EditScholarshipModal from "./EditScholarshipModal"; // নিচে বানানো হবে
+import EditScholarshipModal from "./EditScholarshipModal";
 import { CiEdit } from "react-icons/ci";
 import { MdOutlineDeleteForever } from "react-icons/md";
 import Swal from "sweetalert2";

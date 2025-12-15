@@ -17,7 +17,7 @@ import {
 const generateColorMap = (names) => {
   const colorMap = {};
   names.forEach((name, index) => {
-    const hue = (index * 137.5) % 360; // golden angle
+    const hue = (index * 137.5) % 360;
     colorMap[name] = `hsl(${hue}, 70%, 60%)`;
   });
   return colorMap;

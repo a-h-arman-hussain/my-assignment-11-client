@@ -1,90 +1,120 @@
-// UserProfile.jsx
-import React from "react";
+import React, { useState } from "react";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import useAuth from "../../../hooks/useAuth";
 import useRole from "../../../hooks/useRole";
-import {
-  FiMail,
-  FiUser,
-  FiPhone,
-  FiShield,
-  FiCalendar,
-  FiLogIn,
-  FiMapPin,
-} from "react-icons/fi";
+import { FiMail, FiCamera, FiShield } from "react-icons/fi";
+import useAxiosSecure from "../../../hooks/useAxiosSecure";
+import { imageUpload } from "../../../utils";
 
 const UserProfile = () => {
   const { user } = useAuth();
   const { role } = useRole();
+  const axiosSecure = useAxiosSecure();
+  const queryClient = useQueryClient();
 
-  if (!user)
+  const [loading, setLoading] = useState(false);
+  const [tempAvatar, setTempAvatar] = useState(""); // temporary preview
+  const [tempCover, setTempCover] = useState("");
+
+  const { data: userData } = useQuery({
+    queryKey: ["user", user?.email],
+    queryFn: async () => {
+      if (!user?.email) return null;
+      const res = await axiosSecure.get(`/users/${user.email}`);
+      return res.data;
+    },
+    enabled: !!user?.email,
+  });
+
+  const handleImageChange = async (e, type) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    try {
+      setLoading(true);
+      const uploadedURL = await imageUpload(file);
+
+      // temporary preview
+      if (type === "avatar") setTempAvatar(uploadedURL);
+      if (type === "cover") setTempCover(uploadedURL);
+
+      // payload for backend
+      const payload = { email: user.email };
+      if (type === "avatar") payload.photo = uploadedURL;
+      if (type === "cover") payload.cover = uploadedURL;
+
+      await axiosSecure.patch("/users/update", payload);
+
+      queryClient.invalidateQueries(["user", user.email]);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (!user) {
     return (
-      <p className="text-center mt-10 text-red-500 text-lg font-semibold">
-        Please log in to view your profile.
+      <p className="mt-20 text-center text-error text-lg font-semibold">
+        Please login to view profile
       </p>
     );
+  }
 
   return (
-    <div
-      className="max-w-2xl mx-auto mt-12 p-6 rounded-2xl shadow-2xl 
-      bg-white/20 backdrop-blur-xl border border-white/20"
-    >
-      {/* Profile Header */}
-      <div className="flex flex-col md:flex-row justify-center items-center gap-6">
+    <div className="min-h-screen bg-base-200">
+      {/* Cover */}
+      <div className="relative h-64 bg-base-300">
         <img
-          src={user.photoURL || "https://i.ibb.co/4pDNd9p/avatar.png"}
-          alt="User Avatar"
-          className="w-24 h-24 rounded-full border-4 border-purple-500 shadow-lg"
+          src={tempCover || userData?.cover || null}
+          alt="Cover"
+          className="h-full w-full object-cover"
         />
-        <div className="flex flex-col items-center">
-          <h2 className="text-lg md:text-3xl text-center font-bold text-primary">
-            {user.displayName || "Unnamed User"}
-          </h2>
-          <p className="flex items-center gap-2 mt-1 text-neutral">
-            <FiMail /> {user.email}
-          </p>
-        </div>
+        <label className="absolute top-4 right-6 flex cursor-pointer items-center gap-2 rounded-lg bg-black/60 px-4 py-2 text-sm text-white">
+          <FiCamera /> {loading ? "Updating..." : "Edit cover"}
+          <input
+            type="file"
+            hidden
+            accept="image/*"
+            onChange={(e) => handleImageChange(e, "cover")}
+          />
+        </label>
       </div>
 
-      <hr className="my-6 border-gray-900/20" />
+      {/* Profile Card */}
+      <div className="relative mx-auto -mt-24 max-w-4xl rounded-2xl bg-base-100 p-6 text-center shadow-xl">
+        {/* Avatar */}
+        <div className="relative mx-auto -mt-20 w-40">
+          <img
+            src={tempAvatar || userData?.photo || user?.photoURL}
+            alt="Avatar"
+            className="h-40 w-40 rounded-full border-4 border-base-100 object-cover bg-white"
+          />
+          <label className="absolute bottom-2 right-2 grid h-9 w-9 cursor-pointer place-items-center rounded-full bg-primary text-white">
+            <FiCamera />
+            <input
+              type="file"
+              hidden
+              accept="image/*"
+              onChange={(e) => handleImageChange(e, "avatar")}
+            />
+          </label>
+        </div>
 
-      {/* User Info Cards */}
-      <div className="space-y-4 text-neutral text-lg">
-        <InfoCard label="Role" value={role} icon={<FiShield />} gradient />
-        <InfoCard
-          label="Email Verified"
-          value={user.emailVerified ? "Yes" : "No"}
-          icon={<FiUser />}
-        />
-        <InfoCard
-          label="Account Created"
-          value={new Date(user.metadata.creationTime).toLocaleDateString()}
-          icon={<FiCalendar />}
-        />
-        <InfoCard
-          label="Last Login"
-          value={new Date(user.metadata.lastSignInTime).toLocaleDateString()}
-          icon={<FiLogIn />}
-        />
+        <h2 className="mt-4 text-2xl font-bold text-neutral">
+          {userData?.name || user.displayName || "Unnamed User"}
+        </h2>
+
+        <p className="mt-1 flex items-center justify-center gap-2 text-muted">
+          <FiMail /> {userData?.email || user.email}
+        </p>
+
+        <span className="mt-3 inline-flex items-center gap-2 rounded-full bg-base-200 px-4 py-1 font-semibold text-neutral">
+          <FiShield /> {role}
+        </span>
       </div>
     </div>
   );
 };
-
-// Reusable InfoCard Component
-const InfoCard = ({ label, value, icon, gradient }) => (
-  <div
-    className={`flex items-center justify-between p-3 rounded-xl border border-white/20 shadow-sm
-      ${
-        gradient
-          ? "bg-gradient-to-r from-purple-600/40 to-blue-600/40"
-          : "bg-white/10"
-      }`}
-  >
-    <span className="flex items-center gap-3 font-semibold text-neutral">
-      {icon} {label}
-    </span>
-    <span className="font-medium text-neutral">{value}</span>
-  </div>
-);
 
 export default UserProfile;

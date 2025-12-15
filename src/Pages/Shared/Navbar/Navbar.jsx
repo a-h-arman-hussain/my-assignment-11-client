@@ -1,12 +1,16 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Link, NavLink } from "react-router";
-import useAuth from "../../../hooks/useAuth";
 import { motion, AnimatePresence } from "framer-motion";
 import { FiLogIn } from "react-icons/fi";
+import useAuth from "../../../hooks/useAuth";
+import useAxiosSecure from "../../../hooks/useAxiosSecure";
+import { useQuery } from "@tanstack/react-query";
 import logo from "../../../assets/Screenshot_2025-12-13_191151-removebg-preview.png";
 
 const Navbar = () => {
-  const { user, logOut } = useAuth();
+  const { user: firebaseUser, logOut } = useAuth();
+  const axiosSecure = useAxiosSecure();
+
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
@@ -37,6 +41,17 @@ const Navbar = () => {
     return () => document.removeEventListener("mousedown", handleClick);
   }, []);
 
+  // Fetch user data from backend
+  const { data: userData } = useQuery({
+    queryKey: ["user", firebaseUser?.email],
+    queryFn: async () => {
+      if (!firebaseUser?.email) return null;
+      const res = await axiosSecure.get(`/users/${firebaseUser.email}`);
+      return res.data;
+    },
+    enabled: !!firebaseUser?.email,
+  });
+
   return (
     <motion.nav
       animate={{
@@ -48,7 +63,7 @@ const Navbar = () => {
       }}
     >
       <div className="flex justify-between items-center h-12 px-[5%]">
-        {/* Logo */}
+        {/* Mobile Menu Button */}
         <button
           className="lg:hidden btn-ghost text-primary cursor-pointer"
           onClick={() => setMobileOpen(!mobileOpen)}
@@ -70,8 +85,10 @@ const Navbar = () => {
             />
           </svg>
         </button>
+
+        {/* Logo */}
         <Link to="/">
-          <img src={logo} alt="" className="w-40 h-12" />
+          <img src={logo} alt="Logo" className="w-40 h-12" />
         </Link>
 
         {/* Desktop Links */}
@@ -96,7 +113,7 @@ const Navbar = () => {
 
         {/* Right Section */}
         <div className="relative flex items-center" ref={dropdownRef}>
-          {user ? (
+          {userData ? (
             <>
               {/* Avatar Button */}
               <motion.button
@@ -106,13 +123,13 @@ const Navbar = () => {
                 className="w-10 h-10 rounded-full overflow-hidden border-2 border-primary shadow-lg focus:outline-none transition-all cursor-pointer"
               >
                 <img
-                  src={user.photoURL || "https://i.ibb.co/4pDNd9p/avatar.png"}
+                  src={userData.photo || "https://i.ibb.co/4pDNd9p/avatar.png"}
                   alt="User Avatar"
-                  className="w-full h-full object-cover"
+                  className="w-full h-full object-cover bg-white"
                 />
               </motion.button>
 
-              {/* Ultra-modern Glass Dropdown */}
+              {/* Dropdown */}
               <AnimatePresence>
                 {dropdownOpen && (
                   <motion.div
@@ -122,7 +139,6 @@ const Navbar = () => {
                     transition={{ duration: 0.25, ease: "easeOut" }}
                     className="absolute right-1 mt-44 w-44 bg-base-200/70 backdrop-blur-lg border border-white/30 rounded-2xl shadow-xl py-2 z-50 overflow-hidden"
                   >
-                    {/* Optional Arrow */}
                     <div className="absolute -top-2 right-4 w-3 h-3 bg-white/20 rotate-45 border-l border-t border-white/30"></div>
 
                     <ul className="flex flex-col gap-1">

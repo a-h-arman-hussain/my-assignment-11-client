@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { Link, NavLink, Outlet, useLocation, useNavigate } from "react-router";
 import {
   FaClipboardList,
@@ -16,35 +16,46 @@ import { FiLogOut } from "react-icons/fi";
 import { RiAccountCircleLine } from "react-icons/ri";
 import logo from "../../assets/Screenshot_2025-12-13_191151-removebg-preview.png";
 import Loader from "../../Pages/Shared/Loader/Loader";
+import useAxiosSecure from "../../hooks/useAxiosSecure";
+import { useQuery } from "@tanstack/react-query";
 
 const DashboardLayout = () => {
   const { user, logOut } = useAuth();
   const { role, roleLoading } = useRole();
-
+  const axiosSecure = useAxiosSecure();
   const navigate = useNavigate();
   const location = useLocation();
 
-  useEffect(() => {
+  const { data: userData, isLoading } = useQuery({
+    queryKey: ["user", user?.email],
+    queryFn: async () => {
+      if (!user?.email) return null;
+      const res = await axiosSecure.get(`/users/${user.email}`);
+      return res.data;
+    },
+    enabled: !!user?.email,
+  });
+
+  // Redirect based on role
+  React.useEffect(() => {
     if (roleLoading) return;
 
     if (location.pathname === "/dashboard") {
-      if (role === "Admin") {
-        navigate("admin-dashboard", { replace: true });
-      } else if (role === "Moderator") {
+      if (role === "Admin") navigate("admin-dashboard", { replace: true });
+      else if (role === "Moderator")
         navigate("manage-applications", { replace: true });
-      } else if (role === "Student") {
+      else if (role === "Student")
         navigate("my-applications", { replace: true });
-      }
     }
   }, [role, roleLoading, navigate, location.pathname]);
 
-  if (roleLoading) return <Loader />;
+  if (roleLoading || isLoading) return <Loader />;
 
   return (
     <div className="drawer lg:drawer-open bg-base-200 text-neutral h-screen overflow-auto">
       <input id="my-drawer-4" type="checkbox" className="drawer-toggle" />
 
-      {/* 🔹 NAVBAR */}
+      {/* NAVBAR */}
       <div className="drawer-content flex flex-col">
         <nav className="navbar w-full bg-primary/10 shadow-md backdrop-blur-xl sticky top-0 z-10 px-6">
           <div className="flex-1 flex items-center justify-start">
@@ -86,20 +97,16 @@ const DashboardLayout = () => {
           className="drawer-overlay bg-primary/10 backdrop-blur-lg sticky top-0 z-50"
         ></label>
 
-        <aside
-          className="flex flex-col w-64 bg-gradient-to-b from-primary/20 to-white 
-          md:border-r border-base-300 shadow-lg sticky top-0 z-50 
-          min-h-screen overflow-y-hidden transition-all duration-300 md:pt-0"
-        >
+        <aside className="flex flex-col w-64 bg-gradient-to-b from-primary/20 to-white md:border-r border-base-300 shadow-lg sticky top-0 z-50 min-h-screen overflow-y-hidden transition-all duration-300 md:pt-0">
           {/* User Profile */}
           <div className="flex flex-col items-center py-6 border-b border-base-300 ml-2">
             <img
-              src={user?.photoURL || "https://i.ibb.co/4pDNd9p/avatar.png"}
+              src={userData?.photo}
               alt="User Avatar"
-              className="w-15 h-15 rounded-full border-2 border-primary shadow-sm"
+              className="w-15 h-15 rounded-full bg-white border-2 border-primary shadow-sm"
             />
             <h3 className="mt-3 text-lg font-semibold text-neutral text-center">
-              {user?.displayName}
+              {userData?.name || user?.displayName || "Unnamed User"}
             </h3>
             <p
               className={`text-sm font-medium px-3 pb-0.5 rounded-xl text-white ${
@@ -118,7 +125,7 @@ const DashboardLayout = () => {
 
           {/* Menu Items */}
           <ul className="menu grow p-4 space-y-2 overflow-y-auto md:overflow-y-visible">
-            {/* ---------------- ADMIN ---------------- */}
+            {/* ADMIN */}
             {role === "Admin" && (
               <>
                 <DashboardLink
@@ -160,7 +167,7 @@ const DashboardLayout = () => {
               </>
             )}
 
-            {/* ---------------- MODERATOR ---------------- */}
+            {/* MODERATOR */}
             {role === "Moderator" && (
               <>
                 <DashboardLink
@@ -187,7 +194,7 @@ const DashboardLayout = () => {
               </>
             )}
 
-            {/* ---------------- STUDENT ---------------- */}
+            {/* STUDENT */}
             {role === "Student" && (
               <>
                 <DashboardLink
@@ -205,6 +212,7 @@ const DashboardLayout = () => {
               </>
             )}
           </ul>
+
           <ul className="p-4 space-y-2">
             <DashboardLink
               to="/dashboard/user-profile"

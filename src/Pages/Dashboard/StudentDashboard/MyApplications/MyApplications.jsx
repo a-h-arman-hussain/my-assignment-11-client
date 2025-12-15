@@ -13,7 +13,6 @@ import {
   MdOutlinePayment,
   MdPreview,
 } from "react-icons/md";
-import { a } from "framer-motion/client";
 import Swal from "sweetalert2";
 
 const MyApplications = () => {
@@ -67,7 +66,7 @@ const MyApplications = () => {
         scholarshipId: app.scholarshipId,
         scholarshipName: app.scholarshipName,
         universityName: app.universityName,
-        amount: Number(app.applicationFees), // number
+        amount: Number(app.applicationFees),
         userEmail: app.userEmail,
         studentEmail: app.studentEmail,
         studentName: app.studentName,

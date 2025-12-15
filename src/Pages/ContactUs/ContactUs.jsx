@@ -67,17 +67,17 @@ export default function ContactUs() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           <div className="bg-base-100 p-6 rounded-2xl shadow border border-base-300">
             <h3 className="text-lg font-semibold text-primary mb-2">Email</h3>
-            <p className="text-muted text-sm">support@example.com</p>
+            <p className="text-muted text-sm">armanhd16@gmail.com</p>
           </div>
 
           <div className="bg-base-100 p-6 rounded-2xl shadow border border-base-300">
             <h3 className="text-lg font-semibold text-primary mb-2">Phone</h3>
-            <p className="text-muted text-sm">+1 234 567 890</p>
+            <p className="text-muted text-sm">+8801 3153 15449</p>
           </div>
 
           <div className="bg-base-100 p-6 rounded-2xl shadow border border-base-300">
             <h3 className="text-lg font-semibold text-primary mb-2">Address</h3>
-            <p className="text-muted text-sm">Dhaka, Bangladesh</p>
+            <p className="text-muted text-sm">Chittagong, Bangladesh</p>
           </div>
         </div>
       </div>

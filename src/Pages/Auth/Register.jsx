@@ -1,17 +1,17 @@
-import React from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import useAuth from "../../hooks/useAuth";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
 import { Link, useNavigate } from "react-router";
 import Swal from "sweetalert2";
-import { FaUserPlus } from "react-icons/fa";
-import axios from "axios";
+import { FaEye, FaEyeSlash, FaUserPlus } from "react-icons/fa";
 import { imageUpload } from "../../utils";
 
 export default function Register() {
   const { registerUser, updateUserProfile } = useAuth();
   const navigate = useNavigate();
   const axiosSecure = useAxiosSecure();
+  const [showPassword, setShowPassword] = useState(false);
 
   const {
     register,
@@ -20,78 +20,21 @@ export default function Register() {
     reset,
   } = useForm();
 
-  // const onSubmit = async (data) => {
-  //   try {
-  //     const result = await registerUser(data.email, data.password);
-  //     const imageFile = image[0];
-  //     const formData = new FormData();
-  //     formData.append("image", imageFile);
-
-  //     const imgData = await axios.post(
-  //       `https://api.imgbb.com/1/upload?key=${
-  //         import.meta.env.VITE_IMGBB_API_KEY
-  //       }`,
-  //       formData
-  //     );
-
-  //     console.log(imgData);
-
-  //     await updateUserProfile({
-  //       displayName: data.name,
-  //       photo: data.photo,
-  //     });
-
-  //     const savedUser = {
-  //       name: data.name,
-  //       email: data.email,
-  //       photo: data.photo,
-  //       role: "Student",
-  //     };
-
-  //     await axiosSecure.post("/users", savedUser);
-
-  //     Swal.fire({
-  //       title: "Registration Successful!",
-  //       text: "Your account has been created successfully.",
-  //       icon: "success",
-  //       background: "var(--color-base-200)",
-  //       color: "var(--color-neutral)",
-  //       confirmButtonColor: "var(--color-primary)",
-  //       confirmButtonText: "Continue",
-  //     });
-
-  //     navigate("/");
-  //     reset();
-  //   } catch (err) {
-  //     Swal.fire({
-  //       title: "Error!",
-  //       text: err.message,
-  //       icon: "error",
-  //       background: "var(--color-base-200)",
-  //       color: "var(--color-neutral)",
-  //       confirmButtonColor: "var(--color-error)",
-  //     });
-  //   }
-  // };
-
   const onSubmit = async (data) => {
     try {
-      //  Register user
       const result = await registerUser(data.email, data.password);
 
-      //  Get image file correctly
       const imageFile = data.photo[0];
 
-      //  Upload to imgBB
       const imageUrl = await imageUpload(imageFile);
 
-      //  Update Firebase profile
+      //  Update profile
       await updateUserProfile({
         displayName: data.name,
         photoURL: imageUrl,
       });
 
-      //  Save user to DB
+      //  Save user
       const savedUser = {
         name: data.name,
         email: data.email,
@@ -140,7 +83,7 @@ export default function Register() {
             )}
           </div>
 
-          {/* Photo URL */}
+          {/* Photo */}
           <div>
             <label className="font-medium text-muted">Photo</label>
             <input
@@ -149,6 +92,9 @@ export default function Register() {
               className="w-full bg-base-100 border border-base-300 rounded-lg file-input mt-1 focus:outline-none focus:border-primary"
               placeholder="Your Photo"
             />
+            {errors.photo && (
+              <p className="text-error text-sm mt-1">Photo is required</p>
+            )}
           </div>
 
           {/* Email */}
@@ -168,18 +114,31 @@ export default function Register() {
           {/* Password */}
           <div>
             <label className="font-medium text-muted">Password</label>
-            <input
-              type="password"
-              {...register("password", {
-                required: "Password is required",
-                minLength: {
-                  value: 6,
-                  message: "Password must be at least 6 characters",
-                },
-              })}
-              className="w-full p-3 bg-base-100 border border-base-300 rounded-lg text-neutral mt-1 focus:outline-none focus:border-primary"
-              placeholder="Your Password"
-            />
+
+            <div className="relative mt-1">
+              <input
+                type={showPassword ? "text" : "password"}
+                {...register("password", {
+                  required: "Password is required",
+                  minLength: {
+                    value: 6,
+                    message: "Password must be at least 6 characters",
+                  },
+                })}
+                className="w-full p-3 pr-10 bg-base-100 border border-base-300 rounded-lg text-neutral focus:outline-none focus:border-primary"
+                placeholder="Your Password"
+              />
+
+              {/* Eye Icon */}
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-neutral/70 hover:text-primary cursor-pointer"
+              >
+                {showPassword ? <FaEyeSlash /> : <FaEye />}
+              </button>
+            </div>
+
             {errors.password && (
               <p className="text-error text-sm mt-1">
                 {errors.password.message}

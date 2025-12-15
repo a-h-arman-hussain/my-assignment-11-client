@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router";
 import useAuth from "../../hooks/useAuth";
@@ -6,11 +6,13 @@ import useAxiosSecure from "../../hooks/useAxiosSecure";
 import Swal from "sweetalert2";
 import { FiLogIn } from "react-icons/fi";
 import { FcGoogle } from "react-icons/fc";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 export default function Login() {
   const { signInUser, signInGoogle } = useAuth();
   const navigate = useNavigate();
   const axiosSecure = useAxiosSecure();
+  const [showPassword, setShowPassword] = useState(false);
 
   const {
     register,
@@ -45,7 +47,7 @@ export default function Login() {
     }
   };
 
-  // Google Login + DB save
+  // Google Login
   const handleGoogleLogin = async () => {
     try {
       const result = await signInGoogle();
@@ -115,11 +117,22 @@ export default function Login() {
           {/* Password */}
           <div>
             <label className="font-medium text-muted">Password</label>
-            <input
-              type="password"
-              {...register("password", { required: "Password is required" })}
-              className="w-full p-3 bg-base-100 border border-base-300 rounded-lg text-neutral mt-1 focus:outline-none focus:border-primary"
-            />
+            <div className="relative mt-1">
+              <input
+                type={showPassword ? "text" : "password"}
+                {...register("password", { required: "Password is required" })}
+                className="w-full p-3 bg-base-100 border border-base-300 rounded-lg text-neutral mt-1 focus:outline-none focus:border-primary"
+              />
+
+              {/* Eye Icon */}
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-neutral/70 hover:text-primary cursor-pointer"
+              >
+                {showPassword ? <FaEyeSlash /> : <FaEye />}
+              </button>
+            </div>
             {errors.password && (
               <p className="text-error text-sm mt-1">
                 {errors.password.message}

@@ -1,6 +1,8 @@
 import React from "react";
 import { Link } from "react-router";
 import logo from "../../../assets/Screenshot_2025-12-13_191151-removebg-preview.png";
+import { FaFacebook, FaGithub, FaLinkedin } from "react-icons/fa";
+import { SiGmail } from "react-icons/si";
 
 const Footer = () => {
   return (
@@ -63,15 +65,30 @@ const Footer = () => {
           <p className="text-muted">Email: aharmanhussain@gmail.com</p>
           <p className="text-muted">Phone: +8801 3153 15449</p>
 
-          <div className="flex gap-4 mt-4">
-            <a href="#" className="hover:text-primary transition-colors">
-              Facebook
+          <div className="flex gap-4 mt-6">
+            <a
+              href="https://www.facebook.com/a.h.arman.hussain"
+              className="hover:text-primary transition-colors"
+            >
+              <FaFacebook />
             </a>
-            <a href="#" className="hover:text-primary transition-colors">
-              Twitter
+            <a
+              href="https://www.linkedin.com/in/mohammed-abdul-hakim-arman/"
+              className="hover:text-primary transition-colors"
+            >
+              <FaLinkedin />
             </a>
-            <a href="#" className="hover:text-primary transition-colors">
-              LinkedIn
+            <a
+              href="https://github.com/a-h-arman-hussain"
+              className="hover:text-primary transition-colors"
+            >
+              <FaGithub />
+            </a>
+            <a
+              href="mailto:armanhd16@gmail.com"
+              className="hover:text-primary transition-colors"
+            >
+              <SiGmail />
             </a>
           </div>
         </div>

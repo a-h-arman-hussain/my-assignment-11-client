@@ -1,11 +1,15 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Link, NavLink } from "react-router";
 import { motion, AnimatePresence } from "framer-motion";
-import { FiLogIn } from "react-icons/fi";
+import { FiLogIn, FiLogOut } from "react-icons/fi";
 import useAuth from "../../../hooks/useAuth";
 import useAxiosSecure from "../../../hooks/useAxiosSecure";
 import { useQuery } from "@tanstack/react-query";
 import logo from "../../../assets/Screenshot_2025-12-13_191151-removebg-preview.png";
+import { MdContactMail, MdDashboard, MdHome,  } from "react-icons/md";
+import { FaGraduationCap,  } from "react-icons/fa";
+import { AiOutlineInfoCircle } from "react-icons/ai";
+import { li } from "framer-motion/client";
 
 const Navbar = () => {
   const { user: firebaseUser, logOut } = useAuth();
@@ -17,10 +21,14 @@ const Navbar = () => {
   const dropdownRef = useRef(null);
 
   const links = [
-    { to: "/", label: "Home" },
-    { to: "/all-scholarships", label: "All Scholarships" },
-    { to: "/about", label: "About" },
-    { to: "/contact", label: "Contact Us" },
+    { to: "/", label: "Home", icon: <MdHome size={30} /> },
+    {
+      to: "/all-scholarships",
+      label: "All Scholarships",
+      icon: <FaGraduationCap size={30} />,
+    },
+    { to: "/about", label: "About", icon: <AiOutlineInfoCircle size={30} /> },
+    { to: "/contact", label: "Contact Us" , icon: <MdContactMail size={30} />},
   ];
 
   // Sticky navbar shadow
@@ -92,20 +100,21 @@ const Navbar = () => {
         </Link>
 
         {/* Desktop Links */}
-        <ul className="hidden lg:flex gap-6 font-medium">
+        <ul className="hidden lg:flex gap-8 font-medium">
           {links.map((link) => (
             <li key={link.to}>
               <NavLink
                 to={link.to}
                 className={({ isActive }) =>
-                  `transition-colors ${
+                  `transition-colors flex flex-col items-center justify-center ${
                     isActive
                       ? "text-primary font-semibold border-b-2 border-primary"
                       : "hover:text-primary"
                   }`
                 }
               >
-                {link.label}
+                {link.icon}
+                <span className="text-xs">{link.label}</span>
               </NavLink>
             </li>
           ))}
@@ -142,16 +151,19 @@ const Navbar = () => {
                     <div className="absolute -top-2 right-4 w-3 h-3 bg-white/20 rotate-45 border-l border-t border-white/30"></div>
 
                     <ul className="flex flex-col gap-1">
-                      <li className="px-4 py-2 hover:bg-white/30 rounded-lg transition font-medium text-gray-900 cursor-pointer">
-                        <Link to="/dashboard" className="w-full block">
-                          Dashboard
+                      <li className="px-4 py-2 hover:bg-primary/50 hover:text-white rounded-lg transition font-medium text-gray-900 cursor-pointer">
+                        <Link
+                          to="/dashboard"
+                          className="w-full flex items-center gap-1"
+                        >
+                          <MdDashboard /> Dashboard
                         </Link>
                       </li>
                       <li
-                        className="px-4 py-2 hover:bg-red-500/30 rounded-lg cursor-pointer text-red-600 font-medium transition"
+                        className="flex items-center gap-1 px-4 py-2 hover:bg-red-500/30 rounded-lg cursor-pointer text-red-600 font-medium transition"
                         onClick={logOut}
                       >
-                        Logout
+                        <FiLogOut /> Logout
                       </li>
                     </ul>
                   </motion.div>
@@ -191,7 +203,7 @@ const Navbar = () => {
                   <NavLink
                     to={link.to}
                     className={({ isActive }) =>
-                      `block w-full px-6 py-3 transition-colors ${
+                      `w-full px-6 py-3 transition-colors flex items-center gap-2 ${
                         isActive
                           ? "text-primary font-semibold border-b-2 border-primary"
                           : "hover:text-primary"
@@ -199,6 +211,7 @@ const Navbar = () => {
                     }
                     onClick={() => setMobileOpen(false)}
                   >
+                    {link.icon}
                     {link.label}
                   </NavLink>
                 </li>

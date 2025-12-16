@@ -11,7 +11,7 @@ import {
 } from "react-icons/fa";
 import useRole from "../../hooks/useRole";
 import useAuth from "../../hooks/useAuth";
-import { MdAnalytics, MdPayment } from "react-icons/md";
+import { MdAnalytics, MdDashboard, MdPayment } from "react-icons/md";
 import { FiLogOut } from "react-icons/fi";
 import { RiAccountCircleLine } from "react-icons/ri";
 import logo from "../../assets/Screenshot_2025-12-13_191151-removebg-preview.png";
@@ -43,7 +43,7 @@ const DashboardLayout = () => {
     if (location.pathname === "/dashboard") {
       if (role === "Admin") navigate("admin-dashboard", { replace: true });
       else if (role === "Moderator")
-        navigate("manage-applications", { replace: true });
+        navigate("moderator-dashboard", { replace: true });
       else if (role === "Student")
         navigate("my-applications", { replace: true });
     }
@@ -69,7 +69,7 @@ const DashboardLayout = () => {
                 viewBox="0 0 24 24"
                 strokeWidth={2}
                 stroke="currentColor"
-                className="w-6 h-6"
+                className="w-10 h-10"
               >
                 <path
                   strokeLinecap="round"
@@ -130,7 +130,7 @@ const DashboardLayout = () => {
               <>
                 <DashboardLink
                   to="/dashboard/admin-dashboard"
-                  icon={FaPlusCircle}
+                  icon={MdDashboard}
                 >
                   Dashboard
                 </DashboardLink>
@@ -171,11 +171,18 @@ const DashboardLayout = () => {
             {role === "Moderator" && (
               <>
                 <DashboardLink
+                  to="/dashboard/moderator-dashboard"
+                  icon={MdDashboard}
+                >
+                  Dashboard
+                </DashboardLink>
+                <DashboardLink
                   to="/dashboard/manage-applications"
                   icon={FaTasks}
                 >
                   Manage Applications
                 </DashboardLink>
+
                 <DashboardLink to="/dashboard/all-reviews" icon={FaCommentDots}>
                   All Reviews
                 </DashboardLink>
@@ -197,6 +204,12 @@ const DashboardLayout = () => {
             {/* STUDENT */}
             {role === "Student" && (
               <>
+                <DashboardLink
+                  to="/dashboard/my-dashboard"
+                  icon={MdDashboard}
+                >
+                  Dashboard
+                </DashboardLink>
                 <DashboardLink
                   to="/dashboard/my-applications"
                   icon={FaClipboardList}

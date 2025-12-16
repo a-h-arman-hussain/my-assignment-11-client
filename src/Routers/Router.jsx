@@ -26,6 +26,8 @@ import AboutPage from "../Pages/AboutPage/AboutPage";
 import ContactUs from "../Pages/ContactUs/ContactUs";
 import PaymentHistory from "../Pages/Dashboard/Payment/PaymentHistory";
 import AdminDashboard from "../Pages/Dashboard/AdminDashboard/AdminDashboard/AdminDashboard";
+import ModeratorDashboard from "../Pages/Dashboard/ModeratorDashboard/ModeratorDashboard/ModeratorDashboard";
+import StudentDashboard from "../Pages/Dashboard/StudentDashboard/StudentDashboard";
 
 const router = createBrowserRouter([
   {
@@ -97,6 +99,14 @@ const router = createBrowserRouter([
       },
 
       {
+        path: "moderator-dashboard",
+        element: (
+          <ModeratorRoute>
+            <ModeratorDashboard></ModeratorDashboard>
+          </ModeratorRoute>
+        ),
+      },
+      {
         path: "manage-applications",
         element: (
           <ModeratorRoute>
@@ -112,6 +122,7 @@ const router = createBrowserRouter([
           </ModeratorRoute>
         ),
       },
+      { path: "my-dashboard", Component: StudentDashboard },
       { path: "my-applications", Component: MyApplications },
       { path: "my-reviews", Component: MyReviews },
       { path: "payment-history", Component: PaymentHistory },

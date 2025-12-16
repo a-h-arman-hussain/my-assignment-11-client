@@ -43,7 +43,7 @@ const AdminDashboard = ({ token }) => {
       {/* Main Content */}
       <main className="space-y-6 p-6">
         <h1 className="text-center text-2xl font-bold mb-2 text-primary">
-          Stats
+          Dashboard
         </h1>
         {/* Stats Section */}
         <section className="grid grid-cols-1 sm:grid-cols-3 gap-4">
@@ -90,7 +90,11 @@ const AdminDashboard = ({ token }) => {
                     <td className="px-6 py-4">
                       <span
                         className={`text-white px-2 py-0.5 text-sm font-semibold rounded-lg ${
-                          u.role === "Moderator" ? "bg-primary" : "bg-blue-500"
+                          u.role === "Admin"
+                            ? "bg-primary"
+                            : u.role === "Moderator"
+                            ? "bg-secondary"
+                            : "bg-blue-500"
                         }`}
                       >
                         {u.role}

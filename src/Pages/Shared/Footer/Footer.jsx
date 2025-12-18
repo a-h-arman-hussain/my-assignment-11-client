@@ -70,25 +70,25 @@ const Footer = () => {
               href="https://www.facebook.com/a.h.arman.hussain"
               className="hover:text-primary transition-colors"
             >
-              <FaFacebook />
+              <FaFacebook size={24} />
             </a>
             <a
               href="https://www.linkedin.com/in/mohammed-abdul-hakim-arman/"
               className="hover:text-primary transition-colors"
             >
-              <FaLinkedin />
+              <FaLinkedin size={24} />
             </a>
             <a
               href="https://github.com/a-h-arman-hussain"
               className="hover:text-primary transition-colors"
             >
-              <FaGithub />
+              <FaGithub size={24} />
             </a>
             <a
               href="mailto:armanhd16@gmail.com"
               className="hover:text-primary transition-colors"
             >
-              <SiGmail />
+              <SiGmail size={24} />
             </a>
           </div>
         </div>

@@ -6,10 +6,9 @@ import useAuth from "../../../hooks/useAuth";
 import useAxiosSecure from "../../../hooks/useAxiosSecure";
 import { useQuery } from "@tanstack/react-query";
 import logo from "../../../assets/Screenshot_2025-12-13_191151-removebg-preview.png";
-import { MdContactMail, MdDashboard, MdHome,  } from "react-icons/md";
-import { FaGraduationCap,  } from "react-icons/fa";
+import { MdContactMail, MdDashboard, MdHome } from "react-icons/md";
+import { FaGraduationCap } from "react-icons/fa";
 import { AiOutlineInfoCircle } from "react-icons/ai";
-import { li } from "framer-motion/client";
 
 const Navbar = () => {
   const { user: firebaseUser, logOut } = useAuth();
@@ -28,7 +27,7 @@ const Navbar = () => {
       icon: <FaGraduationCap size={30} />,
     },
     { to: "/about", label: "About", icon: <AiOutlineInfoCircle size={30} /> },
-    { to: "/contact", label: "Contact Us" , icon: <MdContactMail size={30} />},
+    { to: "/contact", label: "Contact Us", icon: <MdContactMail size={30} /> },
   ];
 
   // Sticky navbar shadow
@@ -151,7 +150,7 @@ const Navbar = () => {
                     <div className="absolute -top-2 right-4 w-3 h-3 bg-white/20 rotate-45 border-l border-t border-white/30"></div>
 
                     <ul className="flex flex-col gap-1">
-                      <li className="px-4 py-2 hover:bg-primary/50 hover:text-white rounded-lg transition font-medium text-gray-900 cursor-pointer">
+                      <li className="px-4 py-2 hover:bg-primary/50 hover:text-white rounded-lg transition font-medium text-primary cursor-pointer">
                         <Link
                           to="/dashboard"
                           className="w-full flex items-center gap-1"

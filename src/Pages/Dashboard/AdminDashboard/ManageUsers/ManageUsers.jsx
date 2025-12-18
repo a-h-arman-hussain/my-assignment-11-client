@@ -120,7 +120,7 @@ const ManageUsers = () => {
               <th className="text-center">Actions</th>
             </tr>
           </thead>
-          <tbody>
+          <tbody className="text-sm">
             {filteredUsers.length === 0 ? (
               <tr>
                 <td colSpan="5" className="text-center text-muted">

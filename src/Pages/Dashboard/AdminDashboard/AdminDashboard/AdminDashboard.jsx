@@ -79,7 +79,7 @@ const AdminDashboard = ({ token }) => {
                 </th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-200">
+            <tbody className="divide-y divide-gray-200 text-sm">
               {Array.isArray(users) &&
                 users.map((u) => (
                   <tr key={u._id}>
@@ -125,7 +125,7 @@ const AdminDashboard = ({ token }) => {
                 </th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-200">
+            <tbody className="divide-y divide-gray-200 text-sm">
               {Array.isArray(scholarships) &&
                 scholarships.map((s) => (
                   <tr key={s._id}>
@@ -157,7 +157,7 @@ const AdminDashboard = ({ token }) => {
                 </th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-200">
+            <tbody className="divide-y divide-gray-200 text-sm">
               {Array.isArray(applications) &&
                 applications.map((a) => (
                   <tr key={a._id}>

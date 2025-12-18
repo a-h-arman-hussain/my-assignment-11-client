@@ -79,7 +79,7 @@ const ManageScholarships = () => {
               <th>Actions</th>
             </tr>
           </thead>
-          <tbody>
+          <tbody className="text-sm">
             {scholarships.length === 0 ? (
               <tr>
                 <td colSpan="10" className="text-center text-muted">

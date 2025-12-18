@@ -1,16 +1,137 @@
-# React + Vite
+# 🎓 Scholar Stream
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Scholar Stream is a full-stack web application designed to manage and streamline scholarship discovery, applications, and administration. It provides separate dashboards for **users**, **moderators**, and **admins**, ensuring a secure and role-based experience.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 🚀 Features
 
-## React Compiler
+### 👨‍🎓 User
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+* Browse available scholarships
+* View scholarship details
+* Apply for scholarships
+* Track application status
+* Secure authentication (Firebase)
 
-## Expanding the ESLint configuration
+### 🧑‍💼 Moderator
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+* Review submitted scholarships
+* Approve or reject scholarship posts
+* Manage reported content
+
+### 🛡️ Admin
+
+* Full system control
+* Manage users and roles
+* View platform statistics
+* Manage scholarships and applications
+
+---
+
+## 🛠️ Tech Stack
+
+### Frontend
+
+* React.js
+* Tailwind CSS
+* Axios
+* React Router
+
+### Backend
+
+* Node.js
+* Express.js
+* MongoDB
+* Firebase Admin SDK
+* JWT Authentication
+
+---
+
+## 🔐 Authentication & Security
+
+* Firebase Authentication (Email/Password, Google)
+* Firebase ID Token verification on backend
+* Role-based access control (RBAC)
+* Secure API using JWT & middleware
+
+---
+
+## 📦 Project Structure
+
+```
+scholar-stream/
+│
+├── client/        # React frontend
+│   ├── components/
+│   ├── pages/
+│   ├── hooks/
+│   └── utils/
+│
+├── server/        # Express backend
+│   ├── routes/
+│   ├── middleware/
+│   ├── controllers/
+│   └── index.js
+│
+└── README.md
+```
+
+---
+
+## ⚙️ Environment Variables
+
+### Backend (`.env`)
+
+```
+PORT=5000
+MONGODB_URI=your_mongodb_uri
+FB_SERVICE_ACCOUNT=base64_encoded_firebase_key
+JWT_SECRET=your_jwt_secret
+```
+
+### Frontend (`.env`)
+
+```
+VITE_API_URL=http://localhost:5000
+VITE_FIREBASE_API_KEY=your_key
+```
+
+---
+
+## ▶️ Run Locally
+
+### Backend
+
+```bash
+cd server
+npm install
+npm run dev
+```
+
+### Frontend
+
+```bash
+cd client
+npm install
+npm run dev
+```
+
+---
+
+## 📊 Future Improvements
+* Payment integration (Stripe)
+* Scholarship recommendation system
+* Email notifications
+* Advanced analytics dashboard
+
+---
+
+## 👤 Author
+**Mohammed Abdul Hakim Arman**
+Full Stack Web Developer (MERN)
+
+---
+
+## 📄 License
+This project is for educational purposes.

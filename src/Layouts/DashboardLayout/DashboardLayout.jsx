@@ -44,8 +44,7 @@ const DashboardLayout = () => {
       if (role === "Admin") navigate("admin-dashboard", { replace: true });
       else if (role === "Moderator")
         navigate("moderator-dashboard", { replace: true });
-      else if (role === "Student")
-        navigate("my-applications", { replace: true });
+      else if (role === "Student") navigate("my-dashboard", { replace: true });
     }
   }, [role, roleLoading, navigate, location.pathname]);
 
@@ -100,6 +99,7 @@ const DashboardLayout = () => {
         <aside className="flex flex-col w-64 bg-gradient-to-b from-primary/20 to-white md:border-r border-base-300 shadow-lg sticky top-0 z-50 min-h-screen overflow-y-hidden transition-all duration-300 md:pt-0">
           {/* User Profile */}
           <div className="flex flex-col items-center py-6 border-b border-base-300 ml-2">
+            z
             <img
               src={userData?.photo}
               alt="User Avatar"
@@ -204,10 +204,7 @@ const DashboardLayout = () => {
             {/* STUDENT */}
             {role === "Student" && (
               <>
-                <DashboardLink
-                  to="/dashboard/my-dashboard"
-                  icon={MdDashboard}
-                >
+                <DashboardLink to="/dashboard/my-dashboard" icon={MdDashboard}>
                   Dashboard
                 </DashboardLink>
                 <DashboardLink

@@ -32,7 +32,7 @@ const ScholarshipCard = ({ scholar }) => {
       {/* Content */}
       <div className="p-4 flex flex-col space-y-2">
         {/* Scholarship Name */}
-        <h2 className="text-neutral text-lg font-semibold leading-tight">
+        <h2 className="text-primary text-lg font-semibold leading-tight">
           {scholarshipName}
         </h2>
 

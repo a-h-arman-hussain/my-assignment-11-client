@@ -53,14 +53,6 @@ const UserProfile = () => {
     }
   };
 
-  if (!user) {
-    return (
-      <p className="mt-20 text-center text-error text-lg font-semibold">
-        Please login to view profile
-      </p>
-    );
-  }
-
   return (
     <div className="min-h-screen bg-base-200">
       {/* Cover */}

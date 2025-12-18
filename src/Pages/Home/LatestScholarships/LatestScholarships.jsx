@@ -2,11 +2,28 @@ import React, { useEffect, useState } from "react";
 import useAxiosSecure from "../../../hooks/useAxiosSecure";
 import ScholarshipCard from "../../AllScholarships/ScholarshipCard";
 import Loader from "../../Shared/Loader/Loader";
+import { motion, AnimatePresence } from "framer-motion";
 
 const LatestScholarships = () => {
   const [latestScholarships, setLatestScholarships] = useState([]);
   const [loading, setLoading] = useState(true);
   const axiosSecure = useAxiosSecure();
+
+  // Motion variants
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: { opacity: 1, transition: { staggerChildren: 0.1 } },
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 20, scale: 0.95 },
+    visible: { opacity: 1, y: 0, scale: 1 },
+  };
+
+  const fadeUp = {
+    hidden: { opacity: 0, y: 30 },
+    visible: { opacity: 1, y: 0 },
+  };
 
   useEffect(() => {
     const fetchLatest = async () => {
@@ -23,27 +40,54 @@ const LatestScholarships = () => {
     fetchLatest();
   }, [axiosSecure]);
 
-  if (loading) return <Loader></Loader>;
+  if (loading) return <Loader />;
 
   return (
-    <section className="py-12">
-      <div className="container mx-auto px-6">
-        <h2 className="text-3xl font-bold mb-8 text-center text-primary">
-          Latest Scholarships
-        </h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
+    <motion.section
+      className="py-12"
+      initial="hidden"
+      animate="visible"
+      variants={containerVariants}
+    >
+      <motion.div
+        className="container mx-auto px-6 text-center mb-8"
+        variants={fadeUp}
+      >
+        <h2 className="text-3xl font-bold text-primary">Latest Scholarships</h2>
+      </motion.div>
+
+      <motion.div
+        className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6"
+        variants={containerVariants}
+        layout
+      >
+        <AnimatePresence>
           {latestScholarships.length > 0 ? (
             latestScholarships.map((scholar) => (
-              <ScholarshipCard key={scholar._id} scholar={scholar} />
+              <motion.div
+                key={scholar._id}
+                variants={itemVariants}
+                initial="hidden"
+                animate="visible"
+                exit={{ opacity: 0, scale: 0.95, y: 20 }}
+                whileHover={{ scale: 1.03, y: -5 }}
+                whileTap={{ scale: 0.97 }}
+                layout
+              >
+                <ScholarshipCard scholar={scholar} />
+              </motion.div>
             ))
           ) : (
-            <p className="text-muted text-center col-span-full">
+            <motion.p
+              className="text-muted text-center col-span-full"
+              variants={fadeUp}
+            >
               No scholarships found.
-            </p>
+            </motion.p>
           )}
-        </div>
-      </div>
-    </section>
+        </AnimatePresence>
+      </motion.div>
+    </motion.section>
   );
 };
 

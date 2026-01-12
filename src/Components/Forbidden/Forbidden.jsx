@@ -1,27 +1,70 @@
+import React from "react";
 import Lottie from "lottie-react";
 import forbiddenAnimation from "../../assets/forbidden.json";
 import { Link } from "react-router";
+import { motion } from "framer-motion";
+import { FiHome, FiGrid, FiLock } from "react-icons/fi";
 
 const Forbidden = () => {
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-base-100 text-center px-4">
-      <div className="w-64">
-        <Lottie animationData={forbiddenAnimation} loop={false} />
-      </div>
+    <div className="min-h-screen flex flex-col items-center justify-center overflow-hidden p-6">
+      
 
-      <h1 className="text-3xl font-bold text-error mt-4">Access Forbidden</h1>
+      <motion.div
+        initial={{ opacity: 0, scale: 0.9 }}
+        animate={{ opacity: 1, scale: 1 }}
+        className="relative z-10 flex flex-col items-center max-w-lg w-full"
+      >
+        {/* Lottie Animation Container */}
+        <div className="w-72 md:w-80 drop-shadow-2xl">
+          <Lottie animationData={forbiddenAnimation} loop={true} />
+        </div>
 
-      <p className="text-gray-500 mt-2">
-        You don’t have permission to view this page
-      </p>
+        {/* Text Content */}
+        <div className="text-center mt-8 space-y-4">
+          <div className="inline-flex items-center gap-2 bg-error/10 text-error px-4 py-1.5 rounded-full border border-error/20">
+            <FiLock size={14} />
+            <span className="text-[10px] font-black uppercase tracking-[0.2em]">
+              Error 403
+            </span>
+          </div>
 
-      <div className="flex gap-4 mt-6">
-        <Link to="/" className="btn btn-primary">
-          Go Home
-        </Link>
-        <Link to="/dashboard" className="btn border border-primary text-primary">
-          Dashboard
-        </Link>
+          <h1 className="text-4xl md:text-5xl font-black text-neutral uppercase tracking-tighter">
+            Access <span className="text-error">Forbidden</span>
+          </h1>
+
+          <p className="text-sm font-bold opacity-40 uppercase tracking-widest max-w-xs mx-auto leading-relaxed">
+            Oops! You've reached a restricted area. Your current role doesn't
+            have the keys to this door.
+          </p>
+        </div>
+
+        {/* Action Buttons */}
+        <div className="flex flex-col sm:flex-row gap-4 mt-12 w-full sm:w-auto">
+          <Link
+            to="/"
+            className="group flex items-center justify-center gap-3 bg-neutral text-white px-8 py-4 rounded-[1.5rem] font-black uppercase text-xs tracking-widest hover:bg-primary transition-all duration-300 shadow-xl shadow-black/10 active:scale-95"
+          >
+            <FiHome
+              size={18}
+              className="group-hover:-translate-y-1 transition-transform"
+            />
+            Back to Home
+          </Link>
+
+          <Link
+            to="/dashboard"
+            className="group flex items-center justify-center gap-3 bg-base-200 text-neutral px-8 py-4 rounded-[1.5rem] font-black uppercase text-xs tracking-widest border border-base-300 hover:bg-base-300 transition-all duration-300 active:scale-95"
+          >
+            <FiGrid size={18} />
+            Dashboard
+          </Link>
+        </div>
+      </motion.div>
+
+      {/* Footer Branding */}
+      <div className="absolute bottom-10 text-[10px] font-black uppercase tracking-[0.5em] opacity-20">
+        Secure Access Protocol | Unauthorized
       </div>
     </div>
   );

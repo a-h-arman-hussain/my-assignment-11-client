@@ -1,8 +1,16 @@
 import React, { useEffect, useState } from "react";
-import { FaUsersCog, FaUniversity, FaClipboardList } from "react-icons/fa";
+import {
+  FaUsersCog,
+  FaUniversity,
+  FaClipboardList,
+  FaArrowUp,
+} from "react-icons/fa";
+import { motion } from "framer-motion";
 import useAxiosSecure from "../../../../hooks/useAxiosSecure";
+import Loader from "../../../Shared/Loader/Loader";
+import { Link } from "react-router";
 
-const AdminDashboard = ({ token }) => {
+const AdminDashboard = () => {
   const [stats, setStats] = useState({
     totalUsers: 0,
     totalScholarships: 0,
@@ -11,15 +19,16 @@ const AdminDashboard = ({ token }) => {
   const [users, setUsers] = useState([]);
   const [scholarships, setScholarships] = useState([]);
   const [applications, setApplications] = useState([]);
+  const [loading, setLoading] = useState(true);
   const axiosSecure = useAxiosSecure();
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const [usersRes, scholarshipsRes, applicationsRes] = await Promise.all([
-          axiosSecure.get("/users", {}),
+          axiosSecure.get("/users"),
           axiosSecure.get("/all-scholarships"),
-          axiosSecure.get("/applications", {}),
+          axiosSecure.get("/applications"),
         ]);
 
         setUsers(usersRes.data || []);
@@ -31,147 +40,201 @@ const AdminDashboard = ({ token }) => {
           totalApplications: applicationsRes.data?.length || 0,
         });
       } catch (err) {
-        console.error(err);
+        console.error("Data Fetch Error:", err);
+      } finally {
+        setLoading(false);
       }
     };
 
     fetchData();
-  }, [token, axiosSecure]);
+  }, [axiosSecure]);
+
+  if (loading) return <Loader />;
 
   return (
-    <div className="min-h-screen">
-      {/* Main Content */}
-      <main className="space-y-6 p-6">
-        <h1 className="text-center text-2xl font-bold mb-2 text-primary">
-          Dashboard
-        </h1>
-        {/* Stats Section */}
-        <section className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-          <div className="bg-white p-4 rounded shadow text-center">
-            <p className="text-gray-500">Users</p>
-            <p className="text-2xl font-bold">{stats.totalUsers}</p>
+    <div className="space-y-10 pb-10">
+      {/* Dashboard Main Header - System Overview */}
+      <header className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-12 pb-6 border-b border-base-200">
+        <motion.div
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          className="space-y-1"
+        >
+          {/* ১. সাব-টাইটেল: অ্যাডমিন ইন্ডিকেটর */}
+          <div className="flex items-center gap-2 mb-1">
+            <div className="w-2 h-2 rounded-full bg-primary/40"></div>
+            <span className="text-primary font-black tracking-[0.3em] uppercase text-[10px]">
+              Analytics Dashboard
+            </span>
           </div>
-          <div className="bg-white p-4 rounded shadow text-center">
-            <p className="text-gray-500">Scholarships</p>
-            <p className="text-2xl font-bold">{stats.totalScholarships}</p>
-          </div>
-          <div className="bg-white p-4 rounded shadow text-center">
-            <p className="text-gray-500">Applications</p>
-            <p className="text-2xl font-bold">{stats.totalApplications}</p>
-          </div>
-        </section>
-        {/* Users Table */}
-        <h1 className="text-center text-2xl font-bold mb-2 text-primary">
-          Users
-        </h1>
-        <div className="bg-white rounded shadow overflow-x-auto">
-          <table className="min-w-full divide-y divide-gray-200">
-            <thead className="bg-gray-50">
-              <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Name
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Email
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Role
-                </th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-gray-200 text-sm">
-              {Array.isArray(users) &&
-                users.map((u) => (
-                  <tr key={u._id}>
-                    <td className="px-6 py-4 text-primary font-semibold">
-                      {u.name}
-                    </td>
-                    <td className="px-6 py-4">{u.email}</td>
-                    <td className="px-6 py-4">
-                      <span
-                        className={`text-white px-2 py-0.5 text-sm font-semibold rounded-lg ${
-                          u.role === "Admin"
-                            ? "bg-primary"
-                            : u.role === "Moderator"
-                            ? "bg-secondary"
-                            : "bg-blue-500"
-                        }`}
-                      >
-                        {u.role}
-                      </span>
-                    </td>
-                  </tr>
-                ))}
-            </tbody>
-          </table>
-        </div>
 
-        {/* Scholarships Table */}
-        <h1 className="text-center text-2xl font-bold mb-2 text-primary">
-          Scholarships
-        </h1>
-        <div className="bg-white rounded shadow overflow-x-auto">
-          <table className="min-w-full divide-y divide-gray-200">
-            <thead className="bg-gray-50">
-              <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Name
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  University
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Category
-                </th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-gray-200 text-sm">
-              {Array.isArray(scholarships) &&
-                scholarships.map((s) => (
-                  <tr key={s._id}>
-                    <td className="px-6 py-4">{s.scholarshipName}</td>
-                    <td className="px-6 py-4">{s.universityName}</td>
-                    <td className="px-6 py-4">{s.scholarshipCategory}</td>
-                  </tr>
-                ))}
-            </tbody>
-          </table>
-        </div>
+          {/* ২. মেইন টাইটেল: ডাইনামিক এবং বোল্ড টাইপোগ্রাফি */}
+          <h1 className="text-3xl md:text-5xl font-black text-base-content uppercase tracking-tighter leading-none">
+            System <span className="text-primary">Overview</span>
+          </h1>
 
-        {/* Applications Table */}
-        <h1 className="text-center text-2xl font-bold mb-2 text-primary">
-          Applications
-        </h1>
-        <div className="bg-white rounded shadow overflow-x-auto">
-          <table className="min-w-full divide-y divide-gray-200">
-            <thead className="bg-gray-50">
-              <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Student
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Scholarship
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Applications
-                </th>
+          {/* ৩. ডেসক্রিপশন: প্রফেশনাল অপাসিটি */}
+          <p className="text-[10px] md:text-xs font-bold opacity-40 uppercase tracking-[0.2em] mt-3 ml-1">
+            Real-time platform statistics & insights
+          </p>
+        </motion.div>
+
+        {/* ৪. লাইভ স্ট্যাটাস ইন্ডিকেটর (রাইট সাইড) */}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          className="bg-primary/5 text-primary px-5 py-3 rounded-[1.5rem] border border-primary/20 flex items-center gap-3 self-start md:self-center"
+        >
+          <span className="relative flex h-3 w-3">
+            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
+            <span className="relative inline-flex rounded-full h-3 w-3 bg-primary"></span>
+          </span>
+          <span className="font-black uppercase tracking-widest text-[10px]">
+            Live Data Monitoring
+          </span>
+        </motion.div>
+      </header>
+
+      {/* ১. স্ট্যাট কার্ডস (Global Rule: Rounded-3xl & Icons) */}
+      <section className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <StatCard
+          label="Total Users"
+          value={stats.totalUsers}
+          icon={FaUsersCog}
+          color="bg-primary"
+          trend="+12%"
+        />
+        <StatCard
+          label="Scholarships"
+          value={stats.totalScholarships}
+          icon={FaUniversity}
+          color="bg-secondary"
+          trend="+5"
+        />
+        <StatCard
+          label="Applications"
+          value={stats.totalApplications}
+          icon={FaClipboardList}
+          color="bg-accent"
+          trend="+24%"
+        />
+      </section>
+
+      {/* ২. ডেটা টেবিল গ্রিড */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mt-10">
+        {/* ইউজার টেবিল */}
+        <TableContainer
+          title="Recent Users"
+          viewAllPath="/dashboard/manage-users"
+        >
+          <table className="table w-full">
+            <thead className="bg-base-200/50">
+              <tr className="border-none text-neutral opacity-50 uppercase text-[10px] tracking-widest">
+                <th>Name</th>
+                <th>Role</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-200 text-sm">
-              {Array.isArray(applications) &&
-                applications.map((a) => (
-                  <tr key={a._id}>
-                    <td className="px-6 py-4">{a.studentName}</td>
-                    <td className="px-6 py-4">{a.scholarshipName}</td>
-                    <td className="px-6 py-4">{a.applicationStatus}</td>
-                  </tr>
-                ))}
+            <tbody>
+              {users.slice(0, 5).map((u) => (
+                <tr
+                  key={u._id}
+                  className="border-b border-base-200 last:border-none"
+                >
+                  <td className="font-bold text-sm">{u.name}</td>
+                  <td>
+                    <span
+                      className={`px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider text-white ${
+                        u.role === "Admin"
+                          ? "bg-primary"
+                          : u.role === "Moderator"
+                          ? "bg-secondary"
+                          : "bg-blue-500"
+                      }`}
+                    >
+                      {u.role}
+                    </span>
+                  </td>
+                </tr>
+              ))}
             </tbody>
           </table>
-        </div>
-      </main>
+        </TableContainer>
+
+        {/* স্কলারশিপ টেবিল */}
+        <TableContainer
+          title="Latest Scholarships"
+          viewAllPath="/dashboard/manage-scholarships"
+        >
+          <table className="table w-full">
+            <thead className="bg-base-200/50">
+              <tr className="border-none text-neutral opacity-50 uppercase text-[10px] tracking-widest">
+                <th>University</th>
+                <th>Fees</th>
+              </tr>
+            </thead>
+            <tbody>
+              {scholarships.slice(0, 5).map((s) => (
+                <tr
+                  key={s._id}
+                  className="border-b border-base-200 last:border-none"
+                >
+                  <td className="font-bold text-sm truncate max-w-[150px]">
+                    {s.universityName}
+                  </td>
+                  <td className="text-primary font-black text-xs">
+                    ${s.applicationFees}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </TableContainer>
+      </div>
     </div>
   );
 };
+
+// --- হেল্পার কম্পোনেন্ট: স্ট্যাট কার্ড ---
+const StatCard = ({ label, value, icon: Icon, color, trend }) => (
+  <motion.div
+    whileHover={{ y: -5 }}
+    className="bg-base-100 p-8 rounded-[2.5rem] border border-base-300 shadow-xl flex items-center gap-6 group"
+  >
+    <div
+      className={`p-5 rounded-3xl ${color} text-white shadow-lg shadow-inner group-hover:scale-110 transition-transform`}
+    >
+      <Icon size={32} />
+    </div>
+    <div>
+      <p className="text-xs font-black text-neutral/40 uppercase tracking-widest">
+        {label}
+      </p>
+      <div className="flex items-baseline gap-2">
+        <h2 className="text-3xl font-black text-neutral">{value}</h2>
+        <span className="text-[10px] font-bold text-success flex items-center gap-0.5">
+          <FaArrowUp /> {trend}
+        </span>
+      </div>
+    </div>
+  </motion.div>
+);
+
+// --- হেল্পার কম্পোনেন্ট: টেবিল কন্টেইনার ---
+const TableContainer = ({ title, children, viewAllPath }) => (
+  <div className="bg-base-100 rounded-[2.5rem] border border-base-300 shadow-xl overflow-hidden">
+    <div className="p-6 border-b border-base-200 flex justify-between items-center bg-base-100">
+      <h3 className="font-black text-neutral uppercase tracking-tighter">
+        {title}
+      </h3>
+      <Link
+        to={viewAllPath}
+        className="text-[10px] font-black text-primary uppercase tracking-widest hover:underline cursor-pointer"
+      >
+        View All
+      </Link>
+    </div>
+    <div className="overflow-x-auto p-2">{children}</div>
+  </div>
+);
 
 export default AdminDashboard;

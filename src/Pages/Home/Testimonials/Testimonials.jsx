@@ -1,4 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { FiChevronLeft, FiChevronRight } from "react-icons/fi";
+import { FaQuoteRight } from "react-icons/fa";
 
 const testimonialsData = [
   {
@@ -34,43 +37,105 @@ const Testimonials = () => {
   const nextSlide = () => setCurrent(current === length - 1 ? 0 : current + 1);
   const prevSlide = () => setCurrent(current === 0 ? length - 1 : current - 1);
 
+  // অটো-প্লে ফিচার (অপশনাল)
+  useEffect(() => {
+    const timer = setInterval(nextSlide, 5000);
+    return () => clearInterval(timer);
+  }, [current]);
+
   return (
-    <section className="py-12">
-      <div className="container mx-auto px-6 text-center">
-        <h2 className="text-3xl font-bold mb-10 text-primary">Testimonials</h2>
+    <section className="mt-10 md:mt-16 overflow-hidden">
+      <div className="container mx-auto text-center">
+        {/* Section Header - স্টুডেন্ট ফিডব্যাক সেকশন */}
+        <div className="text-center mb-12">
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+          >
+            {/* ১. সাব-টাইটেল (আগের গুলোর সাথে মিল রেখে) */}
+            <span className="text-primary font-black tracking-[0.3em] uppercase text-[10px] md:text-xs">
+              Testimonials
+            </span>
 
-        <div className="relative max-w-xl mx-auto">
-          {testimonialsData.map((testimonial, index) => (
-            <div
-              key={testimonial.id}
-              className={`${
-                index === current ? "block" : "hidden"
-              } bg-base-100 p-8 rounded-2xl shadow-lg transition transform hover:-translate-y-1`}
+            {/* ২. মেইন টাইটেল - Standardized Typography */}
+            <h2 className="text-3xl md:text-5xl font-black text-base-content mt-3 uppercase tracking-tighter">
+              What Our <span className="text-primary">Students Say</span>
+            </h2>
+
+            {/* ৩. ডেকোরেটিভ বার - Standardized Height (h-1.5) */}
+            <div className="w-20 h-1.5 bg-primary mx-auto mt-5 rounded-full shadow-lg shadow-primary/20"></div>
+          </motion.div>
+        </div>
+
+        <div className="max-w-3xl mx-auto px-4">
+          <div className="relative min-h-[300px] flex items-center justify-center">
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={testimonialsData[current].id}
+                initial={{ opacity: 0, x: 50 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -50 }}
+                transition={{ duration: 0.4, ease: "easeInOut" }}
+                className="bg-base-100 backdrop-blur-sm p-8 md:p-12 rounded-3xl border border-base-300 shadow-xl relative z-10 w-full"
+              >
+                {/* Quote Decoration */}
+                <div className="absolute -top-0 right-5 text-primary/10">
+                  <FaQuoteRight size={60} />
+                </div>
+                <img
+                  src={testimonialsData[current].photo}
+                  alt={testimonialsData[current].name}
+                  className="w-20 h-20 rounded-full mx-auto mb-6 object-cover ring-4 ring-primary ring-offset-4 ring-offset-base-100 shadow-lg"
+                />
+
+                <p className="text-lg md:text-xl text-base-content/80 italic mb-8 leading-relaxed px-4">
+                  "{testimonialsData[current].message}"
+                </p>
+
+                <div>
+                  <h3 className="text-base-content font-bold text-xl">
+                    {testimonialsData[current].name}
+                  </h3>
+                  <p className="text-primary font-medium">
+                    {testimonialsData[current].position}
+                  </p>
+                </div>
+              </motion.div>
+            </AnimatePresence>
+          </div>
+
+          {/* Controls */}
+          <div className="flex justify-center gap-4 mt-10">
+            <button
+              onClick={prevSlide}
+              className="btn btn-circle btn-primary btn-outline hover:!text-white shadow-lg"
+              aria-label="Previous slide"
             >
-              <img
-                src={testimonial.photo}
-                alt={testimonial.name}
-                className="w-16 h-16 rounded-full mx-auto mb-4 object-cover border-2 border-primary"
-              />
-              <p className="text-muted mb-4 mx-8">"{testimonial.message}"</p>
-              <h3 className="text-neutral font-semibold">{testimonial.name}</h3>
-              <p className="text-secondary text-sm">{testimonial.position}</p>
-            </div>
-          ))}
+              <FiChevronLeft size={24} />
+            </button>
 
-          {/* Navigation Buttons */}
-          <button
-            onClick={prevSlide}
-            className="absolute left-0 top-1/2 -translate-y-1/2 bg-primary hover:bg-secondary text-base-100 p-2 rounded-full shadow-lg cursor-pointer"
-          >
-            &#8592;
-          </button>
-          <button
-            onClick={nextSlide}
-            className="absolute right-0 top-1/2 -translate-y-1/2 bg-primary hover:bg-secondary text-base-100 p-2 rounded-full shadow-lg cursor-pointer"
-          >
-            &#8594;
-          </button>
+            {/* Pagination Dots */}
+            <div className="flex items-center gap-2">
+              {testimonialsData.map((_, index) => (
+                <div
+                  key={index}
+                  className={`h-2 rounded-full transition-all duration-300 ${
+                    index === current ? "w-8 bg-primary" : "w-2 bg-primary/30"
+                  }`}
+                />
+              ))}
+            </div>
+
+            <button
+              onClick={nextSlide}
+              className="btn btn-circle btn-primary btn-outline hover:!text-white shadow-lg"
+              aria-label="Next slide"
+            >
+              <FiChevronRight size={24} />
+            </button>
+          </div>
         </div>
       </div>
     </section>

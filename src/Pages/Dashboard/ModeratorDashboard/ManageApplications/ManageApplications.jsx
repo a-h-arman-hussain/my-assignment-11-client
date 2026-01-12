@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { motion } from "framer-motion";
 import useAxiosSecure from "../../../../hooks/useAxiosSecure";
 import Loader from "../../../Shared/Loader/Loader";
 import ApplicationDetailsModal from "./ApplicationDetailsModal";
@@ -26,39 +27,33 @@ const ManageApplications = () => {
   if (isLoading) return <Loader />;
 
   const handleStatusUpdate = async (id, newStatus) => {
-
     try {
-      await axiosSecure.patch(`/applications/${id}`, { status: newStatus });
-
+      await axiosSecure.patch(`/applications/${id}`, {
+        status: newStatus,
+      });
       Swal.fire({
         icon: "success",
         title: "Status Updated!",
-        text: `Application status changed to "${newStatus}".`,
+        text: `Status is now ${newStatus}`,
         timer: 1200,
         showConfirmButton: false,
+        customClass: { popup: "rounded-[2rem]" },
       });
-
       queryClient.invalidateQueries(["allApplications"]);
     } catch (err) {
       console.error(err);
-
-      Swal.fire({
-        icon: "error",
-        title: "Update Failed",
-        text: "Failed to update application status.",
-      });
     }
   };
 
   const handleCancel = async (id) => {
     const result = await Swal.fire({
-      title: "Are you sure?",
-      text: "This application will be rejected!",
+      title: "Reject Application?",
+      text: "This action cannot be undone!",
       icon: "warning",
       showCancelButton: true,
-      confirmButtonColor: "#d33",
-      cancelButtonColor: "#3085d6",
-      confirmButtonText: "Yes, reject it",
+      confirmButtonColor: "#EF4444",
+      confirmButtonText: "Yes, Reject",
+      customClass: { popup: "rounded-[2rem]" },
     });
 
     if (!result.isConfirmed) return;
@@ -67,107 +62,137 @@ const ManageApplications = () => {
       await axiosSecure.patch(`/applications/${id}`, {
         applicationStatus: "rejected",
       });
-
-      Swal.fire({
-        icon: "success",
-        title: "Rejected!",
-        text: "Application rejected successfully.",
-        timer: 1500,
-        showConfirmButton: false,
-      });
-
       queryClient.invalidateQueries(["allApplications"]);
     } catch (err) {
       console.error(err);
-
-      Swal.fire({
-        icon: "error",
-        title: "Action Failed",
-        text: "Failed to reject application.",
-      });
     }
   };
 
   return (
-    <div className="bg-base-200 min-h-screen p-6 rounded-lg">
-      <h1 className="text-3xl font-bold mb-6 text-primary text-center">
-        Manage Applications
-      </h1>
+    <motion.div
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      className="bg-base-200/50 min-h-screen p-4 md:p-8"
+    >
+      {/* Header Section */}
+      {/* Dashboard Page Header - Manage Applications */}
+      <header className="mb-12 pb-6 border-b border-base-200">
+        <motion.div
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.5 }}
+          className="space-y-1"
+        >
+          {/* ১. সাব-টাইটেল ইন্ডিকেটর: প্রসেসিং স্ট্যাটাস বোঝাতে */}
+          <div className="flex items-center gap-2 mb-1">
+            <div className="w-2 h-2 rounded-full bg-primary/60 animate-pulse"></div>
+            <span className="text-primary font-black tracking-[0.3em] uppercase text-[10px]">
+              Application Pipeline
+            </span>
+          </div>
 
-      <div className="overflow-x-auto bg-base-100 rounded-lg shadow border border-base-300 p-4">
-        <table className="table table-zebra w-full">
-          <thead className="bg-base-300 text-neutral font-semibold">
-            <tr>
-              <th>#</th>
-              <th>Applicant Name</th>
-              <th>Email</th>
-              <th>University</th>
-              <th>Feedback</th>
-              <th>Application Status</th>
-              <th>Payment Status</th>
-              <th className="text-center">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {applications.length === 0 ? (
-              <tr>
-                <td colSpan="8" className="text-center text-muted py-6">
-                  No applications found
-                </td>
+          {/* ২. মেইন টাইটেল: Standardized Typography (font-black + tracking-tighter) */}
+          <h1 className="text-3xl md:text-5xl font-black text-base-content uppercase tracking-tighter leading-none">
+            Manage <span className="text-primary">Applications</span>
+          </h1>
+
+          {/* ৩. ডেসক্রিপশন: প্রফেশনাল অপাসিটি এবং ট্র্যাকিং */}
+          <p className="text-[10px] md:text-xs font-bold opacity-40 uppercase tracking-[0.2em] md:tracking-[0.3em] mt-3 ml-1">
+            Review, Process, and manage scholarship requests in real-time
+          </p>
+        </motion.div>
+      </header>
+
+      {/* Main Table Container */}
+      <div className="bg-base-100 rounded-[2.5rem] shadow-2xl shadow-black/5 border border-base-300 overflow-hidden">
+        <div className="overflow-x-auto">
+          <table className="table w-full border-separate border-spacing-0">
+            <thead>
+              <tr className="bg-base-200/60">
+                <th className="p-6 text-[10px] font-black uppercase tracking-widest opacity-60">
+                  Applicant
+                </th>
+                <th className="p-6 text-[10px] font-black uppercase tracking-widest opacity-60">
+                  University
+                </th>
+                <th className="p-6 text-[10px] font-black uppercase tracking-widest opacity-60">
+                  Feedback
+                </th>
+                <th className="p-6 text-[10px] font-black uppercase tracking-widest opacity-60">
+                  Payment Status
+                </th>
+                <th className="p-6 text-[10px] font-black uppercase tracking-widest opacity-60 text-center">
+                  Actions
+                </th>
               </tr>
-            ) : (
-              applications.map((app, index) => (
-                <tr key={app._id}>
-                  <th>{index + 1}</th>
-                  <td className="text-neutral">{app.studentName}</td>
-                  <td className="text-neutral">{app.studentEmail}</td>
-                  <td className="text-neutral">{app.universityName}</td>
-                  <td className="text-neutral">
-                    {app.feedback || "No feedback"}
+            </thead>
+            <tbody>
+              {applications.map((app) => (
+                <tr
+                  key={app._id}
+                  className="hover:bg-base-200/30 transition-colors"
+                >
+                  <td className="p-6 border-b border-base-200">
+                    <p className="font-black text-sm text-neutral">
+                      {app.studentName}
+                    </p>
+                    <p className="text-[10px] font-bold opacity-40 tracking-tight">
+                      {app.studentEmail}
+                    </p>
                   </td>
-                  <td className="text-neutral">{app.applicationStatus}</td>
-                  <td className="text-neutral">{app.paymentStatus}</td>
-                  <td className="text-center">
-                    <div className="inline-flex gap-2 justify-center">
-                      <button
-                        className="btn btn-sm btn-info text-white"
+                  <td className="p-6 border-b border-base-200">
+                    <p className="text-xs font-bold text-neutral uppercase tracking-tighter">
+                      {app.universityName}
+                    </p>
+                  </td>
+                  <td className="p-6 border-b border-base-200">
+                    <p className="text-[11px] font-medium italic opacity-60 truncate max-w-[150px]">
+                      {app.feedback || "---"}
+                    </p>
+                  </td>
+                  <td className="p-6 border-b border-base-200">
+                    <StatusBadge status={app.paymentStatus} />
+                  </td>
+                  <td className="p-6 border-b border-base-200">
+                    <div className="flex items-center justify-center gap-2">
+                      <ActionButton
+                        icon={<IoInformationCircleSharp size={18} />}
+                        color="bg-info"
                         onClick={() => setSelectedApp(app)}
-                      >
-                        <IoInformationCircleSharp size={20} />
-                      </button>
-                      <button
-                        className="btn btn-sm btn-primary text-white"
+                      />
+                      <ActionButton
+                        icon={<MdFeedback size={18} />}
+                        color="bg-primary"
                         onClick={() => setFeedbackApp(app)}
-                      >
-                        <MdFeedback size={20} />
-                      </button>
+                      />
+
                       <select
                         value={app.applicationStatus}
                         onChange={(e) =>
                           handleStatusUpdate(app._id, e.target.value)
                         }
-                        className="select select-sm select-bordered bg-base-100 text-neutral"
+                        className="select select-xs select-bordered rounded-xl font-black text-[10px] uppercase bg-base-100"
                       >
                         <option value="pending">Pending</option>
                         <option value="processing">Processing</option>
                         <option value="completed">Completed</option>
                       </select>
-                      <button
-                        className="btn btn-sm btn-error text-white"
+
+                      <ActionButton
+                        icon={<MdCancel size={18} />}
+                        color="bg-error"
                         onClick={() => handleCancel(app._id)}
-                      >
-                        <MdCancel size={20} />
-                      </button>
+                      />
                     </div>
                   </td>
                 </tr>
-              ))
-            )}
-          </tbody>
-        </table>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
 
-      {/* Modals */}
+      {/* Modals remain same as they use your custom logic */}
       {selectedApp && (
         <ApplicationDetailsModal
           application={selectedApp}
@@ -180,8 +205,36 @@ const ManageApplications = () => {
           closeModal={() => setFeedbackApp(null)}
         />
       )}
-    </div>
+    </motion.div>
   );
 };
+
+// Internal Small Components
+const StatusBadge = ({ status }) => {
+  const styles = {
+    pending: "bg-warning/10 text-warning",
+    processing: "bg-info/10 text-info",
+    completed: "bg-success/10 text-success",
+    rejected: "bg-error/10 text-error",
+  };
+  return (
+    <span
+      className={`px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-tighter ${
+        styles[status] || "bg-base-200"
+      }`}
+    >
+      {status}
+    </span>
+  );
+};
+
+const ActionButton = ({ icon, color, onClick }) => (
+  <button
+    onClick={onClick}
+    className={`${color} text-white p-2 rounded-xl hover:scale-110 active:scale-95 transition-all shadow-lg shadow-black/5`}
+  >
+    {icon}
+  </button>
+);
 
 export default ManageApplications;

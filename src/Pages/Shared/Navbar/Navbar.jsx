@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Link, NavLink } from "react-router";
+import { Link, NavLink, useNavigate } from "react-router";
 import { motion, AnimatePresence } from "framer-motion";
-import { FiLogIn, FiLogOut } from "react-icons/fi";
+import { FiLogIn, FiLogOut, FiMoon, FiSun, FiMenu, FiX } from "react-icons/fi";
 import useAuth from "../../../hooks/useAuth";
 import useAxiosSecure from "../../../hooks/useAxiosSecure";
 import { useQuery } from "@tanstack/react-query";
@@ -13,31 +13,36 @@ import { AiOutlineInfoCircle } from "react-icons/ai";
 const Navbar = () => {
   const { user: firebaseUser, logOut } = useAuth();
   const axiosSecure = useAxiosSecure();
+  const navigate = useNavigate();
 
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
+  const [theme, setTheme] = useState(localStorage.getItem("theme") || "light");
   const dropdownRef = useRef(null);
 
+  // Links Configuration
   const links = [
-    { to: "/", label: "Home", icon: <MdHome size={30} /> },
+    { to: "/", label: "Home", icon: <MdHome size={20} /> },
     {
       to: "/all-scholarships",
       label: "All Scholarships",
-      icon: <FaGraduationCap size={30} />,
+      icon: <FaGraduationCap size={20} />,
     },
-    { to: "/about", label: "About", icon: <AiOutlineInfoCircle size={30} /> },
-    { to: "/contact", label: "Contact Us", icon: <MdContactMail size={30} /> },
+    { to: "/about", label: "About", icon: <AiOutlineInfoCircle size={20} /> },
+    { to: "/contact", label: "Contact", icon: <MdContactMail size={20} /> },
   ];
 
-  // Sticky navbar shadow
+  // Theme Toggle Logic
   useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 10);
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+    document.documentElement.setAttribute("data-theme", theme);
+    localStorage.setItem("theme", theme);
+  }, [theme]);
 
-  // Close dropdown when clicking outside
+  const toggleTheme = () => {
+    setTheme(theme === "light" ? "dark" : "light");
+  };
+
+  // Click Outside to Close Dropdown
   useEffect(() => {
     const handleClick = (e) => {
       if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
@@ -48,7 +53,7 @@ const Navbar = () => {
     return () => document.removeEventListener("mousedown", handleClick);
   }, []);
 
-  // Fetch user data from backend
+  // Fetch User Data
   const { data: userData } = useQuery({
     queryKey: ["user", firebaseUser?.email],
     queryFn: async () => {
@@ -59,166 +64,179 @@ const Navbar = () => {
     enabled: !!firebaseUser?.email,
   });
 
+  const handleLogout = () => {
+    logOut();
+    setDropdownOpen(false);
+    navigate("/");
+  };
+
   return (
     <motion.nav
-      animate={{
-        boxShadow: scrolled
-          ? "0 4px 20px rgba(0, 0, 0, 0.08)"
-          : "0 0 0 rgba(0, 0, 0, 0)",
-        paddingTop: scrolled ? "0.25rem" : "0.5rem",
-        paddingBottom: scrolled ? "0.25rem" : "0.5rem",
-      }}
+      initial={{ y: -100 }}
+      animate={{ y: 0 }}
+      transition={{ duration: 0.5 }}
+      className={`w-full z-50 transition-all duration-300`}
     >
-      <div className="flex justify-between items-center h-12 px-[5%]">
-        {/* Mobile Menu Button */}
-        <button
-          className="lg:hidden btn-ghost text-primary cursor-pointer"
-          onClick={() => setMobileOpen(!mobileOpen)}
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            className="h-10 w-10"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d={
-                mobileOpen ? "M6 18L18 6M6 6l12 12" : "M4 6h16M4 12h16M4 18h16"
-              }
-            />
-          </svg>
-        </button>
-
-        {/* Logo */}
-        <Link to="/">
-          <img src={logo} alt="Logo" className="w-40 h-12" />
+      <div className="container mx-auto flex justify-between items-center">
+        {/* Logo Section */}
+        <Link to="/" className="flex items-center gap-2">
+          {/* লোগো ইমেজের সাইজ ঠিক করা হয়েছে */}
+          <img
+            src={logo}
+            alt="Logo"
+            className="w-auto h-10 lg:h-12 object-contain"
+          />
         </Link>
 
-        {/* Desktop Links */}
-        <ul className="hidden lg:flex gap-8 font-medium">
+        {/* Desktop Menu */}
+        <ul className="hidden lg:flex items-center gap-6 xl:gap-8 font-medium text-base-content">
           {links.map((link) => (
             <li key={link.to}>
               <NavLink
                 to={link.to}
                 className={({ isActive }) =>
-                  `transition-colors flex flex-col items-center justify-center ${
+                  `flex items-center gap-2 px-3 py-2 rounded-lg transition-all duration-300 ${
                     isActive
-                      ? "text-primary font-semibold border-b-2 border-primary"
-                      : "hover:text-primary"
+                      ? "text-primary bg-primary/10 font-semibold"
+                      : "hover:text-primary hover:bg-base-200"
                   }`
                 }
               >
-                {link.icon}
-                <span className="text-xs">{link.label}</span>
+                {/* আইকনগুলো শুধু হোভার বা অ্যাক্টিভ অবস্থায় দেখাতে পারেন যদি ক্লিন লুক চান, 
+                    তবে রিকোয়ারমেন্ট অনুযায়ী আইকন রাখা হয়েছে */}
+                <span className="text-lg">{link.icon}</span>
+                <span>{link.label}</span>
               </NavLink>
             </li>
           ))}
         </ul>
 
-        {/* Right Section */}
-        <div className="relative flex items-center" ref={dropdownRef}>
+        {/* Right Actions Section */}
+        <div className="flex items-center gap-3 lg:gap-4" ref={dropdownRef}>
+          {/* Dark Mode Toggle */}
+          <button
+            onClick={toggleTheme}
+            className="btn btn-circle btn-ghost btn-sm text-xl transition-transform hover:rotate-180"
+            title="Toggle Theme"
+          >
+            {theme === "light" ? (
+              <FiMoon />
+            ) : (
+              <FiSun className="text-warning" />
+            )}
+          </button>
+
           {userData ? (
-            <>
-              {/* Avatar Button */}
+            <div className="relative">
+              {/* User Avatar */}
               <motion.button
-                whileHover={{ scale: 1.1, rotate: 2 }}
+                whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={() => setDropdownOpen(!dropdownOpen)}
-                className="w-10 h-10 rounded-full overflow-hidden border-2 border-primary shadow-lg focus:outline-none transition-all cursor-pointer"
+                className="w-10 h-10 lg:w-11 lg:h-11 rounded-full border-2 border-primary p-0.5 overflow-hidden shadow-md"
               >
                 <img
                   src={userData.photo || "https://i.ibb.co/4pDNd9p/avatar.png"}
-                  alt="User Avatar"
-                  className="w-full h-full object-cover bg-white"
+                  alt="User"
+                  className="w-full h-full object-cover rounded-full"
                 />
               </motion.button>
 
-              {/* Dropdown */}
+              {/* Profile Dropdown */}
               <AnimatePresence>
                 {dropdownOpen && (
                   <motion.div
-                    initial={{ opacity: 0, y: -10, scale: 0.95 }}
+                    initial={{ opacity: 0, y: 10, scale: 0.9 }}
                     animate={{ opacity: 1, y: 0, scale: 1 }}
-                    exit={{ opacity: 0, y: -5, scale: 0.95 }}
-                    transition={{ duration: 0.25, ease: "easeOut" }}
-                    className="absolute right-1 mt-44 w-44 bg-base-200/70 backdrop-blur-lg border border-white/30 rounded-2xl shadow-xl py-2 z-50 overflow-hidden"
+                    exit={{ opacity: 0, y: 10, scale: 0.9 }}
+                    className="absolute right-0 mt-3 w-56 bg-base-100 rounded-xl shadow-2xl border border-base-200 overflow-hidden"
                   >
-                    <div className="absolute -top-2 right-4 w-3 h-3 bg-white/20 rotate-45 border-l border-t border-white/30"></div>
-
-                    <ul className="flex flex-col gap-1">
-                      <li className="px-4 py-2 hover:bg-primary/50 hover:text-white rounded-lg transition font-medium text-primary cursor-pointer">
+                    <div className="p-4 border-b border-base-200 bg-base-200/50">
+                      <p className="text-sm font-bold text-base-content truncate">
+                        {userData.name || "User"}
+                      </p>
+                      <p className="text-xs text-base-content/70 truncate">
+                        {userData.email}
+                      </p>
+                    </div>
+                    <ul className="py-2">
+                      <li>
                         <Link
                           to="/dashboard"
-                          className="w-full flex items-center gap-1"
+                          onClick={() => setDropdownOpen(false)}
+                          className="flex items-center gap-3 px-4 py-2 hover:bg-primary/10 hover:text-primary transition-colors text-base-content"
                         >
                           <MdDashboard /> Dashboard
                         </Link>
                       </li>
-                      <li
-                        className="flex items-center gap-1 px-4 py-2 hover:bg-red-500/30 rounded-lg cursor-pointer text-red-600 font-medium transition"
-                        onClick={logOut}
-                      >
-                        <FiLogOut /> Logout
+                      <li>
+                        <button
+                          onClick={handleLogout}
+                          className="w-full flex items-center gap-3 px-4 py-2 hover:bg-red-50 hover:text-red-500 transition-colors text-red-500 text-left"
+                        >
+                          <FiLogOut /> Logout
+                        </button>
                       </li>
                     </ul>
                   </motion.div>
                 )}
               </AnimatePresence>
-            </>
+            </div>
           ) : (
-            <motion.div
-              whileHover={{
-                scale: 1.05,
-                boxShadow: "0 4px 15px rgba(0,0,0,0.2)",
-              }}
-              className="rounded-full"
-            >
-              <Link
-                to="/login"
-                className="btn bg-primary text-white font-semibold rounded-full px-5 lg:px-6 py-2 lg:py-2.5 shadow-md transition-all"
+            /* Login Button */
+            <Link to="/login">
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="btn btn-primary px-6 text-white rounded-full shadow-lg shadow-primary/30"
               >
-                <FiLogIn />
-                Login
-              </Link>
-            </motion.div>
+                <FiLogIn className="mr-1" /> Login
+              </motion.button>
+            </Link>
           )}
-        </div>
 
-        {/* Mobile Menu */}
-        <AnimatePresence>
-          {mobileOpen && (
-            <motion.ul
-              initial={{ opacity: 0, y: -20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              className="absolute top-14 left-0 w-full bg-base-200 shadow-md border-t border-base-300 flex flex-col lg:hidden"
-            >
+          {/* Mobile Menu Toggle */}
+          <button
+            className="lg:hidden btn btn-ghost btn-circle text-primary text-2xl"
+            onClick={() => setMobileOpen(!mobileOpen)}
+          >
+            {mobileOpen ? <FiX /> : <FiMenu />}
+          </button>
+        </div>
+      </div>
+
+      {/* Mobile Menu Overlay */}
+      <AnimatePresence>
+        {mobileOpen && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: "auto" }}
+            exit={{ opacity: 0, height: 0 }}
+            className="lg:hidden border-t border-base-200 overflow-hidden"
+          >
+            <ul className="flex flex-col p-4 gap-2">
               {links.map((link) => (
-                <li key={link.to} className="border-b border-base-300">
+                <li key={link.to}>
                   <NavLink
                     to={link.to}
+                    onClick={() => setMobileOpen(false)}
                     className={({ isActive }) =>
-                      `w-full px-6 py-3 transition-colors flex items-center gap-2 ${
+                      `flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${
                         isActive
-                          ? "text-primary font-semibold border-b-2 border-primary"
-                          : "hover:text-primary"
+                          ? "bg-primary text-white shadow-md"
+                          : "hover:bg-base-200 text-base-content"
                       }`
                     }
-                    onClick={() => setMobileOpen(false)}
                   >
                     {link.icon}
-                    {link.label}
+                    <span className="font-medium">{link.label}</span>
                   </NavLink>
                 </li>
               ))}
-            </motion.ul>
-          )}
-        </AnimatePresence>
-      </div>
+            </ul>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </motion.nav>
   );
 };

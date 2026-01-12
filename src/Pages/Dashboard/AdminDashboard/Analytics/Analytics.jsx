@@ -13,45 +13,39 @@ import {
   Cell,
   ResponsiveContainer,
 } from "recharts";
-
-const generateColorMap = (names) => {
-  const colorMap = {};
-  names.forEach((name, index) => {
-    const hue = (index * 137.5) % 360;
-    colorMap[name] = `hsl(${hue}, 70%, 60%)`;
-  });
-  return colorMap;
-};
+import { motion } from "framer-motion";
+import { FaUserFriends, FaGem, FaGraduationCap } from "react-icons/fa";
 
 const Analytics = () => {
   const axiosSecure = useAxiosSecure();
-  const [usersCount, setUsersCount] = useState(0);
-  const [totalFees, setTotalFees] = useState(0);
-  const [totalScholarships, setTotalScholarships] = useState(0);
-  const [applicationsData, setApplicationsData] = useState([]);
-  const [colorMap, setColorMap] = useState({});
+  const [data, setData] = useState({
+    usersCount: 0,
+    totalFees: 0,
+    totalScholarships: 0,
+    applicationsData: [],
+  });
+  const [loading, setLoading] = useState(true);
+
+  const COLORS = ["#7C3AED", "#EC4899", "#14B8A6", "#374151", "#F59E0B"];
 
   useEffect(() => {
     const fetchAnalytics = async () => {
       try {
-        const usersRes = await axiosSecure.get("/users");
-        setUsersCount(usersRes.data.length);
+        const [usersRes, scholarshipsRes, applicationsRes] = await Promise.all([
+          axiosSecure.get("/users"),
+          axiosSecure.get("/all-scholarships"),
+          axiosSecure.get("/applications"),
+        ]);
 
-        const scholarshipsRes = await axiosSecure.get("/all-scholarships");
         const scholarships = scholarshipsRes.data;
-        setTotalScholarships(scholarships.length);
-
-        const applicationsRes = await axiosSecure.get("/applications");
         const applications = applicationsRes.data;
 
         const fees = applications.reduce((acc, curr) => {
           const scholarship = scholarships.find(
             (s) => s._id === curr.scholarshipId
           );
-          if (scholarship) return acc + (scholarship.applicationFees || 0);
-          return acc;
+          return acc + (scholarship?.applicationFees || 0);
         }, 0);
-        setTotalFees(fees);
 
         const chartMap = {};
         applications.forEach((app) => {
@@ -59,120 +53,216 @@ const Analytics = () => {
             (s) => s._id === app.scholarshipId
           );
           if (scholarship) {
-            if (!chartMap[scholarship.universityName])
-              chartMap[scholarship.universityName] = 0;
-            chartMap[scholarship.universityName] += 1;
+            chartMap[scholarship.universityName] =
+              (chartMap[scholarship.universityName] || 0) + 1;
           }
         });
 
-        const chartData = Object.entries(chartMap).map(
-          ([name, applications]) => ({ name, applications })
-        );
-        setApplicationsData(chartData);
+        const chartData = Object.entries(chartMap).map(([name, value]) => ({
+          name,
+          value,
+        }));
 
-        const uniNames = chartData.map((item) => item.name);
-        setColorMap(generateColorMap(uniNames));
+        setData({
+          usersCount: usersRes.data.length,
+          totalFees: fees,
+          totalScholarships: scholarships.length,
+          applicationsData: chartData,
+        });
       } catch (err) {
-        console.error("Failed to fetch analytics data:", err);
+        console.error("Analytics Error:", err);
+      } finally {
+        setLoading(false);
       }
     };
 
     fetchAnalytics();
   }, [axiosSecure]);
 
+  if (loading)
+    return (
+      <div className="min-h-[60vh] flex justify-center items-center">
+        <span className="loading loading-ring loading-lg text-primary"></span>
+      </div>
+    );
+
   return (
-    <div className="min-h-screen p-6 bg-base-200 text-neutral">
-      <h1 className="text-3xl font-bold mb-6 text-center text-primary">
-        Platform Analytics
-      </h1>
+    <motion.div
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      className="max-w-7xl mx-auto space-y-6 md:space-y-12 p-2 sm:p-4"
+    >
+      {/* Platform Performance Header */}
+      <div className="text-center md:text-left px-2 mb-10">
+        <motion.div
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.5 }}
+        >
+          {/* ১. মেইন টাইটেল - ডাইনামিক বেস-কন্টেন্ট এবং প্রাইমারি হাইলাইট */}
+          <h1 className="text-3xl md:text-5xl font-black text-base-content uppercase tracking-tighter leading-none">
+            Platform <span className="text-primary">Performance</span>
+          </h1>
 
-      {/* Summary cards */}
-      <div className="grid md:grid-cols-3 gap-6 mb-12">
-        <div className="p-6 bg-base-100 shadow rounded-lg text-center border border-base-300">
-          <h2 className="text-xl font-semibold text-secondary">Total Users</h2>
-          <p className="text-3xl font-bold mt-2">{usersCount}</p>
-        </div>
-        <div className="p-6 bg-base-100 shadow rounded-lg text-center border border-base-300">
-          <h2 className="text-xl font-semibold text-secondary">
-            Total Fees Collected
-          </h2>
-          <p className="text-xl sm:text-2xl md:text-3xl font-bold mt-2">
-            ${String(totalFees).slice(0, 5)}+
-          </p>
-        </div>
-        <div className="p-6 bg-base-100 shadow rounded-lg text-center border border-base-300">
-          <h2 className="text-xl font-semibold text-secondary">
-            Total Scholarships
-          </h2>
-          <p className="text-3xl font-bold mt-2">{totalScholarships}</p>
-        </div>
+          {/* ২. সাব-টাইটেল - ইউনিফাইড ট্র্যাকিং এবং অপাসিটি */}
+          <div className="flex items-center justify-center md:justify-start gap-2 mt-3">
+            <div className="hidden md:block w-8 h-[2px] bg-primary/30"></div>
+            <p className="text-[10px] md:text-xs font-black opacity-40 text-base-content uppercase tracking-[0.3em] md:tracking-[0.5em]">
+              Insights & Statistics
+            </p>
+          </div>
+        </motion.div>
       </div>
 
-      {/* Charts */}
-      <div className="grid md:grid-cols-2 gap-12">
-        {/* Bar Chart */}
-        <div className="bg-base-100 p-6 rounded-lg shadow border border-base-300">
-          <h2 className="text-xl font-semibold mb-4 text-center text-primary">
-            Applications per University
-          </h2>
-          <ResponsiveContainer width="100%" height={300}>
-            <BarChart
-              data={applicationsData}
-              margin={{ top: 5, right: 30, left: 0, bottom: 5 }}
-            >
-              <CartesianGrid strokeDasharray="3 3" stroke="#d1d5db" />
-              <XAxis dataKey="name" stroke="var(--color-neutral)" />
-              <YAxis stroke="var(--color-neutral)" />
-              <Tooltip
-                contentStyle={{ backgroundColor: "var(--color-base-100)" }}
-                itemStyle={{ color: "var(--color-neutral)" }}
-              />
-              <Legend />
-              <Bar dataKey="applications">
-                {applicationsData.map((entry) => (
-                  <Cell
-                    key={`bar-${entry.name}`}
-                    fill={colorMap[entry.name] || "var(--color-primary)"}
-                  />
-                ))}
-              </Bar>
-            </BarChart>
-          </ResponsiveContainer>
-        </div>
+      {/* ২. প্রিমিয়াম সামারি কার্ডস - Grid 1 column on mobile */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-8">
+        <AnalyticsCard
+          title="Total Users"
+          value={data.usersCount}
+          icon={<FaUserFriends />}
+          color="text-orange-600"
+          bg="bg-orange-50"
+        />
+        <AnalyticsCard
+          title="Total Revenue"
+          value={`$${data.totalFees.toLocaleString()}`}
+          icon={<FaGem />}
+          color="text-teal-600"
+          bg="bg-teal-50"
+        />
+        <AnalyticsCard
+          title="Scholarships"
+          value={data.totalScholarships}
+          icon={<FaGraduationCap />}
+          color="text-pink-600"
+          bg="bg-pink-50"
+        />
+      </div>
 
-        {/* Pie Chart */}
-        <div className="bg-base-100 p-6 rounded-lg shadow border border-base-300 mt-6">
-          <h2 className="text-xl font-semibold mb-4 text-center text-primary">
-            Applications Distribution
-          </h2>
-          <ResponsiveContainer width="100%" height={300}>
-            <PieChart>
-              <Pie
-                data={applicationsData}
-                dataKey="applications"
-                nameKey="name"
-                cx="50%"
-                cy="50%"
-                outerRadius={100}
-                label
+      {/* ৩. চার্ট সেকশন - Stack on mobile */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-10">
+        {/* বার চার্ট */}
+        <ChartBox title="University-wise Applications">
+          <div className="h-[300px] md:h-[400px] w-full">
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart
+                data={data.applicationsData}
+                margin={{ top: 10, right: 10, left: -20, bottom: 40 }}
               >
-                {applicationsData.map((entry) => (
-                  <Cell
-                    key={`pie-${entry.name}`}
-                    fill={colorMap[entry.name] || "var(--color-accent)"}
-                  />
-                ))}
-              </Pie>
-              <Tooltip
-                contentStyle={{ backgroundColor: "var(--color-base-100)" }}
-                itemStyle={{ color: "var(--color-neutral)" }}
-              />
-            </PieChart>
-          </ResponsiveContainer>
-        </div>
+                <CartesianGrid
+                  strokeDasharray="3 3"
+                  vertical={false}
+                  strokeOpacity={0.05}
+                />
+                <XAxis
+                  dataKey="name"
+                  axisLine={false}
+                  tickLine={false}
+                  fontSize={9}
+                  angle={-25}
+                  textAnchor="end"
+                  interval={0}
+                />
+                <YAxis axisLine={false} tickLine={false} fontSize={10} />
+                <Tooltip
+                  cursor={{ fill: "transparent" }}
+                  contentStyle={{
+                    borderRadius: "12px",
+                    border: "none",
+                    boxShadow: "0 10px 15px rgba(0,0,0,0.1)",
+                  }}
+                />
+                <Bar dataKey="value" radius={[10, 10, 0, 0]} barSize={30}>
+                  {data.applicationsData.map((entry, index) => (
+                    <Cell
+                      key={`cell-${index}`}
+                      fill={COLORS[index % COLORS.length]}
+                    />
+                  ))}
+                </Bar>
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+        </ChartBox>
+
+        {/* পাই চার্ট */}
+        <ChartBox title="Application Distribution">
+          <div className="h-[350px] md:h-[400px] w-full">
+            <ResponsiveContainer width="100%" height="100%">
+              <PieChart>
+                <Pie
+                  data={data.applicationsData}
+                  innerRadius="60%"
+                  outerRadius="80%"
+                  paddingAngle={5}
+                  dataKey="value"
+                >
+                  {data.applicationsData.map((entry, index) => (
+                    <Cell
+                      key={`cell-pie-${index}`}
+                      fill={COLORS[index % COLORS.length]}
+                    />
+                  ))}
+                </Pie>
+                <Tooltip />
+                <Legend
+                  iconType="circle"
+                  wrapperStyle={{ fontSize: "10px", paddingTop: "10px" }}
+                />
+              </PieChart>
+            </ResponsiveContainer>
+          </div>
+        </ChartBox>
       </div>
-    </div>
+    </motion.div>
   );
 };
+
+// হেল্পার কার্ড কম্পোনেন্ট - Global Dashboard Style
+const AnalyticsCard = ({ title, value, icon, color, bg }) => (
+  <motion.div
+    whileHover={{ y: -5 }}
+    className="bg-base-100 p-6 md:p-8 rounded-[1.8rem] md:rounded-[2.5rem] border border-base-200 shadow-sm hover:shadow-xl hover:shadow-primary/5 transition-all duration-300 flex items-center gap-4 md:gap-6 group"
+  >
+    {/* আইকন কন্টেইনার - Squiracle Shape */}
+    <div
+      className={`w-14 h-14 md:w-16 md:h-16 rounded-[1.2rem] md:rounded-[1.8rem] ${bg} ${color} flex items-center justify-center text-2xl md:text-3xl transition-transform duration-500 group-hover:rotate-[10deg] shadow-inner`}
+    >
+      {icon}
+    </div>
+
+    <div className="min-w-0 flex-1">
+      {/* টাইটেল - Unified Tracking & Opacity */}
+      <p className="text-[9px] md:text-[10px] font-black uppercase tracking-[0.2em] md:tracking-[0.3em] text-base-content/40 truncate mb-1">
+        {title}
+      </p>
+
+      {/* ভ্যালু - Standardized Typography */}
+      <h2 className="text-2xl md:text-3xl font-black text-base-content tracking-tighter truncate leading-tight">
+        {value}
+      </h2>
+    </div>
+  </motion.div>
+);
+
+// হেল্পার চার্ট বক্স - Global Dashboard Style
+const ChartBox = ({ title, children }) => (
+  <div className="bg-base-100 p-6 md:p-10 rounded-[2.5rem] md:rounded-[3.5rem] border border-base-200 shadow-sm relative overflow-hidden group">
+    {/* ডেকোরেটিভ ব্যাকগ্রাউন্ড গ্লো (ঐচ্ছিক) */}
+    <div className="absolute -top-24 -right-24 w-48 h-48 bg-primary/5 rounded-full blur-3xl group-hover:bg-primary/10 transition-colors duration-500"></div>
+
+    <div className="flex items-center gap-3 mb-8 md:mb-10 relative z-10">
+      {/* অ্যাকসেন্ট বার - Primary Color (Unified) */}
+      <div className="w-1.5 md:w-2 h-5 md:h-7 bg-primary rounded-full shadow-sm shadow-primary/40"></div>
+
+      <h3 className="text-[10px] md:text-[11px] font-black uppercase tracking-[0.3em] text-base-content opacity-50">
+        {title}
+      </h3>
+    </div>
+
+    {/* চার্ট এরিয়া */}
+    <div className="relative z-10 w-full overflow-hidden">{children}</div>
+  </div>
+);
 
 export default Analytics;

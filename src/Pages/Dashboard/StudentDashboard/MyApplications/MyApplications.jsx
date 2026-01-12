@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { motion } from "framer-motion";
 import useAxiosSecure from "../../../../hooks/useAxiosSecure";
 import useAuth from "../../../../hooks/useAuth";
 import Loader from "../../../Shared/Loader/Loader";
@@ -33,29 +34,21 @@ const MyApplications = () => {
     },
     enabled: !!user?.email,
   });
-
+  console.log(applications);
   const handleUpdate = async (id, data) => {
     try {
       await axiosSecure.patch(`/update-application/${id}`, data);
-
       Swal.fire({
         icon: "success",
         title: "Updated!",
-        text: "Application updated successfully.",
-        timer: 1500,
         showConfirmButton: false,
+        timer: 1500,
+        customClass: { popup: "rounded-[2rem]" },
       });
-
       queryClient.invalidateQueries(["myApplications", user?.email]);
       setUpdatingApp(null);
     } catch (err) {
-      console.error(err);
-
-      Swal.fire({
-        icon: "error",
-        title: "Update Failed",
-        text: "Failed to update application. Please try again.",
-      });
+      Swal.fire({ icon: "error", title: "Update Failed" });
     }
   };
 
@@ -71,168 +64,203 @@ const MyApplications = () => {
         studentEmail: app.studentEmail,
         studentName: app.studentName,
       };
-
-
       const res = await axiosSecure.post("/payments/init", paymentPayload);
-
       window.location.assign(res.data.url);
     } catch (err) {
-      console.error("Payment init error:", err.response?.data || err.message);
-      alert(err.response?.data?.message || "Payment failed");
+      alert("Payment failed. Please try again.");
     }
   };
 
   const handleDelete = async (id) => {
     const result = await Swal.fire({
-      title: "Are you sure?",
-      text: "This application will be permanently deleted!",
+      title: "Delete Application?",
+      text: "You won't be able to revert this!",
       icon: "warning",
       showCancelButton: true,
-      confirmButtonColor: "#d33",
-      cancelButtonColor: "#3085d6",
-      confirmButtonText: "Yes, delete it!",
+      confirmButtonColor: "var(--color-error, #f87272)",
+      confirmButtonText: "Yes, Delete",
+      customClass: { popup: "rounded-[2rem]" },
     });
 
-    if (!result.isConfirmed) return;
-
-    try {
-      await axiosSecure.delete(`/delete-application/${id}`);
-
-      Swal.fire({
-        icon: "success",
-        title: "Deleted!",
-        text: "Application deleted successfully.",
-        timer: 1500,
-        showConfirmButton: false,
-      });
-
-      queryClient.invalidateQueries(["myApplications", user?.email]);
-    } catch (err) {
-      console.error(err);
-
-      Swal.fire({
-        icon: "error",
-        title: "Failed",
-        text: "Failed to delete application. Please try again.",
-      });
+    if (result.isConfirmed) {
+      try {
+        await axiosSecure.delete(`/delete-application/${id}`);
+        queryClient.invalidateQueries(["myApplications", user?.email]);
+      } catch (err) {
+        Swal.fire({ icon: "error", title: "Failed to delete" });
+      }
     }
   };
 
   if (isLoading) return <Loader />;
 
   return (
-    <div className="min-h-screen p-6 bg-base-200 text-neutral">
-      <h1 className="text-3xl font-bold mb-6 text-primary text-center">
-        My Applications
-      </h1>
+    <motion.div
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      className="space-y-10 pb-10"
+    >
+      {/* User Dashboard Header - My Applications */}
+      <header className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-12 pb-6 border-b border-base-200">
+        <motion.div
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.5 }}
+          className="space-y-1"
+        >
+          {/* ১. সাব-টাইটেল ইন্ডিকেটর: স্টুডেন্ট পোর্টাল স্টাইল */}
+          <div className="flex items-center gap-2 mb-1">
+            <div className="w-1.5 h-1.5 rounded-full bg-primary/60"></div>
+            <span className="text-primary font-black tracking-[0.3em] uppercase text-[9px] md:text-[10px]">
+              Student Portal
+            </span>
+          </div>
 
-      <div className="overflow-x-auto bg-base-100 rounded-lg shadow border border-base-300 p-4">
-        <table className="table table-zebra w-full">
-          <thead className="bg-base-300 text-neutral font-semibold">
-            <tr>
-              <th>#</th>
-              <th>University Name</th>
-              <th>University Address</th>
-              <th>Feedback</th>
-              <th>Subject Category</th>
-              <th>Application Fees</th>
-              <th>Application Status</th>
-              <th className="text-center">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {applications.length === 0 ? (
-              <tr>
-                <td colSpan="8" className="text-center text-muted">
-                  No applications found.
-                </td>
+          {/* ২. মেইন টাইটেল - Standardized Typography (font-black + tracking-tighter) */}
+          <h1 className="text-3xl md:text-5xl font-black text-base-content uppercase tracking-tighter leading-none">
+            My <span className="text-primary">Applications</span>
+          </h1>
+
+          {/* ৩. ডেসক্রিপশন: গ্লোবাল অপাসিটি এবং ট্র্যাকিং */}
+          <p className="text-[10px] md:text-xs font-bold opacity-40 uppercase tracking-[0.2em] md:tracking-[0.3em] mt-3 ml-1">
+            Track, update, and manage your scholarship journey in real-time
+          </p>
+        </motion.div>
+
+        {/* ৪. ডাইনামিক কাউন্টার (ইউজারের জন্য মোটিভেশনাল) */}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          className="bg-base-200/50 px-5 py-3 rounded-[1.5rem] border border-base-300 flex items-center gap-3 self-start md:self-center"
+        >
+          <div className="flex -space-x-2">
+            <div className="w-2 h-2 rounded-full bg-primary"></div>
+            <div className="w-2 h-2 rounded-full bg-primary/40 animate-ping"></div>
+          </div>
+          <span className="text-[10px] font-black uppercase tracking-widest opacity-60 text-base-content">
+            Current Stats: {applications.length} Applied
+          </span>
+        </motion.div>
+      </header>
+
+      {/* ২. অ্যাপ্লিকেশন টেবিল কন্টেইনার */}
+      <div className="bg-base-100 rounded-[2.5rem] border border-base-300 shadow-2xl overflow-hidden">
+        <div className="overflow-x-auto">
+          <table className="table w-full">
+            <thead className="bg-base-200/50 border-none">
+              <tr className="text-neutral/40 uppercase text-[10px] tracking-widest border-none">
+                <th className="py-6 pl-8">University & Category</th>
+                <th>Feedback</th>
+                <th>Fees</th>
+                <th>Status</th>
+                <th className="pr-8 text-right">Actions</th>
               </tr>
-            ) : (
-              applications.map((app, index) => (
-                <tr key={app._id}>
-                  <th>{index + 1}</th>
-                  <td className="text-neutral">{app.universityName}</td>
-                  <td className="text-neutral">{app.universityCity}</td>
-                  <td className="text-neutral">{app.feedback || "-"}</td>
-                  <td className="text-neutral">{app.subjectCategory}</td>
-                  <td className="text-neutral">${app.applicationFees}</td>
+            </thead>
+            <tbody className="text-sm">
+              {applications.length === 0 ? (
+                <tr>
                   <td
-                    className={`font-medium ${
-                      app.applicationStatus === "completed"
-                        ? "text-green-500"
-                        : app.applicationStatus === "pending"
-                        ? "text-yellow-500"
-                        : app.applicationStatus === "processing"
-                        ? "text-gray-500"
-                        : "text-red-500"
-                    }`}
+                    colSpan="5"
+                    className="text-center py-20 opacity-30 font-bold"
                   >
-                    {app.applicationStatus}
-                  </td>
-                  <td className="flex gap-2 justify-center flex-wrap">
-                    {/* DETAILS */}
-                    <button
-                      onClick={() => setSelectedApp(app)}
-                      className="btn btn-sm btn-info text-white"
-                    >
-                      <IoInformationCircleSharp size={20} />
-                    </button>
-
-                    {/* EDIT */}
-                    {app.applicationStatus === "pending" && (
-                      <button
-                        onClick={() => setUpdatingApp(app)}
-                        className="btn btn-sm btn-warning text-white"
-                      >
-                        <CiEdit size={20} />
-                      </button>
-                    )}
-
-                    {/* PAY */}
-                    {app.paymentStatus !== "paid" && (
-                      <button
-                        onClick={() => handlePayment(app)}
-                        className="btn btn-sm btn-success text-white"
-                      >
-                        <MdOutlinePayment size={20} />
-                      </button>
-                    )}
-
-                    {/* DELETE */}
-                    {app.applicationStatus === "pending" && (
-                      <button
-                        onClick={() => handleDelete(app._id)}
-                        className="btn btn-sm btn-error text-white"
-                      >
-                        <MdOutlineDeleteForever size={20} />
-                      </button>
-                    )}
-
-                    {/* ADD REVIEW */}
-                    {app.applicationStatus === "completed" && (
-                      <button
-                        onClick={() => setReviewingApp(app)}
-                        className="btn btn-sm btn-primary text-white"
-                      >
-                        <MdPreview size={20} />
-                      </button>
-                    )}
+                    No applications yet.
                   </td>
                 </tr>
-              ))
-            )}
-          </tbody>
-        </table>
+              ) : (
+                applications.map((app) => (
+                  <tr
+                    key={app._id}
+                    className="border-b border-base-200 last:border-none hover:bg-base-200/20 transition-colors"
+                  >
+                    <td className="py-5 pl-8">
+                      <div className="flex flex-col">
+                        <span className="font-black text-neutral leading-tight">
+                          {app.universityName}
+                        </span>
+                        <span className="text-[10px] font-bold text-primary uppercase mt-1">
+                          {app.subjectCategory}
+                        </span>
+                      </div>
+                    </td>
+                    <td>
+                      <p className="text-xs italic opacity-60 truncate max-w-[150px]">
+                        {app.feedback || "No feedback yet"}
+                      </p>
+                    </td>
+                    <td>
+                      <span className="font-black text-neutral">
+                        ${app.applicationFees}
+                      </span>
+                    </td>
+                    <td>
+                      <StatusBadge status={app.applicationStatus} />
+                    </td>
+                    <td className="pr-8 text-right">
+                      <div className="flex justify-end gap-2 flex-wrap">
+                        {/* Details */}
+                        <ActionButton
+                          onClick={() => setSelectedApp(app)}
+                          icon={<IoInformationCircleSharp size={18} />}
+                          color="bg-info/10 text-info"
+                          label="Details"
+                        />
+
+                        {/* Edit (Only if Pending) */}
+                        {app.applicationStatus === "pending" && (
+                          <ActionButton
+                            onClick={() => setUpdatingApp(app)}
+                            icon={<CiEdit size={18} />}
+                            color="bg-warning/10 text-warning"
+                            label="Edit"
+                          />
+                        )}
+
+                        {/* Pay (If not paid) */}
+                        {app.paymentStatus !== "paid" && (
+                          <ActionButton
+                            onClick={() => handlePayment(app)}
+                            icon={<MdOutlinePayment size={18} />}
+                            color="bg-success/10 text-success"
+                            label="Pay"
+                          />
+                        )}
+
+                        {/* Delete (Only if Pending) */}
+                        {app.applicationStatus === "pending" && (
+                          <ActionButton
+                            onClick={() => handleDelete(app._id)}
+                            icon={<MdOutlineDeleteForever size={18} />}
+                            color="bg-error/10 text-error"
+                            label="Cancel"
+                          />
+                        )}
+
+                        {/* Review (Only if Completed) */}
+                        {app.applicationStatus === "completed" && (
+                          <ActionButton
+                            onClick={() => setReviewingApp(app)}
+                            icon={<MdPreview size={18} />}
+                            color="bg-primary/10 text-primary"
+                            label="Review"
+                          />
+                        )}
+                      </div>
+                    </td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+        </div>
       </div>
 
-      {/* MODALS */}
+      {/* ৩. মোডাল কন্টেইনারস */}
       {selectedApp && (
         <MyApplicationDetails
           application={selectedApp}
           closeModal={() => setSelectedApp(null)}
         />
       )}
-
       {updatingApp && (
         <EditMyApplication
           application={updatingApp}
@@ -240,14 +268,42 @@ const MyApplications = () => {
           onUpdate={handleUpdate}
         />
       )}
-
       {reviewingApp && (
         <AddReview
           application={reviewingApp}
           closeModal={() => setReviewingApp(null)}
         />
       )}
-    </div>
+    </motion.div>
+  );
+};
+
+// হেল্পার সাব-কম্পোনেন্টস
+const ActionButton = ({ onClick, icon, color, label }) => (
+  <button
+    onClick={onClick}
+    className={`p-2.5 ${color} rounded-xl hover:scale-105 active:scale-95 transition-all flex items-center gap-1 font-bold text-[10px] uppercase shadow-sm`}
+    title={label}
+  >
+    {icon}
+  </button>
+);
+
+const StatusBadge = ({ status }) => {
+  const styles = {
+    completed: "bg-success/10 text-success",
+    pending: "bg-warning/10 text-warning",
+    processing: "bg-info/10 text-info",
+    rejected: "bg-error/10 text-error",
+  };
+  return (
+    <span
+      className={`px-3 py-1 rounded-full font-black text-[10px] uppercase tracking-wider ${
+        styles[status] || "bg-base-200 opacity-50 text-neutral"
+      }`}
+    >
+      {status}
+    </span>
   );
 };
 

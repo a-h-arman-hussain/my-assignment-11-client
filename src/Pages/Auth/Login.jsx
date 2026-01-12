@@ -1,59 +1,68 @@
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
-import { Link, useNavigate } from "react-router";
+import { Link, useNavigate, useLocation } from "react-router";
 import useAuth from "../../hooks/useAuth";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
 import Swal from "sweetalert2";
-import { FiLogIn } from "react-icons/fi";
+import {
+  FiLogIn,
+  FiMail,
+  FiLock,
+  FiEye,
+  FiEyeOff,
+  FiUserCheck,
+} from "react-icons/fi";
 import { FcGoogle } from "react-icons/fc";
-import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { motion } from "framer-motion";
 
 export default function Login() {
   const { signInUser, signInGoogle } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
   const axiosSecure = useAxiosSecure();
   const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  const from = location.state?.from?.pathname || "/";
 
   const {
     register,
     handleSubmit,
+    setValue, // ডেমো লগইনের জন্য ব্যবহৃত
     formState: { errors },
   } = useForm();
 
-  // Email login
+  // ইমেইল লগইন হ্যান্ডলার
   const onSubmit = async (data) => {
+    setLoading(true);
     try {
       await signInUser(data.email, data.password);
-
       Swal.fire({
         title: "Welcome Back!",
-        text: "Login Successful",
+        text: "You have logged in successfully.",
         icon: "success",
-        background: "var(--color-base-200)",
-        color: "var(--color-neutral)",
-        confirmButtonColor: "var(--color-primary)",
+        timer: 1500,
+        showConfirmButton: false,
+        customClass: { popup: "rounded-[2rem]" },
       });
-
-      navigate("/");
+      navigate(from, { replace: true });
     } catch (err) {
       Swal.fire({
-        title: "Login Failed!",
+        title: "Login failed!",
         text: err.message,
         icon: "error",
-        background: "var(--color-base-200)",
-        color: "var(--color-neutral)",
-        confirmButtonColor: "var(--color-error)",
+        customClass: { popup: "rounded-[2rem]" },
       });
+    } finally {
+      setLoading(false);
     }
   };
 
-  // Google Login
+  // গুগল লগইন হ্যান্ডলার
   const handleGoogleLogin = async () => {
     try {
       const result = await signInGoogle();
       const user = result.user;
-      const token = await user.getIdToken();
-      localStorage.setItem("fb-token", token);
 
       const { data: existingUser } = await axiosSecure.get(
         `/users/${user.email}`
@@ -70,110 +79,155 @@ export default function Login() {
       }
 
       Swal.fire({
-        title: "Google Login Successful",
-        text: existingUser
-          ? "Welcome back to ScholarStream!"
-          : "Account created & logged in successfully!",
+        title: "Login Successful",
         icon: "success",
-        background: "var(--color-base-200)",
-        color: "var(--color-neutral)",
-        confirmButtonColor: "var(--color-primary)",
+        timer: 1500,
+        showConfirmButton: false,
+        customClass: { popup: "rounded-[2rem]" },
       });
-
-      navigate("/");
+      navigate(from, { replace: true });
     } catch (err) {
       Swal.fire({
-        title: "Google Login Failed!",
+        title: "Google login failed",
         text: err.message,
         icon: "error",
-        background: "var(--color-base-200)",
-        color: "var(--color-neutral)",
-        confirmButtonColor: "var(--color-error)",
+        customClass: { popup: "rounded-[2rem]" },
       });
     }
   };
 
+  // ডেমো লগইন ফাংশন (Rule 6 অনুযায়ী)
+  const handleDemoLogin = (role) => {
+    if (role === "admin") {
+      setValue("email", "admin1@gmail.com");
+      setValue("password", "Admin1@gmail.com");
+    } else {
+      setValue("email", "student@gmail.com");
+      setValue("password", "Student@gmail.com");
+    }
+  };
+
   return (
-    <div className="flex items-center justify-center bg-base-200 px-2">
-      <div className="w-full max-w-md bg-base-100/80 backdrop-blur-lg p-5 md:p-8 rounded-2xl shadow-2xl border border-base-300">
-        <h2 className="text-2xl font-bold text-center mb-6 text-primary">
-          Please Login Your Account
-        </h2>
+    <div className="min-h-screen flex items-center justify-center py-12 overflow-hidden">
+      <motion.div
+        initial={{ opacity: 0, y: 30 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="w-full max-w-lg bg-base-100/80 backdrop-blur-2xl p-8 md:p-12 rounded-[3rem] border border-base-300 shadow-2xl relative z-10"
+      >
+        <div className="text-center mb-10">
+          <div className="inline-flex items-center justify-center w-16 h-16 bg-primary/10 rounded-2xl text-primary mb-4">
+            <FiLogIn size={32} />
+          </div>
+          <h2 className="text-4xl font-black uppercase tracking-tighter leading-none">
+            Welcome <span className="text-primary">Back</span>
+          </h2>
+          <p className="text-[10px] font-bold opacity-40 uppercase tracking-[0.3em] mt-3">
+            Enter your credentials to continue
+          </p>
+        </div>
+
+        {/* Demo Login Options (Rule 6) */}
+        <div className="flex flex-wrap gap-2 mb-8 justify-center">
+          <button
+            onClick={() => handleDemoLogin("admin")}
+            className="btn btn-xs rounded-full bg-neutral/5 border-none text-[9px] font-black uppercase tracking-widest hover:bg-primary hover:text-white transition-all"
+          >
+            Demo Admin
+          </button>
+          <button
+            onClick={() => handleDemoLogin("student")}
+            className="btn btn-xs rounded-full bg-neutral/5 border-none text-[9px] font-black uppercase tracking-widest hover:bg-primary hover:text-white transition-all"
+          >
+            Demo Student
+          </button>
+        </div>
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
-          {/* Email */}
-          <div>
-            <label className="font-medium text-muted">Email Address</label>
-            <input
-              type="email"
-              {...register("email", { required: "Email is required" })}
-              className="w-full p-3 bg-base-100 border border-base-300 rounded-lg text-neutral mt-1 focus:outline-none focus:border-primary"
-            />
+          <div className="form-control w-full">
+            <label className="label font-black text-[10px] uppercase tracking-widest opacity-40 ml-2">
+              Email Address
+            </label>
+            <div className="relative group">
+              <FiMail className="absolute left-5 top-1/2 -translate-y-1/2 text-primary/40 group-focus-within:text-primary transition-colors text-xl" />
+              <input
+                type="email"
+                placeholder="example@mail.com"
+                {...register("email", { required: "Email is required" })}
+                className="input w-full pl-14 h-16 rounded-[1.5rem] bg-base-200/50 border-base-300 focus:border-primary focus:bg-base-100 transition-all font-bold text-sm"
+              />
+            </div>
             {errors.email && (
-              <p className="text-error text-sm mt-1">{errors.email.message}</p>
+              <span className="text-error text-[10px] font-bold mt-1 ml-4 uppercase tracking-tighter">
+                {errors.email.message}
+              </span>
             )}
           </div>
 
-          {/* Password */}
-          <div>
-            <label className="font-medium text-muted">Password</label>
-            <div className="relative mt-1">
+          <div className="form-control w-full">
+            <label className="label font-black text-[10px] uppercase tracking-widest opacity-40 ml-2">
+              Password
+            </label>
+            <div className="relative group">
+              <FiLock className="absolute left-5 top-1/2 -translate-y-1/2 text-primary/40 group-focus-within:text-primary transition-colors text-xl" />
               <input
                 type={showPassword ? "text" : "password"}
+                placeholder="••••••••"
                 {...register("password", { required: "Password is required" })}
-                className="w-full p-3 bg-base-100 border border-base-300 rounded-lg text-neutral mt-1 focus:outline-none focus:border-primary"
+                className="input w-full pl-14 h-16 rounded-[1.5rem] bg-base-200/50 border-base-300 focus:border-primary focus:bg-base-100 transition-all font-bold text-sm"
               />
-
-              {/* Eye Icon */}
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-neutral/70 hover:text-primary cursor-pointer"
+                className="absolute right-5 top-1/2 -translate-y-1/2 text-base-content/20 hover:text-primary transition-colors"
               >
-                {showPassword ? <FaEyeSlash /> : <FaEye />}
+                {showPassword ? <FiEyeOff size={20} /> : <FiEye size={20} />}
               </button>
             </div>
             {errors.password && (
-              <p className="text-error text-sm mt-1">
+              <span className="text-error text-[10px] font-bold mt-1 ml-4 uppercase tracking-tighter">
                 {errors.password.message}
-              </p>
+              </span>
             )}
           </div>
 
           <button
             type="submit"
-            className="w-full bg-primary hover:bg-primary/90 text-base-100 p-2 rounded-lg font-semibold transition shadow-md cursor-pointer"
+            disabled={loading}
+            className="btn btn-primary w-full h-16 rounded-[1.5rem] text-sm font-black uppercase tracking-widest shadow-xl shadow-primary/20 hover:scale-[1.02] active:scale-95 transition-all mt-4"
           >
-            <div className="flex items-center justify-center gap-1 text-lg">
-              <FiLogIn />
-              Login
-            </div>
+            {loading ? (
+              <span className="loading loading-spinner"></span>
+            ) : (
+              "Sign In Account"
+            )}
           </button>
         </form>
 
-        <div className="mt-3 text-center">
-          <p className="text-muted mb-3">Or login with</p>
-          <button
-            onClick={handleGoogleLogin}
-            className="w-full border border-secondary hover:bg-secondary/90 text-secondary hover:text-white p-2 rounded-lg font-semibold transition shadow-md cursor-pointer"
-          >
-            <div className="flex items-center justify-center gap-1 text-lg">
-              <FcGoogle />
-              Google Login
-            </div>
-          </button>
+        <div className="divider my-10 text-[10px] font-black uppercase tracking-[0.4em] opacity-20">
+          Social Connect
         </div>
 
-        <p className="mt-6 text-center text-muted">
-          Don't have an account?{" "}
+        <button
+          onClick={handleGoogleLogin}
+          className="btn btn-outline border-base-300 w-full h-16 rounded-[1.5rem] font-black uppercase text-[10px] tracking-widest flex items-center justify-center gap-4 hover:bg-base-200 hover:border-base-300 group transition-all"
+        >
+          <FcGoogle
+            size={24}
+            className="group-hover:scale-110 transition-transform"
+          />
+          <span>Continue with Google</span>
+        </button>
+
+        <p className="mt-12 text-center text-xs font-bold opacity-60 uppercase tracking-widest">
+          New to the platform?{" "}
           <Link
             to="/register"
-            className="text-accent font-semibold hover:underline"
+            className="text-primary font-black hover:underline underline-offset-4 ml-1"
           >
-            Register
+            Create Account
           </Link>
         </p>
-      </div>
+      </motion.div>
     </div>
   );
 }

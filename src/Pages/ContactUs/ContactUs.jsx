@@ -1,83 +1,201 @@
-import React from "react";
+import React, { useState } from "react";
+import { useForm } from "react-hook-form";
+import Swal from "sweetalert2";
+import { motion } from "framer-motion";
+import { FiMail, FiPhone, FiMapPin, FiSend } from "react-icons/fi";
 
 export default function ContactUs() {
+  const [loading, setLoading] = useState(false);
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm();
+
+  // Form Submission Logic
+  const onSubmit = async (data) => {
+    setLoading(true);
+    // সিমুলেটিং এপিআই কল
+    setTimeout(() => {
+      setLoading(false);
+      Swal.fire({
+        title: "Message Sent!",
+        text: `Thank you ${data.name}, we will get back to you soon.`,
+        icon: "success",
+        confirmButtonColor: "#3b82f6", // Primary Color
+        customClass: { popup: "rounded-[2rem]" },
+      });
+      reset();
+    }, 1500);
+  };
+
   return (
-    <div className="min-h-screen text-neutral px-6 py-16">
-      <div className="max-w-4xl mx-auto">
-        {/* Heading */}
-        <h1 className="text-4xl text-center font-bold text-primary mb-6">Contact Us</h1>
-        <p className="text-lg text-center text-muted mb-10">
-          Have questions or need support? We're here to help. Fill out the form
-          below, and our team will get back to you as soon as possible.
-        </p>
+    <div className="min-h-screen text-base-content py-10">
+      {/* Contact Header Section */}
+      <div className="text-center mb-12">
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+        >
+          {/* ১. সাব-টাইটেল: সাপোর্ট বোঝাতে */}
+          <span className="text-primary font-black tracking-[0.3em] uppercase text-[10px] md:text-xs">
+            Contact Support
+          </span>
 
-        {/* Contact Card */}
-        <div className="bg-base-100 p-8 rounded-2xl shadow border border-base-300 mb-16">
-          <form className="grid grid-cols-1 gap-6">
-            <div>
-              <label className="block text-sm font-medium mb-1">
-                Your Name
-              </label>
-              <input
-                type="text"
-                placeholder="Enter your name"
-                className="input input-bordered w-full"
-              />
-            </div>
+          {/* ২. মেইন টাইটেল: Standardized Typography (text-base-content + primary highlight) */}
+          <h1 className="text-4xl md:text-6xl font-black text-base-content mt-3 uppercase tracking-tighter">
+            Get In <span className="text-primary">Touch</span>
+          </h1>
 
-            <div>
-              <label className="block text-sm font-medium mb-1">
-                Email Address
-              </label>
-              <input
-                type="email"
-                placeholder="your@email.com"
-                className="input input-bordered w-full"
-              />
-            </div>
+          {/* ৩. ডেসক্রিপশন: প্রফেশনাল টেক্সট ব্যালেন্স */}
+          <p className="text-base-content/60 mt-4 max-w-2xl mx-auto font-medium text-sm md:text-lg px-6">
+            Have questions about scholarships? Our team is ready to assist you
+            and guide you through your journey.
+          </p>
 
-            <div>
-              <label className="block text-sm font-medium mb-1">Subject</label>
-              <input
-                type="text"
-                placeholder="Subject here"
-                className="input input-bordered w-full"
-              />
-            </div>
+          {/* ৪. ডেকোরেটিভ বার: ইউনিফাইড ডিজাইন */}
+          <div className="w-24 h-1.5 bg-primary mx-auto mt-6 rounded-full shadow-lg shadow-primary/20"></div>
+        </motion.div>
+      </div>
 
-            <div>
-              <label className="block text-sm font-medium mb-1">Message</label>
-              <textarea
-                rows="5"
-                placeholder="Write your message..."
-                className="textarea textarea-bordered w-full"
-              ></textarea>
-            </div>
-
-            <button
-              type="submit"
-              className="btn bg-primary text-base-100 font-semibold shadow-lg w-full"
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
+        {/* Contact Info Cards */}
+        <div className="space-y-6">
+          {[
+            {
+              icon: <FiMail />,
+              title: "Email Us",
+              detail: "armanhd16@gmail.com",
+              bg: "bg-blue-50 dark:bg-blue-900/10",
+            },
+            {
+              icon: <FiPhone />,
+              title: "Call Us",
+              detail: "+880 1315 315449",
+              bg: "bg-yellow-50 dark:bg-yellow-900/10",
+            },
+            {
+              icon: <FiMapPin />,
+              title: "Visit Us",
+              detail: "Chittagong, Bangladesh",
+              bg: "bg-green-50 dark:bg-green-900/10",
+            },
+          ].map((item, idx) => (
+            <motion.div
+              key={idx}
+              whileHover={{ x: 10 }}
+              className={`p-8 rounded-[2rem] border border-base-300 shadow-sm ${item.bg} flex items-center gap-5`}
             >
-              Send Message
-            </button>
-          </form>
+              <div className="text-3xl text-primary">{item.icon}</div>
+              <div>
+                <h3 className="font-bold text-lg">{item.title}</h3>
+                <p className="text-base-content/70 text-sm">{item.detail}</p>
+              </div>
+            </motion.div>
+          ))}
         </div>
 
-        {/* Contact Info */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          <div className="bg-base-100 p-6 rounded-2xl shadow border border-base-300">
-            <h3 className="text-lg font-semibold text-primary mb-2">Email</h3>
-            <p className="text-muted text-sm">armanhd16@gmail.com</p>
-          </div>
+        {/* Contact Form - Global Rule: Validation & States */}
+        <div className="lg:col-span-2">
+          <div className="bg-base-100 p-8 md:p-12 rounded-[2.5rem] shadow-xl border border-base-300">
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {/* Name Input */}
+                <div className="form-control">
+                  <label className="label font-bold text-xs uppercase tracking-widest opacity-60">
+                    Your Name
+                  </label>
+                  <input
+                    type="text"
+                    {...register("name", { required: "Name is required" })}
+                    placeholder="John Doe"
+                    className={`input input-bordered w-full rounded-2xl h-14 bg-base-200/50 focus:ring-2 focus:ring-primary ${
+                      errors.name ? "border-error" : ""
+                    }`}
+                  />
+                  {errors.name && (
+                    <span className="text-error text-xs mt-1">
+                      {errors.name.message}
+                    </span>
+                  )}
+                </div>
 
-          <div className="bg-base-100 p-6 rounded-2xl shadow border border-base-300">
-            <h3 className="text-lg font-semibold text-primary mb-2">Phone</h3>
-            <p className="text-muted text-sm">+8801 3153 15449</p>
-          </div>
+                {/* Email Input */}
+                <div className="form-control">
+                  <label className="label font-bold text-xs uppercase tracking-widest opacity-60">
+                    Email Address
+                  </label>
+                  <input
+                    type="email"
+                    {...register("email", {
+                      required: "Email is required",
+                      pattern: {
+                        value: /^\S+@\S+$/i,
+                        message: "Invalid email",
+                      },
+                    })}
+                    placeholder="name@example.com"
+                    className={`input input-bordered w-full rounded-2xl h-14 bg-base-200/50 focus:ring-2 focus:ring-primary ${
+                      errors.email ? "border-error" : ""
+                    }`}
+                  />
+                  {errors.email && (
+                    <span className="text-error text-xs mt-1">
+                      {errors.email.message}
+                    </span>
+                  )}
+                </div>
+              </div>
 
-          <div className="bg-base-100 p-6 rounded-2xl shadow border border-base-300">
-            <h3 className="text-lg font-semibold text-primary mb-2">Address</h3>
-            <p className="text-muted text-sm">Chittagong, Bangladesh</p>
+              {/* Subject */}
+              <div className="form-control">
+                <label className="label font-bold text-xs uppercase tracking-widest opacity-60">
+                  Subject
+                </label>
+                <input
+                  type="text"
+                  {...register("subject", {
+                    required: "Subject is required",
+                  })}
+                  placeholder="How can we help?"
+                  className={`input input-bordered w-full rounded-2xl h-14 bg-base-200/50 focus:ring-2 focus:ring-primary ${
+                    errors.subject ? "border-error" : ""
+                  }`}
+                />
+              </div>
+
+              {/* Message */}
+              <div className="form-control">
+                <label className="label font-bold text-xs uppercase tracking-widest opacity-60">
+                  Message
+                </label>
+                <textarea
+                  rows="4"
+                  {...register("message", {
+                    required: "Message cannot be empty",
+                  })}
+                  placeholder="Tell us more about your inquiry..."
+                  className="textarea textarea-bordered w-full rounded-2xl bg-base-200/50 focus:ring-2 focus:ring-primary"
+                ></textarea>
+              </div>
+
+              {/* Submit Button with Loader */}
+              <button
+                type="submit"
+                disabled={loading}
+                className="btn btn-primary w-full h-16 rounded-2xl text-lg font-bold shadow-lg shadow-primary/20 hover:scale-[1.02] transition-transform"
+              >
+                {loading ? (
+                  <span className="loading loading-spinner"></span>
+                ) : (
+                  <>
+                    <FiSend /> Send Message
+                  </>
+                )}
+              </button>
+            </form>
           </div>
         </div>
       </div>

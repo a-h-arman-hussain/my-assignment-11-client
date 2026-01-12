@@ -5,12 +5,19 @@ import useAuth from "../../hooks/useAuth";
 import Loader from "../Shared/Loader/Loader";
 import Swal from "sweetalert2";
 import ReviewCard from "./ReviewCard";
-import useRole from "../../hooks/useRole";
+import { motion } from "framer-motion";
+import {
+  FiCalendar,
+  FiMapPin,
+  FiBook,
+  FiDollarSign,
+  FiClock,
+  FiSend,
+} from "react-icons/fi";
 
 const ScholarshipDetails = () => {
   const { id } = useParams();
   const { user } = useAuth();
-  // const { role } = useRole();
   const navigate = useNavigate();
   const axiosSecure = useAxiosSecure();
 
@@ -59,31 +66,23 @@ const ScholarshipDetails = () => {
         "/apply-scholarships",
         applicationData
       );
-
       if (res.data.success) {
         Swal.fire({
           icon: "success",
           title: "Application Submitted!",
-          text: "Your application has been submitted successfully.",
-          timer: 1500,
+          text: "Your application has been received.",
+          timer: 2000,
           showConfirmButton: false,
+          customClass: { popup: "rounded-[2rem]" },
         });
-
         navigate("/dashboard/my-applications");
-      } else {
-        Swal.fire({
-          icon: "warning",
-          title: "Failed",
-          text: res.data.message || "Something went wrong!",
-        });
       }
     } catch (err) {
-      console.error(err);
-
       Swal.fire({
         icon: "error",
         title: "Error",
         text: "Something went wrong! Please try again.",
+        customClass: { popup: "rounded-[2rem]" },
       });
     }
   };
@@ -91,90 +90,156 @@ const ScholarshipDetails = () => {
   if (loading) return <Loader />;
   if (!scholarship)
     return (
-      <p className="text-center mt-10 text-error font-semibold">
+      <p className="text-center mt-20 font-black uppercase tracking-widest opacity-20">
         Scholarship not found.
       </p>
     );
 
   return (
-    <section className="max-w-5xl mx-auto p-6 space-y-10">
-      {/* Cover Image */}
-      <div className="relative rounded-xl overflow-hidden shadow-2xl">
-        <img
-          src={scholarship.universityImage}
-          alt={scholarship.universityName}
-          className="w-full h-80 object-cover"
-        />
-        <span className="absolute top-4 left-4 bg-accent text-base-100 px-4 py-1 rounded-full text-sm font-semibold shadow-md">
-          {scholarship.scholarshipCategory}
-        </span>
+    <motion.section
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      className="py-6 md:py-16 space-y-12"
+    >
+      {/* Hero Section */}
+      <div className="relative group">
+        <div className="overflow-hidden rounded-[2.5rem] shadow-2xl h-[450px] relative">
+          <img
+            src={scholarship.universityImage}
+            alt={scholarship.universityName}
+            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
+
+          <div className="absolute bottom-8 left-8 right-8">
+            <span className="bg-primary text-white px-6 py-2 rounded-full text-[10px] font-black uppercase tracking-[0.2em] shadow-lg">
+              {scholarship.scholarshipCategory}
+            </span>
+            <h1 className="text-4xl md:text-6xl font-black text-white mt-4 uppercase tracking-tighter leading-none">
+              {scholarship.scholarshipName}
+            </h1>
+          </div>
+        </div>
       </div>
 
-      {/* Scholarship Info */}
-      <div className="bg-base-100 p-6 rounded-xl shadow-lg space-y-6">
-        <h1 className="text-3xl md:text-4xl font-bold text-neutral">
-          {scholarship.scholarshipName}
-        </h1>
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
+        {/* Main Details */}
+        <div className="lg:col-span-2 space-y-8">
+          <div className="bg-base-100/60 backdrop-blur-xl p-8 md:p-12 rounded-[3rem] border border-base-300 shadow-xl">
+            <h2 className="text-2xl font-black text-neutral uppercase tracking-tight mb-6">
+              Institution Details
+            </h2>
 
-        <p className="text-muted">
-          <span className="font-semibold">University:</span>{" "}
-          {scholarship.universityName} <br />
-          <span className="font-semibold">Location:</span>{" "}
-          {scholarship.universityCity}, {scholarship.universityCountry} <br />
-          <span className="font-semibold">Degree:</span> {scholarship.degree}
-        </p>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+              <DetailItem
+                icon={<FiMapPin />}
+                label="Location"
+                value={`${scholarship.universityCity}, ${scholarship.universityCountry}`}
+              />
+              <DetailItem
+                icon={<FiBook />}
+                label="Degree"
+                value={scholarship.degree}
+              />
+              <DetailItem
+                icon={<FiCalendar />}
+                label="Subject"
+                value={scholarship.subjectCategory}
+              />
+              <DetailItem
+                icon={<FiClock />}
+                label="Posted Date"
+                value={scholarship.postDate}
+              />
+            </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-          <InfoCard
-            label="Tuition Fees"
-            value={`$${scholarship.tuitionFees}`}
-          />
-          <InfoCard
-            label="Application Fees"
-            value={`$${scholarship.applicationFees}`}
-          />
-          <InfoCard
-            label="Service Charge"
-            value={`$${scholarship.serviceCharge}`}
-          />
-          <InfoCard label="Deadline" value={scholarship.deadline} />
+            <div className="divider opacity-10"></div>
+
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-6 mt-10">
+              <StatCard label="Tuition" value={`$${scholarship.tuitionFees}`} />
+              <StatCard
+                label="App Fee"
+                value={`$${scholarship.applicationFees}`}
+              />
+              <StatCard
+                label="Service"
+                value={`$${scholarship.serviceCharge}`}
+              />
+            </div>
+          </div>
+
+          {/* Reviews Section */}
+          <div className="space-y-6">
+            <h3 className="text-2xl font-black text-neutral uppercase tracking-tighter flex items-center gap-3">
+              <span className="w-10 h-[2px] bg-primary"></span>
+              Student Feedback
+            </h3>
+            {reviews.length === 0 ? (
+              <p className="text-[10px] font-bold uppercase tracking-widest opacity-30 p-10 bg-base-200/50 rounded-[2rem] text-center border border-dashed border-base-300">
+                No reviews yet for this program
+              </p>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {reviews.map((review) => (
+                  <ReviewCard key={review._id} review={review} />
+                ))}
+              </div>
+            )}
+          </div>
         </div>
 
-        <p className="text-muted">
-          <span className="font-semibold">Posted On:</span>{" "}
-          {scholarship.postDate}
-        </p>
-        <button
-          onClick={handleApply}
-          className="w-full bg-primary text-base-100 p-3 rounded-lg font-semibold transition shadow-lg cursor-pointer"
-        >
-          Apply Now
-        </button>
-      </div>
+        {/* Action Sidebar */}
+        <div className="lg:sticky lg:top-24 space-y-6">
+          <div className="bg-neutral p-8 rounded-[2.5rem] text-white shadow-2xl relative overflow-hidden">
+            <div className="absolute top-0 right-0 w-32 h-32 bg-primary/20 blur-3xl rounded-full -mr-16 -mt-16"></div>
 
-      {/* Reviews */}
-      <div className="space-y-6">
-        <h2 className="text-2xl font-semibold text-neutral">Student Reviews</h2>
-        {reviews.length === 0 ? (
-          <p className="text-muted">No reviews for this scholarship yet.</p>
-        ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {reviews.map((review) => (
-              <ReviewCard key={review._id} review={review} />
-            ))}
+            <p className="text-[10px] font-black uppercase tracking-[0.3em] opacity-60 mb-2">
+              Application Deadline
+            </p>
+            <h4 className="text-3xl font-black mb-6 text-primary">
+              {scholarship.deadline}
+            </h4>
+
+            <button
+              onClick={handleApply}
+              className="btn btn-primary w-full h-16 rounded-[1.5rem] font-black uppercase tracking-widest shadow-xl shadow-primary/40 group hover:scale-[1.03] transition-all"
+            >
+              Apply Now{" "}
+              <FiSend className="group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
+            </button>
+
+            <p className="text-[9px] text-center mt-6 font-bold opacity-40 uppercase tracking-widest">
+              Secure your future today
+            </p>
           </div>
-        )}
+        </div>
       </div>
-    </section>
+    </motion.section>
   );
 };
 
-export default ScholarshipDetails;
-
-const InfoCard = ({ label, value }) => (
-  <div className="bg-base-200 p-4 rounded-lg shadow-inner hover:shadow-lg transition">
-    <p className="text-neutral">
-      <span className="font-semibold">{label}:</span> {value}
-    </p>
+// Internal Components for cleaner UI
+const DetailItem = ({ icon, label, value }) => (
+  <div className="flex items-start gap-4">
+    <div className="w-12 h-12 bg-primary/10 rounded-2xl flex items-center justify-center text-primary shrink-0">
+      {icon}
+    </div>
+    <div>
+      <p className="text-[9px] font-black uppercase tracking-[0.2em] opacity-40">
+        {label}
+      </p>
+      <p className="text-sm font-black text-neutral mt-1">{value}</p>
+    </div>
   </div>
 );
+
+const StatCard = ({ label, value }) => (
+  <div className="bg-base-200/50 p-6 rounded-[1.5rem] border border-base-300 transition-all hover:bg-white hover:shadow-xl">
+    <p className="text-[9px] font-black uppercase tracking-[0.2em] opacity-40 mb-1">
+      {label}
+    </p>
+    <p className="text-xl font-black text-primary">{value}</p>
+  </div>
+);
+
+export default ScholarshipDetails;

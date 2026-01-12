@@ -1,5 +1,6 @@
 import React from "react";
 import { Link } from "react-router";
+import { FiMapPin, FiDollarSign, FiExternalLink } from "react-icons/fi";
 
 const ScholarshipCard = ({ scholar }) => {
   const {
@@ -14,56 +15,64 @@ const ScholarshipCard = ({ scholar }) => {
   } = scholar;
 
   return (
-    <div className="bg-base-100 border border-base-300 rounded-2xl shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300 overflow-hidden relative">
-      {/* University Image */}
-      <div className="relative overflow-hidden rounded-t-2xl">
+    <div className="group bg-base-100 border border-base-300 rounded-[1.8rem] shadow-sm hover:shadow-xl transition-all duration-500 overflow-hidden flex flex-col h-full max-w-[420px] mx-auto">
+      {/* University Image Section - Height reduced to 40 */}
+      <div className="relative h-40 overflow-hidden">
         <img
-          src={universityImage}
+          src={universityImage || null}
           alt={universityName}
-          className="w-full h-36 object-cover transition-transform duration-500 hover:scale-110"
+          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
         />
-
-        {/* Scholarship Category Badge */}
-        <span className="absolute top-2 right-2 bg-accent text-base-100 px-3 py-1 rounded-full text-xs font-semibold shadow-sm">
-          {scholarshipCategory}
-        </span>
+        {/* Overlay Badge - Smaller & Minimal */}
+        <div className="absolute top-3 left-3">
+          <span className="bg-neutral/80 backdrop-blur-md text-white text-[9px] font-black uppercase tracking-widest px-3 py-1.5 rounded-full shadow-lg">
+            {scholarshipCategory}
+          </span>
+        </div>
       </div>
 
-      {/* Content */}
-      <div className="p-4 flex flex-col space-y-2">
-        {/* Scholarship Name */}
-        <h2 className="text-primary text-lg font-semibold leading-tight">
+      {/* Content Section - Padding reduced to p-4 */}
+      <div className="p-5 flex flex-col flex-grow">
+        {/* Scholarship Name - Smaller text size */}
+        <h2 className="text-base font-black text-neutral leading-tight group-hover:text-primary transition-colors line-clamp-2">
           {scholarshipName}
         </h2>
 
-        {/* University Name */}
-        <p className="text-muted text-sm">{universityName}</p>
-
-        {/* Location */}
-        <p className="text-muted text-xs">
-          {universityCity}, {universityCountry}
-        </p>
-
-        {/* Application Fees */}
-        {applicationFees > 0 && (
-          <p className="text-muted text-xs font-medium">
-            Application Fees: ${applicationFees}
+        {/* University Info - Compact layout */}
+        <div className="mt-2 space-y-1">
+          <p className="text-primary font-black text-[10px] uppercase tracking-tighter truncate">
+            {universityName}
           </p>
-        )}
+          <div className="flex items-center gap-1 opacity-50">
+            <FiMapPin size={10} className="shrink-0" />
+            <p className="text-[10px] font-bold truncate">
+              {universityCity}, {universityCountry}
+            </p>
+          </div>
+        </div>
 
-        {/* View Details Button */}
-        <Link
-          to={`/scholarship-details/${_id}`}
-          className="mt-3 w-full text-center bg-primary hover:bg-primary/90 text-base-100 text-sm font-semibold py-2 rounded-xl transition duration-300"
-        >
-          View Details
-        </Link>
+        {/* Bottom Section - More streamlined */}
+        <div className="mt-5 pt-4 border-t border-dashed border-base-300 flex items-center justify-between">
+          <div className="flex flex-col">
+            <span className="text-[8px] uppercase font-black opacity-30 tracking-widest">
+              Fees
+            </span>
+            <p className="font-black text-base text-neutral flex items-center">
+              <span className="text-primary text-xs mr-0.5">$</span>
+              {applicationFees > 0 ? applicationFees : "0"}
+            </p>
+          </div>
+
+          <Link
+            to={`/scholarship-details/${_id}`}
+            className="btn btn-primary btn-sm rounded-xl px-5 normal-case font-black text-[10px] tracking-widest shadow-md shadow-primary/20 hover:scale-105 active:scale-95 transition-all"
+          >
+            DETAILS
+          </Link>
+        </div>
       </div>
     </div>
   );
 };
 
 export default ScholarshipCard;
-
-
-

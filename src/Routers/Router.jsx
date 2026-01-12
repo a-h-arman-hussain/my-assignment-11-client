@@ -27,7 +27,7 @@ import ContactUs from "../Pages/ContactUs/ContactUs";
 import PaymentHistory from "../Pages/Dashboard/Payment/PaymentHistory";
 import AdminDashboard from "../Pages/Dashboard/AdminDashboard/AdminDashboard/AdminDashboard";
 import ModeratorDashboard from "../Pages/Dashboard/ModeratorDashboard/ModeratorDashboard/ModeratorDashboard";
-import StudentDashboard from "../Pages/Dashboard/StudentDashboard/StudentDashboard";
+import StudentDashboard from "../Pages/Dashboard/StudentDashboard/StudentDashboard/StudentDashboard";
 
 const router = createBrowserRouter([
   {

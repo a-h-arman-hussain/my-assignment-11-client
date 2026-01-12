@@ -1,25 +1,39 @@
 @import "tailwindcss";
+
 @plugin "daisyui" {
-  themes: light --default;
+  /* light এবং dark দুটি থিমই এখানে ডিক্লেয়ার করা হলো */
+  themes: light --default, dark;
 }
 
+/* Light Theme Configuration */
 @plugin "daisyui/theme" {
   name: "light";
   default: true;
-
   --color-primary: #d35400;
   --color-secondary: #16a34a;
   --color-accent: #e91e63;
   --color-neutral: #2e2a25;
-
   --color-base-100: #ffffff;
   --color-base-200: #f8f4f0;
   --color-base-300: #e7ded7;
-
   --color-info: #a855f7;
   --color-success: #22c55e;
   --color-warning: #f59e0b;
   --color-error: #dc2626;
+}
 
-  --color-muted: #8b857f;
+/* Dark Theme Configuration (New) */
+@plugin "daisyui/theme" {
+  name: "dark";
+  --color-primary: #e67e22; /* সামান্য লাইট ভেরিয়েন্ট ডার্ক মোডের জন্য */
+  --color-secondary: #22c55e;
+  --color-accent: #ff4081;
+  --color-neutral: #4b5563;
+  --color-base-100: #1a1a1a; /* ডার্ক ব্যাকগ্রাউন্ড */
+  --color-base-200: #121212;
+  --color-base-300: #0a0a0a;
+  --color-info: #c084fc;
+  --color-success: #4ade80;
+  --color-warning: #fbbf24;
+  --color-error: #f87171;
 }
